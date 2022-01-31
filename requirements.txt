@@ -1,0 +1,13 @@
+# Development
+Flask>=2.0.2
+python-dotenv>=0.19.2
+
+# Linting
+flake8>=4.0.1
+
+# Testing
+pytest>=6.2.5
+coverage>=6.3
+
+# Production
+waitress==2.0.0
