@@ -1,0 +1,21 @@
+@import url(./fonts.css);
+@import url(./reset.css);
+
+/* CSS Variables go here */
+:root {
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* System font stack https://css-tricks.com/snippets/css/system-font-stack/ */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+.container {
+  min-height: 100vh;
+  font-family: robotoregular;
+}
