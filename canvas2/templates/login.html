@@ -28,6 +28,8 @@
   <button type="submit" form="login-form">Sign in</button>
 </div>
 <div class="register-frame">
-  <span>New to Canvas2? <a href="#">Register here!</a></span>
+  <span>
+    New to Canvas2? <a href="{{ url_for('signup') }}">Register here!</a>
+  </span>
 </div>
 {% endblock %}

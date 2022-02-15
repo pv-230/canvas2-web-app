@@ -24,6 +24,7 @@ def create_app(config=None):
 
         TODO:
           - Add a check to see if already logged in and redirect to home if so
+          - Add input validation
         """
         return render_template('login.html')
 
@@ -31,13 +32,30 @@ def create_app(config=None):
     def authenticate():
         """
         Authenticates the user based on the provided credentials.
-
-        TODO:
-          - Implement this part in a secure fashion, currently just here for
-            as a placeholder
+        This is just a placeholder for now.
         """
 
         return redirect(url_for("index"))
+
+    @app.route("/signup")
+    def signup():
+        """
+        Renders the page where a user can create a new account.
+
+        TODO:
+          - Add a check to see if already logged in and redirect to home if so
+        """
+
+        return render_template('signup.html')
+
+    @app.route("/create-account")
+    def createAccount():
+        """
+        Creates a new account in the database for the user.
+        This is just a placeholder for now.
+        """
+
+        redirect(url_for("index"))
 
     # return the app
     return app
