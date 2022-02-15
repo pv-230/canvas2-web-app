@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 
 
 def create_app(config=None):
@@ -14,12 +14,30 @@ def create_app(config=None):
 
     # register endpoints
     @app.route("/")
-    def hello_world():
-        return "<p>Hello, World!</p>"
+    def index():
+        return "<h1>Under construction</<h1>"
 
     @app.route("/login")
     def login():
+        """
+        Renders the page where a user can login.
+
+        TODO:
+          - Add a check to see if already logged in and redirect to home if so
+        """
         return render_template('login.html')
+
+    @app.route("/authenticate", methods=["POST"])
+    def authenticate():
+        """
+        Authenticates the user based on the provided credentials.
+
+        TODO:
+          - Implement this part in a secure fashion, currently just here for
+            as a placeholder
+        """
+
+        return redirect(url_for("index"))
 
     # return the app
     return app

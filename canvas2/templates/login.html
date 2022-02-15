@@ -9,5 +9,25 @@
 
 <!-- Content -->
 {% block container %}
-<h1>Test</h1>
+<div class="login-header">
+  <img src="../static/images/favicon.svg" alt="">
+  <h1>Sign in to Canvas2</h1>
+</div>
+<div class="login-frame">
+  <form id="login-form" action="{{ url_for('authenticate') }}" method="POST">
+    <div>
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+  </form>
+  <a class="forgot-pw-link" href="#">Forgot password?</a>
+  <button type="submit" form="login-form">Sign in</button>
+</div>
+<div class="register-frame">
+  <span>New to Canvas2? <a href="#">Register here!</a></span>
+</div>
 {% endblock %}
