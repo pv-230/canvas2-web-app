@@ -107,3 +107,14 @@ button:hover {
   border-radius: 5px;
   text-align: center;
 }
+
+/* Teacher account notice box */
+
+.teacher-notice {
+  width: var(--signup-width);
+  padding: 16px 24px;
+  background-color: rgba(150, 150, 0, 0.3);
+  border: 1px solid rgb(150, 150, 0);
+  border-radius: 5px;
+  text-align: center;
+}

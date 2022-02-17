@@ -82,7 +82,7 @@ def create_app(config=None):
             flash("Email already in use", "error")
 
         if(success and isTeacher == "on"):
-            flash("Account creation pending review", "info")
+            flash("Account creation pending approval", "info")
             return redirect(url_for("login"))
         elif (success):
             flash("Account creation successful", "info")
