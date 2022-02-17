@@ -1,3 +1,7 @@
+:root {
+  --login-width: 300px;
+}
+
 /* General styling */
 
 .container,
@@ -43,7 +47,7 @@ a:hover {
 /* Login frame styling */
 
 .login-frame {
-  width: 300px;
+  width: var(--login-width);
   padding: 24px;
   border: solid 1px var(--border-color);
   border-radius: 5px;
@@ -51,14 +55,35 @@ a:hover {
   background-color: var(--inner-bg-color);
 }
 
+.forgot-pw-link {
+  font-family: robotolight;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+button {
+  width: 100%;
+  margin-top: 24px;
+  padding: 8px 0;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 5px;
+  color: var(--white);
+  background-color: var(--garnet);
+}
+
+button:hover {
+  background-color: var(--garnet-brighter);
+}
+
+/* Login form styling */
+
 #login-form,
 #login-form div,
 #login-form label,
 #login-form input {
   width: 100%;
 }
-
-/* Login form styling */
 
 #login-form {
   gap: 8px;
@@ -82,36 +107,24 @@ a:hover {
   outline: 1px solid var(--gold);
 }
 
-/* Login button and forgot password link styling */
-
-.forgot-pw-link {
-  font-family: robotolight;
-  font-size: 0.9rem;
-  margin-top: 4px;
-}
-
-.login-frame > button {
-  width: 100%;
-  margin-top: 24px;
-  padding: 8px 0;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 5px;
-  color: var(--white);
-  background-color: var(--garnet);
-}
-
-.login-frame > button:hover {
-  background-color: var(--garnet-brighter);
-}
-
 /* Register frame styling */
 
 .register-frame {
-  width: 300px;
+  width: var(--login-width);
   padding: 16px 24px;
   border: 1px solid var(--border-color);
   border-radius: 5px;
   background-color: var(--inner-bg-color);
+  text-align: center;
+}
+
+/* Message flash box styling */
+
+.message-flash-box {
+  width: var(--login-width);
+  padding: 16px 24px;
+  background-color: rgba(136, 52, 72, 0.3);
+  border: 1px solid var(--garnet);
+  border-radius: 5px;
   text-align: center;
 }
