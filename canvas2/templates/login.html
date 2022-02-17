@@ -33,11 +33,20 @@
     New to Canvas2? <a href="{{ url_for('signup') }}">Register here!</a>
   </span>
 </div>
-<div class="message-flash-box" hidden>
-  {% with messages = get_flashed_messages() %}
+<div class="info-box" hidden>
+  {% with messages = get_flashed_messages(category_filter="info") %}
     {% if messages %}
       {% for message in messages %}
-        <span class="flashed-message">{{ message }}</span>
+        <p class="flashed-message">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+<div class="error-box" hidden>
+  {% with messages = get_flashed_messages(category_filter="error") %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="flashed-message">{{ message }}</p>
       {% endfor %}
     {% endif %}
   {% endwith %}

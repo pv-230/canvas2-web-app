@@ -1,6 +1,12 @@
 // Shows the message flash box when there are flashed messages
-const messageFlashBox = document.querySelector('.message-flash-box');
+const infoBox = document.querySelector('.info-box');
+const errorBox = document.querySelector('.error-box');
 const flashedMessage = document.querySelector('.flashed-message');
+
 if (flashedMessage) {
-  messageFlashBox.toggleAttribute('hidden');
+  if (flashedMessage.parentElement.className === 'info-box') {
+    infoBox.toggleAttribute('hidden');
+  } else {
+    errorBox.toggleAttribute('hidden');
+  }
 }

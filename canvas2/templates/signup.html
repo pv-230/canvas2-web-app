@@ -5,6 +5,7 @@
 {% block head %}
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/signup.js') }}"></script>
 {% endblock %}
 
 <!-- Content -->
@@ -46,9 +47,18 @@
     </div>
     <div class="teacher-toggle">
       <label for="teacher-check">Are you a teacher?</label>
-      <input type="checkbox" id="teacher-check" name="isTeacher">
+      <input type="checkbox" id="teacher-check" name="is-teacher">
     </div>
     <button type="submit">Create account</button>
   </form>
+</div>
+<div class="error-box" hidden>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="flashed-message">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
 </div>
 {% endblock %}

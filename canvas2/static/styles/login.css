@@ -120,11 +120,20 @@ button:hover {
 
 /* Message flash box styling */
 
-.message-flash-box {
+.error-box,
+.info-box {
   width: var(--login-width);
   padding: 16px 24px;
-  background-color: rgba(136, 52, 72, 0.3);
-  border: 1px solid var(--garnet);
   border-radius: 5px;
   text-align: center;
+}
+
+.info-box {
+  background-color: rgba(0, 150, 0, 0.3);
+  border: 1px solid rgba(0, 150, 0);
+}
+
+.error-box {
+  background-color: rgba(136, 52, 72, 0.3);
+  border: 1px solid var(--garnet);
 }

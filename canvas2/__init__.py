@@ -41,13 +41,13 @@ def create_app(config=None):
         password = request.form["password"]
 
         # The condition is just a placeholder now to test what happens when
-        # the login fails. Enter "test" as the username/password to fail the
+        # the login fails. Enter "test" as the username or password to fail the
         # login.
-        if (username != "test" and password != "test"):
-            return redirect(url_for("index"))
-        else:
+        if (username == "test" or password == "test"):
             flash("Invalid username or password", "error")
             return redirect(url_for("login"))
+        else:
+            return redirect(url_for("index"))
 
     @app.route("/signup")
     def signup():
@@ -59,10 +59,36 @@ def create_app(config=None):
     def createAccount():
         """Creates a new account in the database for the user.
 
+        TODO: More secure method of sending password from client-side
+        TODO: Need function that verifies form input
         TODO: Sanitize input.
         """
 
-        redirect(url_for("index"))
+        # firstname = request.form["firstname"]
+        # lastname = request.form["lastname"]
+        username = request.form["username"]
+        email = request.form["email"]
+        # password = request.form["password"]
+        # passwordConfirm = request.form["password-confirm"]
+        isTeacher = request.form.get("is-teacher")
+
+        # Placeholders to test signup failure
+        success = True
+        if (username == "test"):
+            success = False
+            flash("Username already in use", "error")
+        if (email == "test@test"):
+            success = False
+            flash("Email already in use", "error")
+
+        if(success and isTeacher == "on"):
+            flash("Account creation pending review", "info")
+            return redirect(url_for("login"))
+        elif (success):
+            flash("Account creation successful", "info")
+            return redirect(url_for("login"))
+        else:
+            return redirect(url_for("signup"))
 
     # return the app
     return app
