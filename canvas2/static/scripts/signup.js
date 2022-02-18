@@ -1,5 +1,5 @@
 const errorBox = document.querySelector('.error-box');
-const flashedMessage = document.querySelector('.flashed-message');
+const flashedMessages = [...document.querySelectorAll('.flashed-message')];
 const checkbox = document.getElementById('teacher-check');
 const teacherNotice = document.querySelector('.teacher-notice');
 const submitButton = document.querySelector('button');
@@ -10,7 +10,7 @@ const form = document.getElementById('signup-form');
 const errorMessage = document.querySelector('.error-message');
 
 // Shows the message flash box when there are flashed messages
-if (flashedMessage) {
+if (flashedMessages.length > 0) {
   errorBox.toggleAttribute('hidden');
 }
 
@@ -40,7 +40,9 @@ submitButton.addEventListener('click', (e) => {
       if (errorBox.hasAttribute('hidden')) {
         errorBox.toggleAttribute('hidden');
       } else {
-        flashedMessage.textContent = '';
+        for (flashedMessage of flashedMessages) {
+          flashedMessage.textContent = '';
+        }
       }
 
       if (errorMessage.hasAttribute('hidden')) {
