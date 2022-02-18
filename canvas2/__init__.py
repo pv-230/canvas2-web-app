@@ -19,7 +19,7 @@ def create_app(config=None):
     def index():
         "Renders the homepage"
 
-        return "<h1>Under construction</<h1>"
+        return "<p>Hello, World!</p>"
 
     @app.route("/login")
     def login():
