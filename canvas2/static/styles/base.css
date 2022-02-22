@@ -1,0 +1,29 @@
+/* CSS Variables go here */
+:root {
+  --white: #eeeeee;
+
+  --garnet: #782f40;
+  --garnet-brighter: #883448;
+
+  --gold: #ceb888;
+  --gold-brighter: #eed59f;
+
+  --black: #2c2a29; /* Used for background color */
+  --border-color: #4e4e4e;
+  --inner-bg-color: #424242;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* System font stack https://css-tricks.com/snippets/css/system-font-stack/ */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+.container {
+  min-height: 100vh;
+  font-family: robotoregular;
+}
