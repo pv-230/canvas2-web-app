@@ -1,0 +1,78 @@
+.container {
+  background-color: var(--black);
+}
+
+/* Header stlying */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: var(--gold);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+.header-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+/* Profile icon and menu */
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+}
+
+.profile-btn:hover {
+  background-color: var(--gold-brighter);
+  border-radius: 50%;
+}
+
+.profile-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.menu-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: absolute;
+  right: 16px;
+  top: 70px;
+  width: 150px;
+  padding: 16px;
+  background-color: var(--gold);
+  border: 2px solid var(--garnet);
+  border-radius: 5px;
+}
+
+.menu-box > button {
+  color: whitesmoke;
+  background-color: var(--garnet);
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
+}
+
+.menu-box > button:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.menu-box.hidden {
+  display: none;
+}

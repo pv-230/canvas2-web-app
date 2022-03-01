@@ -5,7 +5,6 @@ const teacherNotice = document.querySelector('.teacher-notice');
 const submitButton = document.querySelector('button');
 const password = document.getElementById('password');
 const passwordConfirm = document.getElementById('password-confirm');
-/** @type {HTMLFormElement} */
 const form = document.getElementById('signup-form');
 const errorMessage = document.querySelector('.error-message');
 

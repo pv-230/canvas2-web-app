@@ -19,7 +19,14 @@ def create_app(config=None):
     def index():
         "Renders the homepage"
 
-        return "<p>Hello, World!</p>"
+        # Testing variables
+        loggedIn = True
+        isTeacher = False
+
+        if loggedIn:
+            return render_template("home.html", isTeacher=isTeacher)
+        else:
+            return redirect(url_for("login"))
 
     @app.route("/login")
     def login():

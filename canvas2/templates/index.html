@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+<!-- Header extension -->
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+{% endblock %}
+
+<!-- Content -->
+{% block container %}
+  <header>
+    <nav>
+      <a href="/">
+        <img
+          class="header-logo"
+          src="{{ url_for('static', filename='images/favicon.svg') }}"
+          alt="Header Logo">
+      </a>
+      <h1 class="header-title">
+        {% block headerTitle required %}{% endblock %}
+      </h1>
+    </nav>
+    <div class="profile-btn">
+      <img
+        class="profile-icon"
+        src="{{ url_for('static', filename='images/profile-icon.svg') }}"
+        alt="Profile Icon">
+    </div>
+  </header>
+  <div class="menu-box hidden">
+    <button type="button">Profile</button>
+    <button type="button">Logout</button>
+  </div>
+{% endblock %}
