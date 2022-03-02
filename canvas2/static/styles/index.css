@@ -59,11 +59,12 @@ nav {
   width: 150px;
   padding: 16px;
   background-color: var(--gold);
-  border: 2px solid var(--garnet);
+  border: 2px solid var(--border-color);
   border-radius: 5px;
 }
 
 .menu-box > button {
+  font-weight: bold;
   color: var(--white);
   background-color: var(--garnet);
   border: none;

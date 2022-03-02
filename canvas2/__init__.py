@@ -21,7 +21,7 @@ def create_app(config=None):
 
         # Testing variables
         loggedIn = True
-        isTeacher = False
+        isTeacher = True
 
         if loggedIn:
             return render_template("home.html", isTeacher=isTeacher)

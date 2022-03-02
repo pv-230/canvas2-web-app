@@ -21,6 +21,21 @@
       <button class="course-card" type="button">Course Title</button>
       <button class="course-card" type="button">Course Title</button>
       <button class="course-card" type="button">Course Title</button>
+      <button class="course-card" type="button">Course Title</button>
+
+      <!-- Allows teachers to add courses -->
+      {% if isTeacher %}
+        <button class="add-course" type="button">
+          <div class="add-icon-frame">
+            <img
+              class="add-icon"
+              src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+              alt="Plus sign"
+            />
+          </div>
+          <span>Add course</span>
+        </button>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
