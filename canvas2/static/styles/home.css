@@ -1,0 +1,30 @@
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-auto-rows: 150px;
+  justify-content: center;
+  gap: 16px;
+  width: 50%;
+  min-width: auto;
+}
+
+.course-card {
+  padding: 16px;
+  font-size: 1.5rem;
+  border: 2px solid var(--garnet);
+  border-radius: 5px;
+  background-color: var(--inner-bg-color);
+  color: var(--white);
+}
+
+.course-card:hover {
+  border-color: var(--garnet-brighter);
+  background-color: #474747;
+}
