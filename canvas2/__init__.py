@@ -22,9 +22,14 @@ def create_app(config=None):
         # Testing variables
         loggedIn = True
         isTeacher = True
+        courses = [{"title": "English I", "classID": 123}]
 
         if loggedIn:
-            return render_template("home.html", isTeacher=isTeacher)
+            return render_template(
+                "home.html",
+                isTeacher=isTeacher,
+                courses=courses
+            )
         else:
             return redirect(url_for("login"))
 

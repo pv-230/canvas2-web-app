@@ -2,6 +2,8 @@
 const addCourse = document.querySelector('.add-course');
 
 const addCourseItem = () => {
+  if (!addCourse) return;
+
   const courseGrid = document.querySelector('.course-grid', HTMLElement);
   const courseCard = document.createElement('button', HTMLElement);
 
@@ -13,4 +15,6 @@ const addCourseItem = () => {
 };
 
 // Event listeners
-addCourse.addEventListener('click', addCourseItem);
+if (addCourse) {
+  addCourse.addEventListener('click', addCourseItem);
+}

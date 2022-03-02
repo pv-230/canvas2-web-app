@@ -17,11 +17,11 @@
   {{ super() }}
   <div class="content">
     <div class="course-grid">
-      <button class="course-card" type="button">Course Title</button>
-      <button class="course-card" type="button">Course Title</button>
-      <button class="course-card" type="button">Course Title</button>
-      <button class="course-card" type="button">Course Title</button>
-      <button class="course-card" type="button">Course Title</button>
+      {% for course in courses %}
+        <a href="/">
+          <div class="course-card">{{ course["title"] }}</div>
+        </a>
+      {% endfor %}
 
       <!-- Allows teachers to add courses -->
       {% if isTeacher %}
