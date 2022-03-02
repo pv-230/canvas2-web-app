@@ -1,3 +1,4 @@
+// Global element variables
 const errorBox = document.querySelector('.error-box');
 const flashedMessages = [...document.querySelectorAll('.flashed-message')];
 const checkbox = document.getElementById('teacher-check');
@@ -37,14 +38,17 @@ submitButton.addEventListener('click', (e) => {
       errorMessage.textContent = 'Passwords are not the same';
 
       if (errorBox.hasAttribute('hidden')) {
+        // Shows the error box
         errorBox.toggleAttribute('hidden');
       } else {
-        for (flashedMessage of flashedMessages) {
+        // Clears any flashed messages so only the password error message shows
+        for (let flashedMessage of flashedMessages) {
           flashedMessage.textContent = '';
         }
       }
 
       if (errorMessage.hasAttribute('hidden')) {
+        // Shows the password error message inside of the error box
         errorMessage.toggleAttribute('hidden');
       }
     }

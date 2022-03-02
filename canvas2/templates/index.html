@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+<!-- This file represents the common HTML structure for the main pages. -->
 
-<!-- Header extension -->
-{% block title %}Home{% endblock %}
+<!-- HTML head extension -->
+{% extends "base.html" %}
 {% block head %}
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
