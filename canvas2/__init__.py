@@ -102,5 +102,9 @@ def create_app(config=None):
         else:
             return redirect(url_for("signup"))
 
+    @app.route("/add-course", methods=["POST"])
+    def addCourse():
+        return redirect(url_for("/"))
+
     # return the app
     return app

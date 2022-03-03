@@ -19,8 +19,8 @@
       </a>
     {% endfor %}
 
-    <!-- Allows teachers to add courses -->
     {% if isTeacher %}
+      <!-- Button to add additional courses for teachers -->
       <button class="add-course" type="button">
         <div class="add-icon-frame">
           <img
@@ -33,4 +33,13 @@
       </button>
     {% endif %}
   </div>
+
+  {% if isTeacher %}
+    <!-- New course popup form for teachers-->
+    <div class="add-course-frame" hidden>
+      <form action="{{ url_for('addCourse') }}" method="POST">
+
+      </form>
+    </div>
+  {% endif %}
 {% endblock %}
