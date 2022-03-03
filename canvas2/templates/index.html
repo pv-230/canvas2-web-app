@@ -11,17 +11,16 @@
 <!-- Content -->
 {% block container %}
   <header>
-    <nav>
+    <div class="header-info">
       <a href="/">
         <img
           class="header-logo"
-          src="{{ url_for('static', filename='images/favicon.svg') }}"
-          alt="Header Logo">
+          src="{{ url_for('static', filename='images/header-logo.svg') }}"
+          alt="Header Logo"
+        />
       </a>
-      <h1 class="header-title">
-        {% block headerTitle required %}{% endblock %}
-      </h1>
-    </nav>
+      <h1 class="header-title"> Canvas 2</h1>
+    </div>
     <div class="profile-btn">
       <img
         class="profile-icon"
@@ -32,5 +31,8 @@
   <div class="menu-box hidden">
     <button type="button">Profile</button>
     <button type="button">Logout</button>
+  </div>
+  <div class="content">
+    {% block content %}{% endblock %}
   </div>
 {% endblock %}

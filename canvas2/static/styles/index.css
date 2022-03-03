@@ -4,49 +4,59 @@
   grid-template-rows: max-content 1fr;
 }
 
+a {
+  all: unset;
+}
+
 /* Header stlying */
 
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
-  background-color: var(--gold);
+  padding: 4px 16px;
+  background-color: var(--garnet);
 }
 
-nav {
+.header-info {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
 .header-logo {
-  width: 50px;
-  height: 50px;
+  width: 64px;
+  height: 64px;
+}
+
+.header-logo:hover {
+  background-color: var(--garnet-brighter);
   border-radius: 5px;
 }
 
 .header-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--black);
+  color: var(--white);
 }
 
 /* Profile icon and menu */
 
 .profile-btn {
   display: flex;
+  justify-content: center;
   align-items: center;
+  width: 64px;
+  height: 64px;
 }
 
 .profile-btn:hover {
-  background-color: var(--gold-brighter);
+  background-color: var(--garnet-brighter);
   border-radius: 50%;
 }
 
 .profile-icon {
-  width: 50px;
-  height: 50px;
+  height: 90%;
 }
 
 .menu-box {

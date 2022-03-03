@@ -9,33 +9,28 @@
   <script defer src="{{ url_for('static', filename='scripts/home.js') }}"></script>
 {% endblock %}
 
-<!-- Sets the navbar title -->
-{% block headerTitle %}Courses{% endblock %}
-
 <!-- Content -->
-{% block container %}
-  {{ super() }}
-  <div class="content">
-    <div class="course-grid">
-      {% for course in courses %}
-        <a href="/">
-          <div class="course-card">{{ course["title"] }}</div>
-        </a>
-      {% endfor %}
+{% block content %}
+  <h2 class="content-title">Courses</h2>
+  <div class="course-grid">
+    {% for course in courses %}
+      <a href="/">
+        <div class="course-card">{{ course["title"] }}</div>
+      </a>
+    {% endfor %}
 
-      <!-- Allows teachers to add courses -->
-      {% if isTeacher %}
-        <button class="add-course" type="button">
-          <div class="add-icon-frame">
-            <img
-              class="add-icon"
-              src="{{ url_for('static', filename='images/plus-sign.svg') }}"
-              alt="Plus sign"
-            />
-          </div>
-          <span>Add course</span>
-        </button>
-      {% endif %}
-    </div>
+    <!-- Allows teachers to add courses -->
+    {% if isTeacher %}
+      <button class="add-course" type="button">
+        <div class="add-icon-frame">
+          <img
+            class="add-icon"
+            src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+            alt="Plus sign"
+          />
+        </div>
+        <span>Add course</span>
+      </button>
+    {% endif %}
   </div>
 {% endblock %}

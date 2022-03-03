@@ -22,7 +22,7 @@ def create_app(config=None):
         # Testing variables
         loggedIn = True
         isTeacher = True
-        courses = [{"title": "English I", "classID": 123}]
+        courses = [{"title": "Random loooooooong class name", "classID": 123}]
 
         if loggedIn:
             return render_template(
