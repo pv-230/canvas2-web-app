@@ -1,20 +1,30 @@
-// Global element variables
-const addCourse = document.querySelector('.add-course');
+const home = (() => {
+  const addCourseCard = document.querySelector('.add-course-card');
+  const closeBtnFrame = document.querySelector('.close-btn-frame');
+  const mainContent = document.querySelector('.main-content');
+  const addCourseBg = document.querySelector('.add-course-bg');
+  const addCourseForm = document.forms['add-course-form'];
 
-const addCourseItem = () => {
-  if (!addCourse) return;
+  // Displays the add course form and blurs the background
+  const addCourseItem = () => {
+    if (!addCourseCard) return;
 
-  const courseGrid = document.querySelector('.course-grid', HTMLElement);
-  const courseCard = document.createElement('button', HTMLElement);
+    mainContent.style.cssText = 'filter: blur(5px);';
+    addCourseBg.removeAttribute('hidden');
+  };
 
-  courseCard.classList.add('course-card');
-  courseCard.setAttribute('type', 'button');
-  courseCard.textContent = 'New Course';
+  // Closes the add course form window
+  const closeFormWindow = () => {
+    if (!closeBtnFrame) return;
 
-  courseGrid.insertBefore(courseCard, addCourse);
-};
+    addCourseForm.reset();
+    mainContent.removeAttribute('style');
+    addCourseBg.setAttribute('hidden', '');
+  };
 
-// Event listeners
-if (addCourse) {
-  addCourse.addEventListener('click', addCourseItem);
-}
+  // Event listeners
+  if (addCourseCard) {
+    addCourseCard.addEventListener('click', addCourseItem);
+    closeBtnFrame.addEventListener('click', closeFormWindow);
+  }
+})();

@@ -23,6 +23,18 @@ body {
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
+input {
+  padding: 4px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--black);
+  color: var(--white);
+}
+
+input:focus {
+  outline: 1px solid var(--gold);
+}
+
 .container {
   min-height: 100vh;
   font-family: robotoregular;

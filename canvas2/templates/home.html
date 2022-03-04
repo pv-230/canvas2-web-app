@@ -11,35 +11,52 @@
 
 <!-- Content -->
 {% block content %}
-  <h2 class="content-title">Courses</h2>
-  <div class="course-grid">
-    {% for course in courses %}
-      <a href="/">
-        <div class="course-card">{{ course["title"] }}</div>
-      </a>
-    {% endfor %}
-
-    {% if isTeacher %}
-      <!-- Button to add additional courses for teachers -->
-      <button class="add-course" type="button">
-        <div class="add-icon-frame">
-          <img
-            class="add-icon"
-            src="{{ url_for('static', filename='images/plus-sign.svg') }}"
-            alt="Plus sign"
-          />
-        </div>
-        <span>Add course</span>
-      </button>
-    {% endif %}
+  <div class="main-content">
+    <h2 class="content-title">Courses</h2>
+    <div class="course-grid">
+      {% for course in courses %}
+        <a href="/">
+          <div class="course-card">{{ course["title"] }}</div>
+        </a>
+      {% endfor %}
+      {% if isTeacher %}
+        <!-- Button to add additional courses for teachers -->
+        <button class="add-course-card" type="button">
+          <div class="add-icon-frame">
+            <img
+              class="add-icon"
+              src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+              alt="Plus sign"
+            />
+          </div>
+          <span>Add course</span>
+        </button>
+      {% endif %}
+    </div>
   </div>
 
   {% if isTeacher %}
     <!-- New course popup form for teachers-->
-    <div class="add-course-frame" hidden>
-      <form action="{{ url_for('addCourse') }}" method="POST">
-
-      </form>
+    <div class="add-course-bg" hidden>
+      <div class="add-course-frame">
+        <div class="form-header">
+          <h3>Add course</h3>
+          <div class="close-btn-frame">
+            <img 
+            class="close-btn"
+            src="{{ url_for('static', filename='images/close-btn.svg') }}"
+            alt="Close"
+            />
+          </div>
+        </div>
+        <form id="add-course-form" action="{{ url_for('addCourse') }}" method="POST">
+            <div class="form-input-group">
+              <label for="course-name">Course name</label>
+              <input type='text' id="course-name" name="course-name" required>
+            </div>
+            <button class="add-course-btn" type="submit">Add</button>
+        </form>
+      </div>
     </div>
   {% endif %}
 {% endblock %}

@@ -17,12 +17,20 @@ def create_app(config=None):
 
     @app.route("/")
     def index():
-        "Renders the homepage"
+        """Renders the homepage
+
+        TODO: Need way of telling if user is logged in
+        TODO: Need to determine if user is a teacher
+        TODO: Need to obtain list of classes user is associated with
+        """
 
         # Testing variables
         loggedIn = True
         isTeacher = True
-        courses = [{"title": "Random loooooooong class name", "classID": 123}]
+        courses = []
+        courses.append({"title": "This is a class", "classID": 1})
+        courses.append({"title": "This is another class", "classID": 2})
+        courses.append({"title": "And another class", "classID": 3})
 
         if loggedIn:
             return render_template(
@@ -104,7 +112,12 @@ def create_app(config=None):
 
     @app.route("/add-course", methods=["POST"])
     def addCourse():
-        return redirect(url_for("/"))
+        """Adds a course to the database.
+
+        TODO: Need to add functionality here to add a course into the database
+        """
+        # courseName = request.form["course-name"]
+        return redirect(url_for("index"))
 
     # return the app
     return app

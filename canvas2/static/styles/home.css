@@ -3,11 +3,16 @@
 }
 
 .content {
+  position: relative;
+}
+
+.main-content {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 32px;
+  height: 100%;
 }
 
 .content-title {
@@ -51,7 +56,7 @@
 
 /* Add course button */
 
-.add-course {
+.add-course-card {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -72,13 +77,100 @@
   transition: height 0.1s;
 }
 
-.add-course:hover .add-icon {
+.add-course-card:hover .add-icon {
   height: 100%;
   transition: height 0.1s;
 }
 
 /* Add course form styling */
-.add-course-frame:not([hidden]) {
+
+.add-course-bg:not([hidden]) {
   position: absolute;
-  height: 100vh;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-course-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  background-color: var(--inner-bg-color);
+  border: solid 1px var(--border-color);
+  border-radius: 5px;
+}
+
+#add-course-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+}
+
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  color: var(--white);
+}
+
+.add-course-btn {
+  width: min-content;
+  padding: 4px 16px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 5px;
+  color: var(--white);
+  background-color: var(--garnet);
+}
+
+.add-course-btn:hover {
+  background-color: var(--garnet-brighter);
+}
+
+/* Add course form header styling */
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  background-color: #3a3a3a;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.form-header > h3 {
+  font-size: 1.2rem;
+  color: var(--white);
+}
+
+.close-btn-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  background-color: var(--garnet);
+  border-radius: 50%;
+}
+
+.close-btn-frame:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.close-btn {
+  width: 80%;
+  height: 80%;
 }
