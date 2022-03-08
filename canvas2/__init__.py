@@ -28,9 +28,9 @@ def create_app(config=None):
         loggedIn = True
         isTeacher = True
         courses = []
-        courses.append({"title": "This is a class", "classID": 1})
-        courses.append({"title": "This is another class", "classID": 2})
-        courses.append({"title": "And another class", "classID": 3})
+        courses.append({"title": "This is a class", "code": 'class1'})
+        courses.append({"title": "This is another class", "code": 'class2'})
+        courses.append({"title": "And another class", "code": 'class3'})
 
         if loggedIn:
             return render_template(
@@ -40,6 +40,23 @@ def create_app(config=None):
             )
         else:
             return redirect(url_for("login"))
+
+    @app.route("/<code>")
+    def course_page(code):
+        """Renders the appropriate course page for a user.
+
+        TODO: Add a way to determine if user is enrolled in the course
+              specified by the code in the URL
+        """
+
+        # Testing variable to mimick if the user is actually enrolled in the
+        # course associated with the course code in the URL
+        enrolled = True
+
+        if enrolled:
+            return f"WIP: This is the course page for {code}"
+        else:
+            return redirect(url_for('index'))
 
     @app.route("/login")
     def login():
@@ -76,7 +93,7 @@ def create_app(config=None):
         return render_template("signup.html")
 
     @app.route("/create-account", methods=["POST"])
-    def createAccount():
+    def create_account():
         """Creates a new account in the database for the user.
 
         TODO: More secure method of sending password from client-side
@@ -111,10 +128,11 @@ def create_app(config=None):
             return redirect(url_for("signup"))
 
     @app.route("/add-course", methods=["POST"])
-    def addCourse():
+    def add_course():
         """Adds a course to the database.
 
         TODO: Need to add functionality here to add a course into the database
+        TODO: Add more form data as needed, going with bare minimum for now
         """
         # courseName = request.form["course-name"]
         return redirect(url_for("index"))

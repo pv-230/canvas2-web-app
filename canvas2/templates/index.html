@@ -12,21 +12,10 @@
 {% block container %}
   <header>
     <div class="header-info">
-      <a href="/">
-        <img
-          class="header-logo"
-          src="{{ url_for('static', filename='images/header-logo.svg') }}"
-          alt="Header Logo"
-        />
-      </a>
+      <a class="header-logo" href="/"></a>
       <h1 class="header-title"> Canvas 2</h1>
     </div>
-    <div class="profile-btn">
-      <img
-        class="profile-icon"
-        src="{{ url_for('static', filename='images/profile-icon.svg') }}"
-        alt="Profile Icon">
-    </div>
+    <button class="profile-btn" type="button"></button>
   </header>
   <div class="menu-box" hidden>
     <button type="button">Profile</button>

@@ -35,6 +35,7 @@ header {
 .header-logo {
   width: 64px;
   height: 64px;
+  background: center / cover url(../images/header-logo.svg) no-repeat;
 }
 
 .header-logo:hover {
@@ -43,28 +44,23 @@ header {
 }
 
 .header-title {
+  font-family: robotomedium;
   font-size: 2.5rem;
-  font-weight: 700;
   color: var(--white);
 }
 
 /* Profile icon and menu */
 
 .profile-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 64px;
   height: 64px;
+  background: center / cover url(../images/profile-icon.svg) no-repeat;
+  border: none;
 }
 
 .profile-btn:hover {
   background-color: var(--garnet-brighter);
   border-radius: 50%;
-}
-
-.profile-icon {
-  height: 90%;
 }
 
 .menu-box:not([hidden]) {
@@ -83,7 +79,8 @@ header {
 }
 
 .menu-box > button {
-  font-weight: bold;
+  font-family: robotobold;
+  letter-spacing: 0.5px;
   color: var(--white);
   background-color: var(--garnet);
   border: none;

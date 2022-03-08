@@ -15,7 +15,7 @@
     <h2 class="content-title">Courses</h2>
     <div class="course-grid">
       {% for course in courses %}
-        <a href="/">
+        <a href="/{{ course['code'] }}">
           <div class="course-card">{{ course["title"] }}</div>
         </a>
       {% endfor %}
@@ -41,15 +41,9 @@
       <div class="add-course-frame">
         <div class="form-header">
           <h3>Add course</h3>
-          <div class="close-btn-frame">
-            <img 
-            class="close-btn"
-            src="{{ url_for('static', filename='images/close-btn.svg') }}"
-            alt="Close"
-            />
-          </div>
+          <div class="close-btn-frame"></div>
         </div>
-        <form id="add-course-form" action="{{ url_for('addCourse') }}" method="POST">
+        <form id="add-course-form" action="{{ url_for('add_course') }}" method="POST">
             <div class="form-input-group">
               <label for="course-name">Course name</label>
               <input type='text' id="course-name" name="course-name" required>
