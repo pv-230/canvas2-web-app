@@ -16,10 +16,13 @@
     <div class="course-grid">
       {% for course in courses %}
         <a href="/{{ course['code'] }}">
-          <div class="course-card">{{ course["title"] }}</div>
+          <div class="course-card">
+            <div class="course-code">{{ course["code"] }}</div>
+            <div class="course-title">{{ course["title"] }}</div>
+          </div>
         </a>
       {% endfor %}
-      {% if isTeacher %}
+      {% if role == "teacher" %}
         <!-- Button to add additional courses for teachers -->
         <button class="add-course-card" type="button">
           <div class="add-icon-frame">
@@ -35,7 +38,7 @@
     </div>
   </div>
 
-  {% if isTeacher %}
+  {% if role == "teacher" %}
     <!-- New course popup form for teachers-->
     <div class="add-course-bg" hidden>
       <div class="add-course-frame">

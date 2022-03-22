@@ -1,0 +1,46 @@
+<!-- This file represents course content. -->
+
+<!-- HTML head extension -->
+{% extends "index.html" %}
+{% block title %}{{ course["code"] }}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/course.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/course.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="main-content">
+    <section>
+      <h2 class="section-title">{{ course["title"] }}</h2>
+      <p class="course-description">{{ course["description"] }}</p>
+    </section>
+    <section>
+      <h2 class="section-title">Assignments</h2>
+      <div class="assignment-grid">
+        {% if course["assignments"] %}
+          {% for assignment in course["assignments"] %}
+            <div class="assignment-card">
+              <div class="assignment-text">
+                <div class="assignment-title">{{ assignment["title"] }}</div>
+                <p>{{ assignment["description"] }}</p>
+                <p>
+                  Due: {{ assignment["dueDate"] }} at {{ assignment["dueTime"] }}
+                </p>
+                {% if role == "student" %}
+                <div class="submit-status">
+                  Submitted: {{ assignment["isSubmitted"] }}
+                </div>
+                {% endif %}
+              </div>
+              <button class="assignment-btn" type="button">UPLOAD</button>
+            </div>
+          {% endfor %}
+        {% else %}
+            <p>No assignments are currently posted.</p>
+        {% endif %}
+      </div>
+    </section>
+  </div>
+  
+{% endblock %}

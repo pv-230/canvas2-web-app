@@ -1,0 +1,78 @@
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+}
+
+/* Section styling */
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: var(--content-width);
+  color: var(--white);
+  padding: 32px 0;
+}
+
+section:not(:first-child) {
+  border-top: 1px solid var(--border-color);
+}
+
+.section-title {
+  font-size: 2rem;
+}
+
+.course-description {
+  font-size: 1.2rem;
+}
+
+/* Assignment card styling */
+
+.assignment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 300px);
+  gap: 16px;
+  width: var(--content-width);
+}
+
+.assignment-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--inner-bg-color);
+  color: var(--white);
+}
+
+.assignment-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 24px 8px;
+  font-family: robotolight;
+}
+
+.assignment-title {
+  font-size: 1.2rem;
+  font-family: robotomedium;
+}
+
+.assignment-btn:hover {
+  background-color: rgb(20, 135, 207);
+}
+
+.assignment-btn,
+.assignment-btn:active {
+  width: 100%;
+  padding: 8px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: rgb(0, 110, 179);
+  font-family: robotomedium;
+  color: var(--white);
+}

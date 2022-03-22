@@ -1,5 +1,43 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
 
+# These are a bunch of testing variables that should be removed once we get
+# the databased hooked up.
+courses = []
+courses.append(
+    {
+        "title": "Object Oriented Programming",
+        "code": "COP3330",
+        "description": "Learn some OOP.",
+        "assignments": [],
+    }
+)
+courses.append(
+    {
+        "title": "Computer Organization I",
+        "code": "CDA3100",
+        "description": "Learn some computer organization.",
+        "assignments": [],
+    }
+)
+courses.append(
+    {
+        "title": "Secure, Parallel, and Distributed Computing with Python",
+        "code": "COP4521",
+        "description": "Learn some secure, parallel, and distributed stuff.",
+        "assignments": [
+            {
+                "title": "Assignment 1",
+                "description": "This is the first assignment.",
+                "dueDate": "03/22/2022",
+                "dueTime": "11:59PM",
+                "isSubmitted": False,
+            }
+        ],
+    }
+)
+role = "teacher"
+isLoggedIn = True
+
 
 def create_app(config=None):
 
@@ -24,20 +62,8 @@ def create_app(config=None):
         TODO: Need to obtain list of classes user is associated with
         """
 
-        # Testing variables
-        loggedIn = True
-        isTeacher = True
-        courses = []
-        courses.append({"title": "This is a class", "code": 'class1'})
-        courses.append({"title": "This is another class", "code": 'class2'})
-        courses.append({"title": "And another class", "code": 'class3'})
-
-        if loggedIn:
-            return render_template(
-                "home.html",
-                isTeacher=isTeacher,
-                courses=courses
-            )
+        if isLoggedIn:
+            return render_template("home.html", role=role, courses=courses)
         else:
             return redirect(url_for("login"))
 
@@ -49,14 +75,13 @@ def create_app(config=None):
               specified by the code in the URL
         """
 
-        # Testing variable to mimick if the user is actually enrolled in the
-        # course associated with the course code in the URL
-        enrolled = True
+        # Replace this with a database function that looks up if the course
+        # code is found in the user's enrollments
+        for course in courses:
+            if course["code"] == code:
+                return render_template("course.html", role=role, course=course)
 
-        if enrolled:
-            return f"WIP: This is the course page for {code}"
-        else:
-            return redirect(url_for('index'))
+        return redirect(url_for("index"))
 
     @app.route("/login")
     def login():
@@ -80,7 +105,7 @@ def create_app(config=None):
         # The condition is just a placeholder now to test what happens when
         # the login fails. Enter "test" as the username or password to fail the
         # login.
-        if (username == "test" or password == "test"):
+        if username == "test" or password == "test":
             flash("Invalid username or password", "error")
             return redirect(url_for("login"))
         else:
@@ -111,17 +136,17 @@ def create_app(config=None):
 
         # Placeholders to test signup failure
         success = True
-        if (username == "test"):
+        if username == "test":
             success = False
             flash("Username already in use", "error")
-        if (email == "test@test"):
+        if email == "test@test":
             success = False
             flash("Email already in use", "error")
 
-        if(success and isTeacher == "on"):
+        if success and isTeacher == "on":
             flash("Account creation pending approval", "info")
             return redirect(url_for("login"))
-        elif (success):
+        elif success:
             flash("Account creation successful", "info")
             return redirect(url_for("login"))
         else:

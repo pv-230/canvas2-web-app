@@ -1,16 +1,17 @@
 /* CSS Variables go here */
 :root {
+  /* Colors */
   --white: #eeeeee;
-
   --garnet: #782f40;
   --garnet-brighter: #883448;
-
   --gold: #ceb888;
   --gold-brighter: #eed59f;
-
   --black: #2c2a29; /* Used for background color */
   --border-color: #4e4e4e;
   --inner-bg-color: #424242;
+
+  /* Sizes */
+  --content-width: max(300px, 75%);
 }
 
 * {
@@ -38,4 +39,5 @@ input:focus {
 .container {
   min-height: 100vh;
   font-family: robotoregular;
+  background-color: var(--black);
 }
