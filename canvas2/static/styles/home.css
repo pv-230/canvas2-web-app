@@ -32,7 +32,13 @@
   width: var(--content-width);
 }
 
-.course-card {
+.course-card:hover {
+  background-color: #474747;
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.course-card,
+.course-card:active {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -43,11 +49,6 @@
   border-radius: 10px;
   background-color: var(--inner-bg-color);
   color: var(--white);
-}
-
-.course-card:hover {
-  background-color: #474747;
-  box-shadow: 0 0 8px var(--gold);
 }
 
 .course-title {

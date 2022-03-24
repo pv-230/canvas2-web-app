@@ -15,6 +15,7 @@
       <h2 class="section-title">{{ course["title"] }}</h2>
       <p class="course-description">{{ course["description"] }}</p>
     </section>
+
     <section>
       <h2 class="section-title">Assignments</h2>
       <div class="assignment-grid">
@@ -28,19 +29,76 @@
                   Due: {{ assignment["dueDate"] }} at {{ assignment["dueTime"] }}
                 </p>
                 {% if role == "student" %}
-                <div class="submit-status">
-                  Submitted: {{ assignment["isSubmitted"] }}
-                </div>
+                  <div class="submit-status">
+                    Submitted: {{ assignment["isSubmitted"] }}
+                  </div>
                 {% endif %}
               </div>
-              <button class="assignment-btn" type="button">UPLOAD</button>
+              <button class="assignment-btn" type="button">
+                {% if role == "student" %}
+                  UPLOAD
+                {% elif role == "teacher" or role == "ta" %}
+                  MANAGE
+                {% endif %}
+              </button>
             </div>
           {% endfor %}
         {% else %}
-            <p>No assignments are currently posted.</p>
+          <p>No assignments are currently posted.</p>
         {% endif %}
       </div>
     </section>
+    
+    <section>
+      <h2 class="section-title">People</h2>
+      {% if role == "teacher" %}
+        <button class="link-btn" type="button">Generate invite link</button>
+      {% endif %}
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">
+              <div class="role-head">
+                <span>Role</span>
+                {% if role == "teacher" %}
+                  <button>Manage</button>
+                {% endif %}
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in course["users"] %}
+            <tr>
+              <td>{{ user["name"] }}</td>
+              <td>
+                <div class="role-cell">
+                  {{ user["role"] }}
+                  {% if user["role"] == "Instructor" %}
+                    <img
+                      class="table-icon"
+                      src="{{ url_for('static', filename='images/star-icon.svg') }}"
+                    />
+                  {% elif user["role"] == "Teaching Assistant" and
+                     role == "teacher" %}
+                    <img
+                      class="table-icon remove-ta"
+                      src="{{ url_for('static', filename='images/down-arrow.svg') }}"
+                    />
+                  {% elif user["role"] == "Student" and
+                     role == "teacher" %}
+                    <img
+                      class="table-icon set-ta"
+                      src="{{ url_for('static', filename='images/up-arrow.svg') }}"
+                    />
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
   </div>
-  
 {% endblock %}

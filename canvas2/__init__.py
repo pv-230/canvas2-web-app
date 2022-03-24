@@ -9,6 +9,12 @@ courses.append(
         "code": "COP3330",
         "description": "Learn some OOP.",
         "assignments": [],
+        "users": [
+            {
+                "name": "OOP Instructor",
+                "role": "Instructor"
+            }
+        ],
     }
 )
 courses.append(
@@ -17,6 +23,12 @@ courses.append(
         "code": "CDA3100",
         "description": "Learn some computer organization.",
         "assignments": [],
+        "users": [
+            {
+                "name": "Comp Org Instructor",
+                "role": "Instructor"
+            }
+        ],
     }
 )
 courses.append(
@@ -32,6 +44,12 @@ courses.append(
                 "dueTime": "11:59PM",
                 "isSubmitted": False,
             }
+        ],
+        "users": [
+            {"name": "SPD Instructor", "role": "Instructor"},
+            {"name": "Juan Smith", "role": "Teaching Assistant"},
+            {"name": "John Smith", "role": "Student"},
+            {"name": "Bob Smith", "role": "Student"},
         ],
     }
 )

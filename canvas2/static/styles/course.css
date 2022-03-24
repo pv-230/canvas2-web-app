@@ -25,11 +25,7 @@ section:not(:first-child) {
   font-size: 2rem;
 }
 
-.course-description {
-  font-size: 1.2rem;
-}
-
-/* Assignment card styling */
+/* Assignment section styling */
 
 .assignment-grid {
   display: grid;
@@ -74,5 +70,75 @@ section:not(:first-child) {
   border-bottom-right-radius: 10px;
   background-color: rgb(0, 110, 179);
   font-family: robotomedium;
+  color: var(--white);
+}
+
+/* People section styling */
+
+.link-btn:hover {
+  background-color: rgb(0, 141, 12);
+}
+
+.link-btn,
+.link-btn:active {
+  width: fit-content;
+  padding: 8px 16px 8px 16px;
+  background-color: rgb(0, 122, 10);
+  color: var(--white);
+  border-radius: 10px;
+  font-family: robotomedium;
+}
+
+.user-table {
+  table-layout: fixed;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  width: min(100%, 60ch);
+}
+
+.user-table th {
+  font-family: robotomedium;
+  font-size: 1.2rem;
+  width: 50%;
+}
+
+.user-table th,
+.user-table td {
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  vertical-align: middle;
+}
+
+.table-icon {
+  height: 1.5rem;
+}
+
+.remove-ta:hover,
+.set-ta:hover {
+  background-color: var(--inner-bg-color);
+  border-radius: 50%;
+}
+
+.role-cell {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.role-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.role-head > button:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.role-head > button,
+.role-head > button:active {
+  background-color: var(--garnet);
+  border-radius: 8px;
+  padding: 4px 8px 4px 8px;
   color: var(--white);
 }
