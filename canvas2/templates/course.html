@@ -34,13 +34,11 @@
                   </div>
                 {% endif %}
               </div>
-              <button class="assignment-btn" type="button">
-                {% if role == "student" %}
-                  UPLOAD
-                {% elif role == "teacher" or role == "ta" %}
-                  MANAGE
-                {% endif %}
-              </button>
+              {% if role == "student" %}
+                <button class="assignment-btn upload-btn" type="button">UPLOAD</button>
+              {% elif role == "teacher" or role == "ta" %}
+                <a class="assignment-btn" href="/">MANAGE</a>
+              {% endif %}
             </div>
           {% endfor %}
         {% else %}
@@ -100,5 +98,27 @@
         </tbody>
       </table>
     </section>
+  </div>
+
+  <!-- Background to center popup windows -->
+  <div class="popup-bg" hidden>
+    <!-- Popup window for uploading assignments -->
+    <div class="upload-frame" hidden>
+      <div class="popup-header">
+        <h3>Upload Assignment</h3>
+        <div class="close-btn"></div>
+      </div>
+      <form id="upload-form" action="" method="">
+          <div class="form-input-group">
+            <textarea
+              type='text'
+              class="assignment-entry"
+              name="assignment-entry"
+              placeholder="Enter your submission here"
+              required></textarea>
+          </div>
+          <button class="submit-form-btn" type="submit">Submit</button>
+      </form>
+    </div>
   </div>
 {% endblock %}

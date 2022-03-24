@@ -167,8 +167,3 @@
 .close-btn-frame:hover {
   background-color: var(--garnet-brighter);
 }
-
-.close-btn {
-  width: 80%;
-  height: 80%;
-}

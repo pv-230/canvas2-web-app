@@ -7,16 +7,12 @@ const home = (() => {
 
   // Displays the add course form and blurs the background
   const addCourseItem = () => {
-    if (!addCourseCard) return;
-
     mainContent.style.cssText = 'filter: blur(5px);';
     addCourseBg.removeAttribute('hidden');
   };
 
   // Closes the add course form window
   const closeFormWindow = () => {
-    if (!closeBtnFrame) return;
-
     addCourseForm.reset();
     mainContent.removeAttribute('style');
     addCourseBg.setAttribute('hidden', '');

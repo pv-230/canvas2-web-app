@@ -53,7 +53,7 @@ courses.append(
         ],
     }
 )
-role = "teacher"
+role = "student"
 isLoggedIn = True
 
 
