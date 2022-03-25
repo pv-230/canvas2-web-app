@@ -1,6 +1,7 @@
 # Development
 Flask>=2.0.2
 python-dotenv>=0.19.2
+numpy>=1.16.2
 
 # Linting
 flake8>=4.0.1
