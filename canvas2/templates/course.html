@@ -35,12 +35,27 @@
                 {% endif %}
               </div>
               {% if role == "student" %}
-                <button class="assignment-btn upload-btn" type="button">UPLOAD</button>
+                <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
               {% elif role == "teacher" or role == "ta" %}
-                <a class="assignment-btn" href="/">MANAGE</a>
+                <a class="assignment-btn" href="./{{ course['code'] }}">MANAGE</a>
               {% endif %}
             </div>
           {% endfor %}
+
+
+          <!-- Button for teachers to add assignments -->
+          {% if role == "teacher" %}
+            <button class="add-assignment-card" type="button">
+              <div class="add-icon-frame">
+                <img
+                  class="add-icon"
+                  src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+                  alt="Plus sign"
+                />
+              </div>
+              <span>Add assignment</span>
+            </button>
+          {% endif %}
         {% else %}
           <p>No assignments are currently posted.</p>
         {% endif %}
@@ -102,21 +117,58 @@
 
   <!-- Background to center popup windows -->
   <div class="popup-bg" hidden>
-    <!-- Popup window for uploading assignments -->
-    <div class="upload-frame" hidden>
-      <div class="popup-header">
-        <h3>Upload Assignment</h3>
-        <div class="close-btn"></div>
+    <!-- Popup window for submitting assignments -->
+    {% if role == "student" %}
+      <div class="popup-window submit-window" hidden>
+        <div class="popup-header">
+          <h3>Submit Assignment</h3>
+          <div class="close-btn"></div>
+        </div>
+        <form id="popup-form" action="{{ url_for('submit_assignment') }}" method="POST">
+            <textarea
+              type='text'
+              id="assignment-entry"
+              name="assignment-entry"
+              placeholder="Enter your submission here"
+              required></textarea>
+            <button class="form-btn" type="submit">Submit</button>
+            <input name="course-code" value="{{ course['code'] }}" hidden>
+        </form>
       </div>
-      <form id="upload-form" action="" method="">
-          <textarea
-            type='text'
-            class="assignment-entry"
-            name="assignment-entry"
-            placeholder="Enter your submission here"
-            required></textarea>
-          <button class="submit-form-btn" type="submit">Submit</button>
-      </form>
-    </div>
+    {% endif %}
+
+    <!-- Popup window for teachers to create assignments -->
+    {% if role == "teacher" %}
+      <div class="popup-window add-assignment-window" hidden>
+        <div class="popup-header">
+          <h3>Add Assignment</h3>
+          <div class="close-btn"></div>
+        </div>
+        <form id="popup-form" action="{{ url_for('add_assignment') }}" method="POST">
+            <div class="form-input-group">
+              <label for="assignment-name">Name</label>
+              <input type='text' id="assignment-name" name="assignment-name" required>
+            </div>
+            <div class="form-input-group">
+              <label for="assignment-descrip">Description</label>
+              <textarea
+                type='text'
+                id="assignment-descrip"
+                name="assignment-descrip"
+                required></textarea>
+            </div>
+            <div class="form-input-group">
+              <label for="due-date">Due date</label>
+              <input type='date' id="due-date" name="due-date" required>
+            </div>
+            <div class="form-input-group">
+              <label for="due-time">Due time</label>
+              <input type='time' id="due-time" name="due-time" required>
+            </div>
+            <button class="form-btn" type="submit">Add</button>
+            <input name="course-code" value="{{ course['code'] }}" hidden>
+        </form>
+      </div>
+    {% endif %}
   </div>
 {% endblock %}

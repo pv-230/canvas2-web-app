@@ -180,5 +180,25 @@ def create_app(config=None):
         # courseName = request.form["course-name"]
         return redirect(url_for("index"))
 
+    @app.route("/submit-assignment", methods=["POST"])
+    def submit_assignment():
+        """Submits an assignment to the database.
+
+        TODO: Need to add a function here to save a student's submission to db
+        """
+
+        courseCode = request.form["course-code"]
+        return redirect(courseCode)
+
+    @app.route("/add-assignment", methods=["POST"])
+    def add_assignment():
+        """Adds an assignment to the database.
+
+        TODO: Need to add functionality here to add an assignment into the db
+        """
+
+        courseCode = request.form["course-code"]
+        return redirect(courseCode)
+
     # return the app
     return app

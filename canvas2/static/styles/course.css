@@ -1,3 +1,7 @@
+:root {
+  --min-card-height: 150px;
+}
+
 .content {
   position: relative;
 }
@@ -35,14 +39,14 @@ section:not(:first-child) {
   display: grid;
   grid-template-columns: repeat(auto-fit, 300px);
   gap: 16px;
-  width: var(--content-width);
+  width: 100%;
 }
 
 .assignment-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  min-height: var(--min-card-height);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   background-color: var(--inner-bg-color);
@@ -55,6 +59,7 @@ section:not(:first-child) {
   gap: 8px;
   padding: 8px 8px 24px 8px;
   font-family: robotolight;
+  word-wrap: break-word;
 }
 
 .assignment-title {
@@ -160,6 +165,17 @@ section:not(:first-child) {
   align-items: center;
 }
 
+.popup-window:not([hidden]) {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--inner-bg-color);
+  border: solid 1px var(--border-color);
+  border-radius: 4px;
+}
+
 .popup-header {
   display: flex;
   justify-content: space-between;
@@ -176,48 +192,47 @@ section:not(:first-child) {
   color: var(--white);
 }
 
-.close-btn {
+.close-btn:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.close-btn,
+.close-btn:active {
   width: 24px;
   height: 24px;
   background: center / 80% url(../images/close-btn.svg) no-repeat var(--garnet);
   border-radius: 50%;
 }
 
-.close-btn:hover {
-  background-color: var(--garnet-brighter);
-}
+/* Popup form styling */
 
-/* Upload assignment form styling */
-
-.upload-frame {
-  position: relative;
+#popup-form {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--inner-bg-color);
-  border: solid 1px var(--border-color);
-  border-radius: 4px;
-}
-
-#upload-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
+  gap: 8px;
   width: 100%;
   padding: 16px;
+  color: var(--white);
 }
 
-.submit-form-btn:hover {
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.form-btn:hover {
   background-color: var(--garnet-brighter);
 }
 
-.submit-form-btn,
-.submit-form-btn:active {
+.form-btn,
+.form-btn:active {
   width: max-content;
   padding: 4px 16px;
+  margin-top: 8px;
   font-size: 1.1rem;
   border: none;
   border-radius: 4px;
@@ -225,19 +240,43 @@ section:not(:first-child) {
   background-color: var(--garnet);
 }
 
-.assignment-entry {
-  max-width: 100%;
+#assignment-entry {
   width: 80ch;
   height: 400px;
   resize: none;
-  background-color: 1px solid var(--inner-bg-color);
-  border: 1px solid var(--gold);
-  border-radius: 4px;
-  color: var(--white);
-  padding: 8px;
 }
 
-.assignment-entry:focus {
-  outline: none;
-  box-shadow: 0 0 8px var(--gold);
+#assignment-descrip {
+  width: 40ch;
+  height: 100px;
+  resize: none;
+}
+
+/* Add assignment button styling */
+
+.add-assignment-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  color: var(--white);
+  font-size: 1.5rem;
+  height: var(--min-card-height);
+}
+
+.add-icon-frame {
+  width: 100%;
+  height: 60%;
+}
+
+.add-icon {
+  height: 90%;
+  transition: height 0.1s;
+}
+
+.add-assignment-card:hover .add-icon {
+  height: 100%;
+  transition: height 0.1s;
 }

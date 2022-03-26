@@ -1,35 +1,59 @@
 'use strict';
 
+// Course module
 (() => {
+  // Frames
   const mainContent = document.querySelector('.main-content');
   const popupBg = document.querySelector('.popup-bg');
-  const assignmentBtn = document.querySelector('.assignment-btn');
-  const closeBtnFrame = document.querySelector('.close-btn');
-  const uploadFrame = document.querySelector('.upload-frame');
-  const uploadForm = document.forms['upload-form'];
-  const submitFormBtn = document.querySelector('.submit-form-btn');
+  const popupWindows = [...document.querySelectorAll('.popup-window')];
+  const submitWindow = document.querySelector('.submit-window');
+  const addAssignmentWindow = document.querySelector('.add-assignment-window');
 
-  // Displays the upload assignment form and blurs the background
-  const openUploadPopup = () => {
+  // Buttons
+  const assignmentBtn = document.querySelector('.assignment-btn');
+  const assignmentCard = document.querySelector('.add-assignment-card');
+  const closeBtns = [...document.querySelectorAll('.close-btn')];
+
+  // Forms
+  const popupForm = document.forms['popup-form'];
+
+  /**
+   * Opens a popup window and blurs the background.
+   */
+  const openPopup = (e) => {
     mainContent.style.cssText = 'filter: blur(5px);';
     popupBg.removeAttribute('hidden');
-    uploadFrame.removeAttribute('hidden');
+
+    if (e.currentTarget === assignmentBtn) {
+      submitWindow.removeAttribute('hidden');
+    } else if (e.currentTarget === assignmentCard) {
+      addAssignmentWindow.removeAttribute('hidden');
+    }
   };
 
-  // Closes popup window and hides any frames that were shown inside
+  /**
+   * Closes popup window and hides any frames that were shown inside.
+   */
   const closePopup = () => {
-    if (!uploadFrame.hasAttribute('hidden')) {
-      uploadForm.reset();
-      uploadFrame.setAttribute('hidden', '');
-    }
+    popupWindows.forEach((window) => {
+      if (!window.hasAttribute('hidden')) {
+        window.setAttribute('hidden', '');
+      }
+    });
 
+    popupForm.reset();
     mainContent.removeAttribute('style');
     popupBg.setAttribute('hidden', '');
   };
 
   // Event listeners
-  closeBtnFrame.addEventListener('click', closePopup);
-  if (assignmentBtn.classList.contains('upload-btn')) {
-    assignmentBtn.addEventListener('click', openUploadPopup);
+  closeBtns.forEach((button) => button.addEventListener('click', closePopup));
+
+  if (assignmentCard) {
+    assignmentCard.addEventListener('click', openPopup);
+  }
+
+  if (assignmentBtn.classList.contains('submit-btn')) {
+    assignmentBtn.addEventListener('click', openPopup);
   }
 })();
