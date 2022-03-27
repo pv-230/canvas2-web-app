@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="main-content">
+  <div class="main-content" data-code="{{ course['code'] }}">
     <section>
       <h2 class="section-title">{{ course["title"] }}</h2>
       <p class="course-description">{{ course["description"] }}</p>
@@ -75,7 +75,7 @@
               <div class="role-head">
                 <span>Role</span>
                 {% if role == "teacher" %}
-                  <button>Manage</button>
+                  <button class="role-btn manage">Manage</button>
                 {% endif %}
               </div>
             </th>
@@ -86,25 +86,36 @@
             <tr>
               <td>{{ user["name"] }}</td>
               <td>
-                <div class="role-cell">
-                  {{ user["role"] }}
-                  {% if user["role"] == "Instructor" %}
+                <div 
+                  class="role-cell"
+                  data-id="{{ user['name'] }}"
+                  data-role="{{ user['role'] }}"
+                >
+                  {% if user["role"] == "teacher" %}
+                    Instructor
                     <img
                       class="table-icon"
                       src="{{ url_for('static', filename='images/star-icon.svg') }}"
+                      hidden
                     />
-                  {% elif user["role"] == "Teaching Assistant" and
-                     role == "teacher" %}
-                    <img
-                      class="table-icon remove-ta"
-                      src="{{ url_for('static', filename='images/down-arrow.svg') }}"
-                    />
-                  {% elif user["role"] == "Student" and
-                     role == "teacher" %}
-                    <img
-                      class="table-icon set-ta"
-                      src="{{ url_for('static', filename='images/up-arrow.svg') }}"
-                    />
+                  {% elif user["role"] == "ta" %}
+                    Teaching Assistant
+                    {% if role == "teacher" %}
+                      <img
+                        class="table-icon remove-ta"
+                        src="{{ url_for('static', filename='images/down-arrow.svg') }}"
+                        hidden
+                      />
+                    {% endif %}
+                  {% elif user["role"] == "student" %}
+                    Student
+                    {% if role == "teacher" %}
+                      <img
+                        class="table-icon set-ta"
+                        src="{{ url_for('static', filename='images/up-arrow.svg') }}"
+                        hidden
+                      />
+                    {% endif %}
                   {% endif %}
                 </div>
               </td>
@@ -159,11 +170,7 @@
             </div>
             <div class="form-input-group">
               <label for="due-date">Due date</label>
-              <input type='date' id="due-date" name="due-date" required>
-            </div>
-            <div class="form-input-group">
-              <label for="due-time">Due time</label>
-              <input type='time' id="due-time" name="due-time" required>
+              <input type='datetime-local' id="due-date" name="due-date" required>
             </div>
             <button class="form-btn" type="submit">Add</button>
             <input name="course-code" value="{{ course['code'] }}" hidden>

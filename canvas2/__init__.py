@@ -1,4 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import (
+    Flask,
+    render_template,
+    redirect,
+    url_for,
+    flash,
+    request,
+    jsonify
+)
 
 # These are a bunch of testing variables that should be removed once we get
 # the databased hooked up.
@@ -12,7 +20,7 @@ courses.append(
         "users": [
             {
                 "name": "OOP Instructor",
-                "role": "Instructor"
+                "role": "teacher"
             }
         ],
     }
@@ -26,7 +34,7 @@ courses.append(
         "users": [
             {
                 "name": "Comp Org Instructor",
-                "role": "Instructor"
+                "role": "teacher"
             }
         ],
     }
@@ -46,14 +54,14 @@ courses.append(
             }
         ],
         "users": [
-            {"name": "SPD Instructor", "role": "Instructor"},
-            {"name": "Juan Smith", "role": "Teaching Assistant"},
-            {"name": "John Smith", "role": "Student"},
-            {"name": "Bob Smith", "role": "Student"},
+            {"name": "SPD Instructor", "role": "teacher"},
+            {"name": "Juan Smith", "role": "ta"},
+            {"name": "John Smith", "role": "student"},
+            {"name": "Bob Smith", "role": "student"},
         ],
     }
 )
-role = "student"
+role = "teacher"
 isLoggedIn = True
 
 
@@ -199,6 +207,25 @@ def create_app(config=None):
 
         courseCode = request.form["course-code"]
         return redirect(courseCode)
+
+    @app.route("/change-roles", methods=["POST"])
+    def change_roles():
+        """Changes the roles of users based on the list of role requests
+
+        TODO: Add function to change a user's role
+        """
+
+        # roleRequests = request.get_json()
+        # roleRequests is a JSON in the form of:
+        #   {'userID': 'roleToBecome', ...}
+        # print(roleRequests, flush=True)
+
+        # Change this to a function that actually does the role swap in the db
+        roleChangeSuccessful = True
+        if roleChangeSuccessful:
+            return jsonify(success=True), 200
+        else:
+            return jsonify(success=False), 418
 
     # return the app
     return app
