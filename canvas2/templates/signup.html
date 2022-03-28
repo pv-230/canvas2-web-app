@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+<!-- This file represents the signup page content. -->
 
-<!-- Header extension -->
+<!-- HTML head extension -->
+{% extends "base.html" %}
 {% block title %}Account creation{% endblock %}
 {% block head %}
   {{ super() }}
@@ -10,67 +11,69 @@
 
 <!-- Content -->
 {% block container %}
-<div class="signup-header">
-  <img src="../static/images/favicon.svg" alt="">
-  <h1>Sign up for Canvas2</h1>
-</div>
-<div class="signup-frame">
-  <form
-    id="signup-form"
-    action="{{ url_for('createAccount') }}"
-    method="POST"
-    autocomplete="off"
-  >
-    <div class="input-group">
-      <label for="firstname">First name</label>
-      <input type="text" id="firstname" name="firstname" required>
-    </div>
-    <div class="input-group">
-      <label for="lastname">Last name</label>
-      <input type="text" id="lastname" name="lastname" required>
-    </div>
-    <div class="input-group">
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username" required>
-    </div>
-    <div class="input-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
-    </div>
-    <div class="input-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
-    </div>
-    <div class="input-group">
-      <label for="password-confirm">Confirm Password</label>
-      <input
-        type="password"
-        id="password-confirm"
-        name="password-confirm"
-        required
-      >
-    </div>
-    <div class="teacher-toggle">
-      <label for="teacher-check">Are you a teacher?</label>
-      <input type="checkbox" id="teacher-check" name="is-teacher">
-    </div>
-    <button type="submit">Create account</button>
-  </form>
-</div>
-<div class="error-box" hidden>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <p class="flashed-message">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-  <p class="error-message" hidden></p>
-</div>
-<div class="teacher-notice" hidden>
-  <p>
-    Teacher accounts must be approved by an administrator before use.
-    This process may take some time to complete.
-  </p>
-</div>
+  <div class="signup-header">
+    <img src="../static/images/favicon.svg" alt="">
+    <h1>Sign up for Canvas2</h1>
+  </div>
+  <div class="signup-frame">
+    <form
+      id="signup-form"
+      action="{{ url_for('create_account') }}"
+      method="POST"
+      autocomplete="off"
+    >
+      <div class="input-group">
+        <label for="firstname">First name</label>
+        <input type="text" id="firstname" name="firstname" required>
+      </div>
+      <div class="input-group">
+        <label for="lastname">Last name</label>
+        <input type="text" id="lastname" name="lastname" required>
+      </div>
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="input-group">
+        <label for="password-confirm">Confirm Password</label>
+        <input
+          type="password"
+          id="password-confirm"
+          name="password-confirm"
+          required
+        >
+      </div>
+      <div class="teacher-toggle">
+        <label for="teacher-check">Are you a teacher?</label>
+        <input type="checkbox" id="teacher-check" name="is-teacher">
+      </div>
+      <button type="submit">Create account</button>
+    </form>
+  </div>
+
+  <!-- Flashed messages and static error messages -->
+  <div class="error-box" hidden>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="flashed-message">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <p class="error-message" hidden></p>
+  </div>
+  <div class="teacher-notice" hidden>
+    <p>
+      Teacher accounts must be approved by an administrator before use.
+      This process may take some time to complete.
+    </p>
+  </div>
 {% endblock %}

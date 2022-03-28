@@ -1,16 +1,17 @@
 /* CSS Variables go here */
 :root {
+  /* Colors */
   --white: #eeeeee;
-
   --garnet: #782f40;
   --garnet-brighter: #883448;
-
   --gold: #ceb888;
   --gold-brighter: #eed59f;
-
   --black: #2c2a29; /* Used for background color */
   --border-color: #4e4e4e;
   --inner-bg-color: #424242;
+
+  /* Sizes */
+  --content-width: max(300px, 75%);
 }
 
 * {
@@ -23,7 +24,23 @@ body {
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
+input,
+textarea {
+  padding: 4px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--black);
+  color: var(--white);
+}
+
+input:focus,
+textarea:focus {
+  outline: 1px solid var(--gold);
+  box-shadow: 0 0 4px var(--gold);
+}
+
 .container {
   min-height: 100vh;
   font-family: robotoregular;
+  background-color: var(--black);
 }

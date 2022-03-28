@@ -1,0 +1,181 @@
+<!-- This file represents course content. -->
+
+<!-- HTML head extension -->
+{% extends "index.html" %}
+{% block title %}{{ course["code"] }}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/course.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/course.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="main-content" data-code="{{ course['code'] }}">
+    <section>
+      <h2 class="section-title">{{ course["title"] }}</h2>
+      <p class="course-description">{{ course["description"] }}</p>
+    </section>
+
+    <section>
+      <h2 class="section-title">Assignments</h2>
+      <div class="assignment-grid">
+        {% if course["assignments"] %}
+          {% for assignment in course["assignments"] %}
+            <div class="assignment-card">
+              <div class="assignment-text">
+                <div class="assignment-title">{{ assignment["title"] }}</div>
+                <p>{{ assignment["description"] }}</p>
+                <p>
+                  Due: {{ assignment["dueDate"] }} at {{ assignment["dueTime"] }}
+                </p>
+                {% if role == "student" %}
+                  <div class="submit-status">
+                    Submitted: {{ assignment["isSubmitted"] }}
+                  </div>
+                {% endif %}
+              </div>
+              {% if role == "student" %}
+                <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
+              {% elif role == "teacher" or role == "ta" %}
+                <a class="assignment-btn" href="./{{ course['code'] }}">MANAGE</a>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+
+          <!-- Button for teachers to add assignments -->
+          {% if role == "teacher" %}
+            <button class="add-assignment-card" type="button">
+              <div class="add-icon-frame">
+                <img
+                  class="add-icon"
+                  src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+                  alt="Plus sign"
+                />
+              </div>
+              <span>Add assignment</span>
+            </button>
+          {% endif %}
+        {% else %}
+          <p>No assignments are currently posted.</p>
+        {% endif %}
+      </div>
+    </section>
+    
+    <section>
+      <h2 class="section-title">People</h2>
+      {% if role == "teacher" %}
+        <button class="link-btn" type="button">Generate invite link</button>
+      {% endif %}
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">
+              <div class="role-head">
+                <span>Role</span>
+                {% if role == "teacher" %}
+                  <button class="role-btn manage">Manage</button>
+                {% endif %}
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in course["users"] %}
+            <tr>
+              <td>{{ user["name"] }}</td>
+              <td>
+                <div 
+                  class="role-cell"
+                  data-id="{{ user['name'] }}"
+                  data-role="{{ user['role'] }}"
+                >
+                  {% if user["role"] == "teacher" %}
+                    Instructor
+                    <img
+                      class="table-icon"
+                      src="{{ url_for('static', filename='images/star-icon.svg') }}"
+                      hidden
+                    />
+                  {% elif user["role"] == "ta" %}
+                    Teaching Assistant
+                    {% if role == "teacher" %}
+                      <img
+                        class="table-icon remove-ta"
+                        src="{{ url_for('static', filename='images/down-arrow.svg') }}"
+                        hidden
+                      />
+                    {% endif %}
+                  {% elif user["role"] == "student" %}
+                    Student
+                    {% if role == "teacher" %}
+                      <img
+                        class="table-icon set-ta"
+                        src="{{ url_for('static', filename='images/up-arrow.svg') }}"
+                        hidden
+                      />
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- Background to center popup windows -->
+  <div class="popup-bg" hidden>
+    <!-- Popup window for submitting assignments -->
+    {% if role == "student" %}
+      <div class="popup-window submit-window" hidden>
+        <div class="popup-header">
+          <h3>Submit Assignment</h3>
+          <div class="close-btn"></div>
+        </div>
+        <form id="popup-form" action="{{ url_for('submit_assignment') }}" method="POST">
+            <textarea
+              type='text'
+              id="assignment-entry"
+              name="assignment-entry"
+              placeholder="Enter your submission here"
+              required></textarea>
+            <button class="form-btn" type="submit">Submit</button>
+            <input name="course-code" value="{{ course['code'] }}" hidden>
+        </form>
+      </div>
+    {% endif %}
+
+    <!-- Popup window for teachers to create assignments -->
+    {% if role == "teacher" %}
+      <div class="popup-window add-assignment-window" hidden>
+        <div class="popup-header">
+          <h3>Add Assignment</h3>
+          <div class="close-btn"></div>
+        </div>
+        <form id="popup-form" action="{{ url_for('add_assignment') }}" method="POST">
+            <div class="form-input-group">
+              <label for="assignment-name">Name</label>
+              <input type='text' id="assignment-name" name="assignment-name" required>
+            </div>
+            <div class="form-input-group">
+              <label for="assignment-descrip">Description</label>
+              <textarea
+                type='text'
+                id="assignment-descrip"
+                name="assignment-descrip"
+                required></textarea>
+            </div>
+            <div class="form-input-group">
+              <label for="due-date">Due date</label>
+              <input type='datetime-local' id="due-date" name="due-date" required>
+            </div>
+            <button class="form-btn" type="submit">Add</button>
+            <input name="course-code" value="{{ course['code'] }}" hidden>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
