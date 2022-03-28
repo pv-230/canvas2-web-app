@@ -16,7 +16,7 @@
     <h1>Sign in to Canvas2</h1>
   </div>
   <div class="login-frame">
-    <form id="login-form" action="{{ url_for('authenticate') }}" method="POST">
+    <form id="login-form" action="{{ url_for('frontend.authenticate') }}" method="POST">
       <div>
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required>
@@ -31,7 +31,7 @@
   </div>
   <div class="register-frame">
     <span>
-      New to Canvas2? <a href="{{ url_for('signup') }}">Register here!</a>
+      New to Canvas2? <a href="{{ url_for('frontend.signup') }}">Register here!</a>
     </span>
   </div>
 

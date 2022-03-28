@@ -46,7 +46,7 @@
           <h3>Add Course</h3>
           <div class="close-btn-frame"></div>
         </div>
-        <form id="add-course-form" action="{{ url_for('add_course') }}" method="POST">
+        <form id="add-course-form" action="{{ url_for('frontend.add_course') }}" method="POST">
             <div class="form-input-group">
               <label for="course-name">Course name</label>
               <input type='text' id="course-name" name="course-name" required>
