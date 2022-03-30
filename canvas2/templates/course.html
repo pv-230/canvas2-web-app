@@ -155,7 +155,7 @@
           <h3>Add Assignment</h3>
           <div class="close-btn"></div>
         </div>
-        <form id="popup-form" action="{{ url_for('frontend.add_assignment') }}" method="POST">
+        <form id="popup-form" action="{{ url_for('backend.add_assignment') }}" method="POST">
             <div class="form-input-group">
               <label for="assignment-name">Name</label>
               <input type='text' id="assignment-name" name="assignment-name" required>

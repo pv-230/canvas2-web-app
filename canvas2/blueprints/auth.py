@@ -47,6 +47,12 @@ def login():
             flash("Invalid username or password", "error")
             return redirect(url_for("auth.login"))
 
+        # if user is not approved yet
+        if user["approved"] is False:
+            flash("Your account has not yet been approved! Please \
+                contact an admin if you believe this is an error.", "error")
+            return redirect(url_for("auth.login"))
+
         # else, save vars to session and redirect to home
         session["id"] = str(user["_id"])
         session["username"] = user["username"]
@@ -72,3 +78,60 @@ def logout():
 
     # redirect
     return redirect(url_for("auth.login"))
+
+
+@auth.route("/signup", methods=["GET", "POST"])
+def signup():
+    """
+    If GET, Renders the page where a user can sign up.
+    IF POST, Registers the user and redirects to the login page.
+
+    TODO: Sanitize form input
+    """
+
+    # if get, render login page
+    if request.method == "GET":
+        return render_template("signup.html")
+
+    # if post, authenticate user
+    elif request.method == "POST":
+
+        # get form data
+        # NOTE: role input is a bodge rn till frontend gets updated
+        fname = request.form["firstname"]
+        lame = request.form["lastname"]
+        uname = request.form["username"]
+        email = request.form["email"]
+        passwd = request.form["password"]; passwd = passwd  # noqa: E702; flake8 shush
+        role = request.form["role"] if "role" in request.form else 1
+
+        # check database for user
+        user = db_conn.db.users.find_one({"username": uname})
+        if user:
+            flash("Username already in use!", "error")
+            return redirect(url_for("auth.signup"))
+
+        user = db_conn.db.users.find_one({"email": email})
+        if user:
+            flash("Email already in use!", "error")
+            return redirect(url_for("auth.signup"))
+
+        # insert user into database
+        auto_approve_users = True  # For later... ;) -A
+        db_conn.db.users.insert_one({
+            "firstname": fname,
+            "lastname": lame,
+            "username": uname,
+            "email": email,
+            "password": "password_hash_goes_here",
+            "role": role,
+            "approved": auto_approve_users
+        })
+
+        # redirect
+        if auto_approve_users:
+            flash("Account created! You may now log in!", "info")
+            return redirect(url_for("auth.login"))
+        else:
+            flash("Account created! An admin will approve your account soon.", "info")
+            return redirect(url_for("auth.login"))

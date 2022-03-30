@@ -20,8 +20,9 @@ def create_app(config=None):
     init_db(app)
 
     # import blueprints
-    from .blueprints import frontend, auth
+    from .blueprints import frontend, backend, auth
     app.register_blueprint(frontend)
+    app.register_blueprint(backend)
     app.register_blueprint(auth)
 
     # return the app
