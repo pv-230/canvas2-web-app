@@ -1,65 +1,9 @@
 from bson import ObjectId
-from flask import Blueprint, request, session, render_template, redirect, \
-    url_for, flash, jsonify, abort
+from flask import Blueprint, session, render_template, redirect, \
+    url_for, abort
 
 from ..utils.db import db_conn
 
-
-# These are a bunch of testing variables that should be removed once we get
-# the databased hooked up.
-courses = []
-courses.append(
-    {
-        "title": "Object Oriented Programming",
-        "code": "COP3330",
-        "description": "Learn some OOP.",
-        "assignments": [],
-        "users": [
-            {
-                "name": "OOP Instructor",
-                "role": "teacher"
-            }
-        ],
-    }
-)
-courses.append(
-    {
-        "title": "Computer Organization I",
-        "code": "CDA3100",
-        "description": "Learn some computer organization.",
-        "assignments": [],
-        "users": [
-            {
-                "name": "Comp Org Instructor",
-                "role": "teacher"
-            }
-        ],
-    }
-)
-courses.append(
-    {
-        "title": "Secure, Parallel, and Distributed Computing with Python",
-        "code": "COP4521",
-        "description": "Learn some secure, parallel, and distributed stuff.",
-        "assignments": [
-            {
-                "title": "Assignment 1",
-                "description": "This is the first assignment.",
-                "dueDate": "03/22/2022",
-                "dueTime": "11:59PM",
-                "isSubmitted": False,
-            }
-        ],
-        "users": [
-            {"name": "SPD Instructor", "role": "teacher"},
-            {"name": "Juan Smith", "role": "ta"},
-            {"name": "John Smith", "role": "student"},
-            {"name": "Bob Smith", "role": "student"},
-        ],
-    }
-)
-role = "teacher"
-isLoggedIn = False
 
 # create main frontend blueprint
 frontend = Blueprint(
@@ -128,5 +72,15 @@ def course_page(code):
     except StopIteration:
         abort(404)
 
-    print(session)
+    # if student, get submissions and attach to course object
+    if session["role"] == 1:
+
+        # lookup against database
+        submissions = db_conn.db.submissions.find({
+            "user": ObjectId(session["id"]),
+            "assignment": {'$in': [ObjectId(a["_id"]) for a in course["assignments"]]},
+        })
+        course["submissions"] = {s["assignment"]: s for s in submissions}
+
+    # return course page
     return render_template("course.html", session=session, course=course)

@@ -1,4 +1,5 @@
 from bson import ObjectId
+from datetime import datetime
 from flask import Blueprint, request, session, redirect, url_for, abort
 
 from ..utils.db import db_conn
@@ -54,8 +55,43 @@ def submit_assignment():
     TODO: Need to add a function here to save a student's submission to db
     """
 
-    courseCode = request.form["course-code"]
-    return redirect(courseCode)
+    # get data from form
+    print(request.form)
+    assgid = request.form["assg-id"]
+    contents = request.form["assg-entry"]
+    course = request.form["assg-course"]
+    userid = request.form["assg-user-id"]
+
+    # ensure user is submitting own document
+    if not userid == session["id"]:
+        abort(403)
+
+    # make sure user is enrolled in course
+    temp = db_conn.db.enrollments.find_one({
+        "user": ObjectId(userid), "class": ObjectId(course)
+    })
+    if not temp:
+        abort(403)
+
+    # make sure desired assignment even exists
+    temp = db_conn.db.assignments.find_one({
+        "_id": ObjectId(assgid), "class": ObjectId(course)
+    })
+    if not temp:
+        abort(400)
+
+    # save submission to db
+    db_conn.db.submissions.insert_one({
+        "assignment": ObjectId(assgid),
+        "class": ObjectId(course),
+        "user": ObjectId(userid),
+        "contents": contents,
+        "timestamp": datetime.now(),
+        "comments": []
+    })
+
+    # return success message
+    return redirect(url_for("frontend.course_page", code=course))
 
 
 @backend.route("/add-assignment", methods=["POST"])

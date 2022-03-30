@@ -28,14 +28,13 @@
                 <p>
                   Due: {{ assignment["deadline"] }} UTC
                 </p>
-                {% if session['role'] == 1 %}
-                  <div class="submit-status">
-                    Submitted: {{ assignment["isSubmitted"] }}
-                  </div>
-                {% endif %}
               </div>
               {% if session['role'] == 1 %}
-                <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
+                {% if assignment["_id"] in course["submissions"] %}
+                  <button class="assignment-btn-submitted submit-btn" type="button">SUBMITTED</button>
+                {% else %}
+                  <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
+                {% endif %}
               {% elif session['role'] >= 2 %}
                 <a class="assignment-btn" href="">MANAGE</a>
               {% endif %}
@@ -135,15 +134,24 @@
           <h3>Submit Assignment</h3>
           <div class="close-btn"></div>
         </div>
-        <form id="popup-form" action="{{ url_for('frontend.submit_assignment') }}" method="POST">
-            <textarea
-              type='text'
-              id="assignment-entry"
-              name="assignment-entry"
-              placeholder="Enter your submission here"
-              required></textarea>
+        <form id="popup-form" action="{{ url_for('backend.submit_assignment') }}" method="POST">
+            <div class="form-input-group"> <!-- This should eventually be set by JS and hidden. -A -->
+              <label for="assg-id">Assignment ID</label>
+              <input type='text' id="assg-id" name="assg-id" required>
+            </div>
+            <div class="form-input-group">
+              <label for="assg-entry">Contents</label>
+              <textarea
+                type='text'
+                id="assg-entry"
+                name="assg-entry"
+                rows="20" cols="80"
+                placeholder="Enter your submission here"
+                required></textarea>
+              </div>
             <button class="form-btn" type="submit">Submit</button>
-            <input name="course-code" value="{{ course['code'] }}" hidden>
+            <input name="assg-course" value="{{ course['_id'] }}" hidden>
+            <input name="assg-user-id" value="{{ session['id'] }}" hidden>
         </form>
       </div>
     {% endif %}
