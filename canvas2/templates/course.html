@@ -13,7 +13,7 @@
   <div class="main-content" data-code="{{ course['code'] }}">
     <section>
       <h2 class="section-title">{{ course["title"] }}</h2>
-      <p class="course-description">{{ course["description"] }}</p>
+      <p class="course-description">{{ course["desc"] }}</p>
     </section>
 
     <section>
@@ -26,25 +26,25 @@
                 <div class="assignment-title">{{ assignment["title"] }}</div>
                 <p>{{ assignment["description"] }}</p>
                 <p>
-                  Due: {{ assignment["dueDate"] }} at {{ assignment["dueTime"] }}
+                  Due: {{ assignment["deadline"] }} UTC
                 </p>
-                {% if role == "student" %}
+                {% if session['role'] == 1 %}
                   <div class="submit-status">
                     Submitted: {{ assignment["isSubmitted"] }}
                   </div>
                 {% endif %}
               </div>
-              {% if role == "student" %}
+              {% if session['role'] == 1 %}
                 <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
-              {% elif role == "teacher" or role == "ta" %}
-                <a class="assignment-btn" href="./{{ course['code'] }}">MANAGE</a>
+              {% elif session['role'] >= 2 %}
+                <a class="assignment-btn" href="">MANAGE</a>
               {% endif %}
             </div>
           {% endfor %}
 
 
           <!-- Button for teachers to add assignments -->
-          {% if role == "teacher" %}
+          {% if session['role'] >= 3 %}
             <button class="add-assignment-card" type="button">
               <div class="add-icon-frame">
                 <img
@@ -64,7 +64,7 @@
     
     <section>
       <h2 class="section-title">People</h2>
-      {% if role == "teacher" %}
+      {% if session['role'] >= 3 %}
         <button class="link-btn" type="button">Generate invite link</button>
       {% endif %}
       <table class="user-table">
@@ -74,7 +74,7 @@
             <th scope="col">
               <div class="role-head">
                 <span>Role</span>
-                {% if role == "teacher" %}
+                {% if session['role'] >= 3 %}
                   <button class="role-btn manage">Manage</button>
                 {% endif %}
               </div>
@@ -82,34 +82,34 @@
           </tr>
         </thead>
         <tbody>
-          {% for user in course["users"] %}
+          {% for user in course["enrolled"] %}
             <tr>
-              <td>{{ user["name"] }}</td>
+              <td>{{ user["lastname"] }}, {{ user["firstname"] }}</td>
               <td>
                 <div 
                   class="role-cell"
                   data-id="{{ user['name'] }}"
                   data-role="{{ user['role'] }}"
                 >
-                  {% if user["role"] == "teacher" %}
+                  {% if user['role'] == 3 %}
                     Instructor
                     <img
                       class="table-icon"
                       src="{{ url_for('static', filename='images/star-icon.svg') }}"
                       hidden
                     />
-                  {% elif user["role"] == "ta" %}
+                  {% elif user['role'] == 2 %}
                     Teaching Assistant
-                    {% if role == "teacher" %}
+                    {% if session['role'] >= 3 %}
                       <img
                         class="table-icon remove-ta"
                         src="{{ url_for('static', filename='images/down-arrow.svg') }}"
                         hidden
                       />
                     {% endif %}
-                  {% elif user["role"] == "student" %}
+                  {% elif user["role"] == 1 %}
                     Student
-                    {% if role == "teacher" %}
+                    {% if session['role'] >= 3 %}
                       <img
                         class="table-icon set-ta"
                         src="{{ url_for('static', filename='images/up-arrow.svg') }}"
@@ -129,7 +129,7 @@
   <!-- Background to center popup windows -->
   <div class="popup-bg" hidden>
     <!-- Popup window for submitting assignments -->
-    {% if role == "student" %}
+    {% if session['role'] == 1 %}
       <div class="popup-window submit-window" hidden>
         <div class="popup-header">
           <h3>Submit Assignment</h3>
@@ -149,7 +149,7 @@
     {% endif %}
 
     <!-- Popup window for teachers to create assignments -->
-    {% if role == "teacher" %}
+    {% if session['role'] >= 3 %}
       <div class="popup-window add-assignment-window" hidden>
         <div class="popup-header">
           <h3>Add Assignment</h3>

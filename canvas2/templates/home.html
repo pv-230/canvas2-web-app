@@ -12,10 +12,10 @@
 <!-- Content -->
 {% block content %}
   <div class="main-content">
-    <h2 class="content-title">Courses</h2>
+    <h2 class="content-title">Courses - {{ session['username'] }}</h2>
     <div class="course-grid">
       {% for course in courses %}
-        <a href="/{{ course['code'] }}">
+        <a href="{{ url_for('frontend.course_page', code=course['_id']) }}">
           <div class="course-card">
             <div class="course-code">{{ course["code"] }}</div>
             <div class="course-title">{{ course["title"] }}</div>

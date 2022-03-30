@@ -1,5 +1,9 @@
-from flask import Blueprint, request, g, render_template, redirect, url_for, \
-    flash, jsonify
+from bson import ObjectId
+from flask import Blueprint, request, session, render_template, redirect, \
+    url_for, flash, jsonify, abort
+
+from ..utils.db import db_conn
+
 
 # These are a bunch of testing variables that should be removed once we get
 # the databased hooked up.
@@ -55,12 +59,12 @@ courses.append(
     }
 )
 role = "teacher"
-isLoggedIn = True
+isLoggedIn = False
 
-# initialize frontend blueprint
+# create main frontend blueprint
 frontend = Blueprint(
     'frontend', __name__,
-    template_folder='templates'
+    template_folder='templates',
 )
 
 
@@ -74,13 +78,27 @@ def index():
     TODO: Need to obtain list of classes user is associated with
     """
 
-    if isLoggedIn:
-        return render_template("home.html", role=role, courses=courses)
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # else, render home page
     else:
-        return redirect(url_for("login"))
+
+        # get all classes by user id
+        courses = db_conn.db.enrollments.aggregate([
+            {'$match': {'user': ObjectId(session["id"])}},
+            {'$lookup': {
+                'from': 'classes', 'localField': 'class',
+                'foreignField': '_id', 'as': 'class'}},
+            {'$unwind': {'path': '$class'}},
+            {'$replaceRoot': {'newRoot': '$class'}}
+        ])
+
+        return render_template("home.html", session=session, courses=courses)
 
 
-@frontend.route("/<code>")
+@frontend.route("/c/<code>")
 def course_page(code):
     """Renders the appropriate course page for a user.
 
@@ -88,43 +106,30 @@ def course_page(code):
             specified by the code in the URL
     """
 
-    # Replace this with a database function that looks up if the course
-    # code is found in the user's enrollments
-    for course in courses:
-        if course["code"] == code:
-            return render_template("course.html", role=role, course=course)
+    # look up data from db
+    course = db_conn.db.classes.aggregate([
+        {'$match': {'_id': ObjectId(code)}},
+        {'$lookup': {
+            'from': 'enrollments', 'localField': '_id',
+            'foreignField': 'class', 'as': 'enrolled'}},
+        {'$lookup': {
+            'from': 'users', 'localField': 'enrolled.user',
+            'foreignField': '_id', 'as': 'enrolled'}},
+        {'$lookup': {
+            'from': 'assignments', 'localField': '_id',
+            'foreignField': 'class', 'as': 'assignments'}},
+        {'$project': {'enrolled.password': 0}},
+        {'$limit': 1}
+    ])
 
-    return redirect(url_for("index"))
+    # try and get result, otherwise 404
+    try:
+        course = course.next()
+    except StopIteration:
+        abort(404)
 
-
-@frontend.route("/login")
-def login():
-    """Renders the page where a user can login."""
-
-    return render_template("login.html")
-
-
-@frontend.route("/authenticate", methods=["POST"])
-def authenticate():
-    """Authenticates the user based on the provided credentials.
-
-    TODO: More secure method of sending password from client-side
-    TODO: Need function that verifies username/password
-    TODO: Sanitize form input
-    """
-
-    # Form data
-    username = request.form["username"]
-    password = request.form["password"]
-
-    # The condition is just a placeholder now to test what happens when
-    # the login fails. Enter "test" as the username or password to fail the
-    # login.
-    if username == "test" or password == "test":
-        flash("Invalid username or password", "error")
-        return redirect(url_for("login"))
-    else:
-        return redirect(url_for("index"))
+    print(session)
+    return render_template("course.html", session=session, course=course)
 
 
 @frontend.route("/signup")
