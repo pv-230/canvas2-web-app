@@ -165,15 +165,15 @@
         </div>
         <form id="popup-form" action="{{ url_for('backend.add_assignment') }}" method="POST">
             <div class="form-input-group">
-              <label for="assignment-name">Name</label>
-              <input type='text' id="assignment-name" name="assignment-name" required>
+              <label for="assg-name">Name</label>
+              <input type='text' id="assg-name" name="assg-name" required>
             </div>
             <div class="form-input-group">
-              <label for="assignment-descrip">Description</label>
+              <label for="assg-desc">Description</label>
               <textarea
                 type='text'
-                id="assignment-descrip"
-                name="assignment-descrip"
+                id="assg-desc"
+                name="assg-desc"
                 required></textarea>
             </div>
             <div class="form-input-group">
@@ -181,7 +181,7 @@
               <input type='datetime-local' id="due-date" name="due-date" required>
             </div>
             <button class="form-btn" type="submit">Add</button>
-            <input name="course-code" value="{{ course['code'] }}" hidden>
+            <input name="course-code" value="{{ course['_id'] }}" hidden>
         </form>
       </div>
     {% endif %}

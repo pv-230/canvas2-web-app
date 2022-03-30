@@ -50,10 +50,7 @@ def add_course():
 
 @backend.route("/submit-assignment", methods=["POST"])
 def submit_assignment():
-    """Submits an assignment to the database.
-
-    TODO: Need to add a function here to save a student's submission to db
-    """
+    """Submits an assignment to the database."""
 
     # get data from form
     print(request.form)
@@ -96,10 +93,31 @@ def submit_assignment():
 
 @backend.route("/add-assignment", methods=["POST"])
 def add_assignment():
-    """Adds an assignment to the database.
+    """Adds an assignment to the database."""
 
-    TODO: Need to add functionality here to add an assignment into the db
-    """
+    # get data from form
+    title = request.form["assg-name"]
+    desc = request.form["assg-desc"]
+    duedate = request.form["due-date"]
+    classid = request.form["course-code"]
 
-    courseCode = request.form["course-code"]
-    return redirect(courseCode)
+    # ensure user is a teacher in the course
+    temp1 = db_conn.db.users.find_one({"_id": ObjectId(session["id"])})
+    temp2 = db_conn.db.enrollments.find_one({
+        "user": ObjectId(session["id"]), "class": ObjectId(classid)
+    })
+    if not temp1 or not temp2:
+        abort(403)
+    elif not temp1["role"] >= 3:
+        abort(403)
+
+    # make assignment in database
+    db_conn.db.assignments.insert_one({
+        "title": title,
+        "description": desc,
+        "deadline": datetime.strptime(duedate, "%Y-%m-%dT%H:%M"),
+        "class": ObjectId(classid),
+    })
+
+    # redirect to course page
+    return redirect(url_for("frontend.course_page", code=classid))
