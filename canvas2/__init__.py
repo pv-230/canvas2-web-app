@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from dotenv import load_dotenv
 from .utils.db import init_db
 
 def create_app(config=None):
@@ -14,6 +15,7 @@ def create_app(config=None):
     # in most cases our config is automatically loaded from .flaskenv, but
     # for testing we're programatically required to set TESTING to True
     if config:
+        load_dotenv(".flaskenv")
         app.config.update(config)
 
     # init db
