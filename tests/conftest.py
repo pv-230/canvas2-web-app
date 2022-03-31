@@ -20,12 +20,21 @@ def init_db(db):
     db.drop_collection("submissions")
 
     # insert users
-    # admin_id = db['users'].insert_one({
-    #     'username': 'admin', 'password': 'password',
-    #     'firstname': 'Admin', 'lastname': 'User',
-    #     'email': 'admin@example.com',
-    #     'role': 4, 'approved': True
-    # }).inserted_id
+    # admin_id = (
+    #     db["users"]
+    #     .insert_one(
+    #         {
+    #             "username": "admin",
+    #             "password": "password",
+    #             "firstname": "Admin",
+    #             "lastname": "User",
+    #             "email": "admin@example.com",
+    #             "role": 4,
+    #             "approved": True,
+    #         }
+    #     )
+    #     .inserted_id
+    # )
     teacher_id = (
         db["users"]
         .insert_one(
@@ -191,7 +200,7 @@ def check_db(db):
     """Checks DB to make sure entries are in the right place."""
 
     # check counts
-    assert db["users"].count_documents({}) == 5
+    assert db["users"].count_documents({}) == 4
     assert db["classes"].count_documents({}) == 3
     assert db["enrollments"].count_documents({}) == 6
     assert db["assignments"].count_documents({}) == 3

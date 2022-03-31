@@ -1,11 +1,19 @@
-from flask import Blueprint, request, session, render_template, redirect,\
-    url_for, flash
+from flask import (
+    Blueprint,
+    request,
+    session,
+    render_template,
+    redirect,
+    url_for,
+    flash,
+)
 
 from ..utils.db import db_conn
 
 # create main frontend blueprint
 auth = Blueprint(
-    'auth', __name__,
+    "auth",
+    __name__,
     url_prefix="/auth",
 )
 
@@ -38,8 +46,8 @@ def login():
         print("Creds: ", username, password)
 
         # check database for user
-        user = db_conn.db['users'].find_one({"username": username})
-        print('User: ', user)
+        user = db_conn.db["users"].find_one({"username": username})
+        print("User: ", user)
 
         # TODO: password checking goes here
         password = password  # shut up flask8
@@ -51,8 +59,11 @@ def login():
 
         # if user is not approved yet
         if user["approved"] is False:
-            flash("Your account has not yet been approved! Please \
-                contact an admin if you believe this is an error.", "error")
+            flash(
+                "Your account has not yet been approved! Please \
+                contact an admin if you believe this is an error.",
+                "error",
+            )
             return redirect(url_for("auth.login"))
 
         # else, save vars to session and redirect to home
@@ -113,27 +124,29 @@ def signup():
         role = request.form["role"] if "role" in request.form else 1
 
         # check database for user
-        user = db_conn.db['users'].find_one({"username": uname})
+        user = db_conn.db["users"].find_one({"username": uname})
         if user:
             flash("Username already in use!", "error")
             return redirect(url_for("auth.signup"))
 
-        user = db_conn.db['users'].find_one({"email": email})
+        user = db_conn.db["users"].find_one({"email": email})
         if user:
             flash("Email already in use!", "error")
             return redirect(url_for("auth.signup"))
 
         # insert user into database
         auto_approve_users = True  # For later... ;) -A
-        db_conn.db['users'].insert_one({
-            "firstname": fname,
-            "lastname": lame,
-            "username": uname,
-            "email": email,
-            "password": passwd,
-            "role": role,
-            "approved": auto_approve_users
-        })
+        db_conn.db["users"].insert_one(
+            {
+                "firstname": fname,
+                "lastname": lame,
+                "username": uname,
+                "email": email,
+                "password": passwd,
+                "role": role,
+                "approved": auto_approve_users,
+            }
+        )
 
         # redirect
         if auto_approve_users:
@@ -142,5 +155,6 @@ def signup():
         else:
             flash(
                 "Account created! An admin will approve your account soon.",
-                "info")
+                "info",
+            )
             return redirect(url_for("auth.login"))
