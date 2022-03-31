@@ -68,8 +68,12 @@ def login():
 def logout():
     """Logs out the user and redirects to the login page."""
 
+    # if not logged in, redirect to login page
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
     # clear session variables
-    session.pop("id", None)
+    del session["id"]
     del session["username"]
     del session["fname"]
     del session["lname"]
@@ -104,7 +108,7 @@ def signup():
         lame = request.form["lastname"]
         uname = request.form["username"]
         email = request.form["email"]
-        passwd = request.form["password"]; passwd = passwd  # noqa: E702; flake8 shush
+        passwd = request.form["password"]
         role = request.form["role"] if "role" in request.form else 1
 
         # check database for user
@@ -125,7 +129,7 @@ def signup():
             "lastname": lame,
             "username": uname,
             "email": email,
-            "password": "password_hash_goes_here",
+            "password": passwd,
             "role": role,
             "approved": auto_approve_users
         })

@@ -6,8 +6,6 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from canvas2 import create_app
 
-MONGO_URI = None
-
 def init_db(db):
     """
     Initialize the database.
@@ -23,27 +21,32 @@ def init_db(db):
     # insert users
     admin_id = db['users'].insert_one({
         'username': 'admin', 'password': 'password', 
-        'firstname': 'Admin', 'lastname': 'User', 
+        'firstname': 'Admin', 'lastname': 'User',
+        'email': 'admin@example.com',
         'role': 4, 'approved': True
     }).inserted_id
     teacher_id = db['users'].insert_one({
         'username': 'teacher', 'password': 'password', 
         'firstname': 'Teacher', 'lastname': 'User', 
+        'email': 'teacher@example.com',
         'role': 3, 'approved': True
     }).inserted_id
     asst_id = db['users'].insert_one({
         'username': 'teachasst', 'password': 'password', 
         'firstname': 'Assistant', 'lastname': 'User', 
+        'email': 'teachasst@example.com',
         'role': 2, 'approved': True
     }).inserted_id
     student1_id = db['users'].insert_one({
         'username': 'student1', 'password': 'password', 
         'firstname': 'Student1', 'lastname': 'User', 
+        'email': 'student1@example.com',
         'role': 1, 'approved': True
     }).inserted_id
     student2_id = db['users'].insert_one({
         'username': 'student2', 'password': 'password', 
         'firstname': 'Student2', 'lastname': 'User', 
+        'email': 'student2@example.com',
         'role': 1, 'approved': True
     }).inserted_id
 
@@ -120,9 +123,6 @@ def pytest_configure(config):
     file after command line options have been parsed.
     """
 
-    # globals
-    global MONGO_URI
-
     # print
     print("Setting up test environment...")
 
@@ -136,7 +136,7 @@ def pytest_configure(config):
         #       Flask_PyMongo requires for it to be the table that you wish to default to.
         #       This URI will still work for MongoClient luckily, but you'll still need to
         #       pick the DB. Don't mess with this unless you know what you're doing.
-        MONGO_URI = "mongodb://localhost:27017/canvas2_test"
+        pytest.MONGO_URI = "mongodb://localhost:27017/canvas2_test"
 
     # else, if at home, just use test atlas DB
     else:
@@ -150,19 +150,22 @@ def pytest_configure(config):
             raise Exception("MONGO_URI env var is not set!")
             
         # initialize database
-        MONGO_URI = os.environ.get("MONGO_URI").replace("canvas2", "canvas2_test")
+        pytest.MONGO_URI = os.environ.get("MONGO_URI").replace("canvas2", "canvas2_test")
 
     # print our string
-    print("Configuring using URI: " + MONGO_URI)
+    print("Configuring using URI: " + pytest.MONGO_URI)
 
     # initialize test database
     print("Re-initializing database...")
-    client = MongoClient(MONGO_URI)
+    client = MongoClient(pytest.MONGO_URI)
     init_db(client['canvas2_test'])
 
     # check database
     print("Checking database...")
     check_db(client['canvas2_test'])
+
+    # save database conn to pytest, for use in tests
+    pytest.db = client['canvas2_test']
 
     # done!
     print("Done! Ready to test!")
@@ -188,17 +191,14 @@ def pytest_unconfigure(config):
 @pytest.fixture
 def app():
 
-    # globals
-    global MONGO_URI
-
     # make sure our mongo uri is set
-    if not MONGO_URI:
+    if not pytest.MONGO_URI:
         raise Exception("MONGO_URI global is not set! Potential race condition?")
 
     # create app using testing config
     app = create_app({
         'TESTING': True,
-        'MONGO_URI': MONGO_URI
+        'MONGO_URI': pytest.MONGO_URI
     })
 
     # return it
