@@ -18,9 +18,9 @@ def init_db(app):
     with app.app_context():
 
         # make sure we have a conn string
+        # see: conftest.py:pytest_configure()
         if not app.config["MONGO_URI"]:
             raise Exception("MONGO_URI is not set!")
-        print("db.py CONFIG URI:", app.config["MONGO_URI"])
 
         # init mongodb connection and save it in global state
         # start by creating our client with a connection timeout of 3 seconds

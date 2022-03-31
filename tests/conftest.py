@@ -98,7 +98,7 @@ def init_db(db):
     })
 
 def check_db(db):
-    """Checks DB to make sure files are in the right place."""
+    """Checks DB to make sure entries are in the right place."""
 
     # check counts
     assert db['users'].count_documents({}) == 5
@@ -132,6 +132,10 @@ def pytest_configure(config):
 
         # set client to local database
         # NOTE: This proved to be a big PITA to get working.
+        #       While most drivers will want the suffix to be set to the auth collection name,
+        #       Flask_PyMongo requires for it to be the table that you wish to default to.
+        #       This URI will still work for MongoClient luckily, but you'll still need to
+        #       pick the DB. Don't mess with this unless you know what you're doing.
         MONGO_URI = "mongodb://localhost:27017/canvas2_test"
 
     # else, if at home, just use test atlas DB
@@ -141,6 +145,10 @@ def pytest_configure(config):
         # load flaskenv
         load_dotenv(".flaskenv")
 
+        # see if we have a environment variable
+        if not os.environ.get("MONGO_URI"):
+            raise Exception("MONGO_URI env var is not set!")
+            
         # initialize database
         MONGO_URI = os.environ.get("MONGO_URI").replace("canvas2", "canvas2_test")
 
@@ -168,8 +176,12 @@ def pytest_unconfigure(config):
     # print
     print("Cleaning up test environment...")
 
-    # initialize database
-    client = MongoClient(os.environ.get("MONGO_URI"))
+    # close database connection
+    # NOTE: Disabled for now, since keeping connections open for MongoDB is apparently good?
+    #       In my hours of scouring the internet, saw some stack comment mentioning it, but now
+    #       I can't find it for the life of me. I'm not sure how true it is, but uh... Makes my 
+    #       life easier so whatever, I guess! -A
+    # client = MongoClient(os.environ.get("MONGO_URI"))
     # client.drop_database('canvas2_test')
 
 
@@ -181,7 +193,7 @@ def app():
 
     # make sure our mongo uri is set
     if not MONGO_URI:
-        raise Exception("MONGO_URI not set")
+        raise Exception("MONGO_URI global is not set! Potential race condition?")
 
     # create app using testing config
     app = create_app({

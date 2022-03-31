@@ -14,7 +14,7 @@ def create_app(test_config=None):
 
     # handle testing config, if it was passed in
     # we call this second because we want to overwite MONGO_URI
-    # see: conftest.py:128
+    # see: conftest.py:pytest_configure()
     if test_config:
         app.config.update(**test_config)
 
