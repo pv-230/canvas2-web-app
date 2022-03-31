@@ -13,14 +13,13 @@ def parseText(inputFile: str) -> list:
     """
 
     ignoreThese = set()
-    with open('mostCommonWords.txt', 'r') as f:
+    with open('assets/mostCommonWords.txt', 'r') as f:
         for line in f:
             ignoreThese.add(line.strip())
 
     with open(inputFile, 'r') as f:
         words = f.read().split()
         words = [word.lower() for word in words if word.isalnum() and word.lower() not in ignoreThese]
-
     
     frequencyList = FreqDist(x.lower() for x in brown.words())
     words = [WordNetLemmatizer().lemmatize(word) for word in words]
@@ -47,6 +46,9 @@ def parseText(inputFile: str) -> list:
                 seen[word] = stack[0][0]
     return words
 
+# Shingling algorithm inspired by:
+# http://ethen8181.github.io/machine-learning/clustering_old/text_similarity/text_similarity.html#jaccard-similarity
+
 def shingles(words: list, k: int) -> set:
     """
     Return a list of shingles of length k
@@ -54,7 +56,7 @@ def shingles(words: list, k: int) -> set:
     words = " ".join(words)
     shingles = set()
     for i in range(len(words) - k + 1):
-        shingles.add(''.join(words[i:i+k]))
+        shingles.add(''.join(words[i:i + k]))
     return shingles
 
 def similarityScore(shingle1: set, shingle2: set) -> float:
@@ -71,33 +73,3 @@ def compareDocs(doc1: str, doc2: str, k: int) -> float:
     shingles2 = shingles(parseText(doc2), k)
 
     return similarityScore(shingles1, shingles2)
-
-def tests():
-    shingleSize = 5
-
-    # words = parseText('testdocs/original1.txt')
-    # test1 = parseText('testdocs/t1.txt')
-    # test2 = parseText('testdocs/t2.txt')
-    # test3 = parseText('testdocs/t3.txt')
-    # test4 = parseText('testdocs/t4.txt')
-    # test5 = parseText('testdocs/t5.txt')
-
-    words = parseText('testdocs/original2.txt')
-    test1 = parseText('testdocs/s1.txt')
-    test2 = parseText('testdocs/s2.txt')
-    test3 = parseText('testdocs/s3.txt')
-    test4 = parseText('testdocs/s4.txt')
-    test5 = parseText('testdocs/s5.txt')
-
-    shingles1 = shingles(words, shingleSize)
-    testShingles1 = shingles(test1, shingleSize)
-    testShingles2 = shingles(test2, shingleSize)
-    testShingles3 = shingles(test3, shingleSize)
-    testShingles4 = shingles(test4, shingleSize)
-    testShingles5 = shingles(test5, shingleSize)
-
-    print(similarityScore(shingles1, testShingles1))
-    print(similarityScore(shingles1, testShingles2))
-    print(similarityScore(shingles1, testShingles3))
-    print(similarityScore(shingles1, testShingles4))
-    print(similarityScore(shingles1, testShingles5))
