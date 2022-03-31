@@ -1,0 +1,279 @@
+:root {
+  --min-card-height: 150px;
+}
+
+.content {
+  position: relative;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+}
+
+/* Section styling */
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: var(--content-width);
+  color: var(--white);
+  padding: 32px 0;
+}
+
+section:not(:first-child) {
+  border-top: 1px solid var(--border-color);
+}
+
+.section-title {
+  font-size: 2rem;
+}
+
+/* Assignment section styling */
+
+.assignment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 300px);
+  gap: 16px;
+  width: 100%;
+}
+
+.assignment-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: var(--min-card-height);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--inner-bg-color);
+  color: var(--white);
+}
+
+.assignment-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 24px 8px;
+  font-family: robotolight;
+  word-wrap: break-word;
+}
+
+.assignment-title {
+  font-size: 1.2rem;
+  font-family: robotomedium;
+}
+
+.assignment-btn:hover {
+  background-color: rgb(20, 135, 207);
+}
+
+.assignment-btn,
+.assignment-btn:active {
+  width: 100%;
+  padding: 8px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: rgb(0, 110, 179);
+  font-family: robotomedium;
+  color: var(--white);
+  text-align: center;
+}
+
+/* People section styling */
+
+.link-btn:hover {
+  background-color: rgb(0, 141, 12);
+}
+
+.link-btn,
+.link-btn:active {
+  width: fit-content;
+  padding: 8px 16px 8px 16px;
+  background-color: rgb(0, 122, 10);
+  color: var(--white);
+  border-radius: 10px;
+  font-family: robotomedium;
+}
+
+.user-table {
+  table-layout: fixed;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  width: min(100%, 60ch);
+}
+
+.user-table th {
+  font-family: robotomedium;
+  font-size: 1.2rem;
+  width: 50%;
+}
+
+.user-table th,
+.user-table td {
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  vertical-align: middle;
+  height: 45px;
+}
+
+.remove-ta:hover,
+.set-ta:hover {
+  background-color: var(--inner-bg-color);
+  border-radius: 50%;
+}
+
+.role-cell {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.role-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.role-head > button:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.role-head > button,
+.role-head > button:active {
+  background-color: var(--garnet);
+  border-radius: 8px;
+  padding: 4px 8px 4px 8px;
+  color: var(--white);
+}
+
+/* Popup window styling */
+
+.popup-bg:not([hidden]) {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-window:not([hidden]) {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--inner-bg-color);
+  border: solid 1px var(--border-color);
+  border-radius: 4px;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  background-color: #3a3a3a;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.popup-header > h3 {
+  font-size: 1.2rem;
+  color: var(--white);
+}
+
+.close-btn:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.close-btn,
+.close-btn:active {
+  width: 24px;
+  height: 24px;
+  background: center / 80% url(../images/close-btn.svg) no-repeat var(--garnet);
+  border-radius: 50%;
+}
+
+/* Popup form styling */
+
+#popup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  color: var(--white);
+}
+
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.form-btn:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.form-btn,
+.form-btn:active {
+  width: max-content;
+  padding: 4px 16px;
+  margin-top: 8px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 4px;
+  color: var(--white);
+  background-color: var(--garnet);
+}
+
+#assignment-entry {
+  width: 80ch;
+  height: 400px;
+  resize: none;
+}
+
+#assignment-descrip {
+  width: 40ch;
+  height: 100px;
+  resize: none;
+}
+
+/* Add assignment button styling */
+
+.add-assignment-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  color: var(--white);
+  font-size: 1.5rem;
+  height: var(--min-card-height);
+}
+
+.add-icon-frame {
+  width: 100%;
+  height: 60%;
+}
+
+.add-icon {
+  height: 90%;
+  transition: height 0.1s;
+}
+
+.add-assignment-card:hover .add-icon {
+  height: 100%;
+  transition: height 0.1s;
+}

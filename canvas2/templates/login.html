@@ -1,0 +1,57 @@
+<!-- This file represents the login page content. -->
+
+<!-- HTML head extension -->
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/login.js') }}"></script>
+{% endblock %}
+
+<!-- Content -->
+{% block container %}
+  <div class="login-header">
+    <img src="../static/images/favicon.svg" alt="">
+    <h1>Sign in to Canvas2</h1>
+  </div>
+  <div class="login-frame">
+    <form id="login-form" action="{{ url_for('authenticate') }}" method="POST">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+    </form>
+    <a class="forgot-pw-link" href="#">Forgot password?</a>
+    <button type="submit" form="login-form">Sign in</button>
+  </div>
+  <div class="register-frame">
+    <span>
+      New to Canvas2? <a href="{{ url_for('signup') }}">Register here!</a>
+    </span>
+  </div>
+
+  <!-- Flashed messages from flask -->
+  <div class="info-box" hidden>
+    {% with messages = get_flashed_messages(category_filter="info") %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="flashed-message">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+  <div class="error-box" hidden>
+    {% with messages = get_flashed_messages(category_filter="error") %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="flashed-message">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+{% endblock %}

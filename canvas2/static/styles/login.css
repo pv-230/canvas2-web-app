@@ -1,0 +1,139 @@
+:root {
+  --login-width: 300px;
+}
+
+/* General styling */
+
+.container,
+.login-header,
+.login-frame,
+#login-form,
+#login-form > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  gap: 16px;
+  color: var(--white);
+  background-color: var(--black);
+}
+
+a {
+  text-decoration: none;
+  color: var(--gold);
+}
+
+a:hover {
+  color: var(--gold-brighter);
+}
+
+/* Login header styling */
+
+.login-header > img {
+  width: 64px;
+  height: 64px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+.login-header > h1 {
+  font-family: robotomedium;
+  font-size: 1.5rem;
+}
+
+/* Login frame styling */
+
+.login-frame {
+  width: var(--login-width);
+  padding: 24px;
+  border: solid 1px var(--border-color);
+  border-radius: 5px;
+  align-items: start;
+  background-color: var(--inner-bg-color);
+}
+
+.forgot-pw-link {
+  font-family: robotolight;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+button {
+  width: 100%;
+  margin-top: 24px;
+  padding: 8px 0;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 5px;
+  color: var(--white);
+  background-color: var(--garnet);
+}
+
+button:hover {
+  background-color: var(--garnet-brighter);
+}
+
+/* Login form styling */
+
+#login-form,
+#login-form div,
+#login-form label,
+#login-form input {
+  width: 100%;
+}
+
+#login-form {
+  gap: 8px;
+}
+
+#login-form > div {
+  justify-content: center;
+  align-items: start;
+  gap: 4px;
+}
+
+#login-form input {
+  padding: 4px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--black);
+  color: var(--white);
+}
+
+#login-form input:focus {
+  outline: 1px solid var(--gold);
+}
+
+/* Register frame styling */
+
+.register-frame {
+  width: var(--login-width);
+  padding: 16px 24px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: var(--inner-bg-color);
+  text-align: center;
+}
+
+/* Message flash box styling */
+
+.error-box,
+.info-box {
+  width: var(--login-width);
+  padding: 16px 24px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.info-box {
+  background-color: rgba(0, 150, 0, 0.3);
+  border: 1px solid rgba(0, 150, 0);
+}
+
+.error-box {
+  background-color: rgba(136, 52, 72, 0.3);
+  border: 1px solid var(--garnet);
+}
