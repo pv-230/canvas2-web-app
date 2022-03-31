@@ -284,11 +284,11 @@ def pytest_configure(config):
         if "canvas2" not in os.environ.get("MONGO_URI"):
             raise Exception(
                 "MONGO_URI was loaded, but is improper!\n\n"
-                + "Survey says you appended either a random db or your + "
-                + "default auth db to the end\nof your URI. STOP! + "
-                + "Flask-PyMongo will not work with this URI! Your URI "
-                + "MUST end\nwith the name of the default db you wish to"
-                + "use, i.e. either canvas2 or\ncanvas2_test, no others! "
+                + "Survey says you appended either a random db or your "
+                + "default auth db to the end\nof your URI. STOP! "
+                + "Flask-PyMongo will not work with this URI! Your URI MUST "
+                + "end\nwith the name of the default db you wish to use, i.e. "
+                + "either canvas2 or canvas2_test,\nno others will work! "
                 + "Please fix this and try again!"
             )
 
