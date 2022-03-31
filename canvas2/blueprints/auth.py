@@ -1,5 +1,5 @@
-from flask import Blueprint, request, session, render_template, redirect, url_for, \
-    flash, jsonify
+from flask import Blueprint, request, session, render_template, redirect,\
+    url_for, flash
 
 from ..utils.db import db_conn
 
@@ -63,6 +63,7 @@ def login():
         session["role"] = user["role"]
 
         return redirect(url_for("frontend.index"))
+
 
 @auth.route("/logout", methods=["GET"])
 def logout():
@@ -139,5 +140,7 @@ def signup():
             flash("Account created! You may now log in!", "info")
             return redirect(url_for("auth.login"))
         else:
-            flash("Account created! An admin will approve your account soon.", "info")
+            flash(
+                "Account created! An admin will approve your account soon.",
+                "info")
             return redirect(url_for("auth.login"))
