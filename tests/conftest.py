@@ -95,6 +95,22 @@ def init_db(db):
         'contents': 'This is the test submission!', 'comments': []
     })
 
+def check_db(db):
+    """Checks DB to make sure files are in the right place."""
+
+    # check counts
+    assert db['users'].count_documents({}) == 5
+    assert db['classes'].count_documents({}) == 2
+    assert db['enrollments'].count_documents({}) == 6
+    assert db['assignments'].count_documents({}) == 2
+    assert db['submissions'].count_documents({}) == 1
+
+    # get list of objects in each collection
+    print("- Collections:", db.list_collection_names())
+    print("- Users:", db['users'].distinct('username'))
+    print("- Classes:", db['classes'].distinct('code'))
+    print("- Assignments:", db['assignments'].distinct('name'))
+
 def pytest_configure(config):
     """
     Allows plugins and conftest files to perform initial configuration.
@@ -110,7 +126,7 @@ def pytest_configure(config):
         print("Detected github actions, setting local MONGO_URI...")
 
         # set client to local database
-        os.environ['MONGO_URI'] = "mongodb://github-ci:temppass@localhost:27017/admin"
+        os.environ['MONGO_URI'] = "mongodb://localhost:27017"
 
     # else, if at home, just use test atlas DB
     else:
@@ -129,6 +145,10 @@ def pytest_configure(config):
     print("Re-initializing database...")
     client = MongoClient(os.environ.get("MONGO_URI"))
     init_db(client['canvas2_test'])
+
+    # check database
+    print("Checking database...")
+    check_db(client['canvas2_test'])
 
     # done!
     print("Done! Ready to test!")

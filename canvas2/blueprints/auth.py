@@ -35,9 +35,11 @@ def login():
         # get form data
         username = request.form["username"]
         password = request.form["password"]
+        print("Creds: ", username, password)
 
         # check database for user
-        user = db_conn.db.users.find_one({"username": username})
+        user = db_conn.db['users'].find_one({"username": username})
+        print('User: ', user)
 
         # TODO: password checking goes here
         password = password  # shut up flask8
@@ -106,19 +108,19 @@ def signup():
         role = request.form["role"] if "role" in request.form else 1
 
         # check database for user
-        user = db_conn.db.users.find_one({"username": uname})
+        user = db_conn.db['users'].find_one({"username": uname})
         if user:
             flash("Username already in use!", "error")
             return redirect(url_for("auth.signup"))
 
-        user = db_conn.db.users.find_one({"email": email})
+        user = db_conn.db['users'].find_one({"email": email})
         if user:
             flash("Email already in use!", "error")
             return redirect(url_for("auth.signup"))
 
         # insert user into database
         auto_approve_users = True  # For later... ;) -A
-        db_conn.db.users.insert_one({
+        db_conn.db['users'].insert_one({
             "firstname": fname,
             "lastname": lame,
             "username": uname,

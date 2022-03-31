@@ -16,9 +16,11 @@ def test_good_login(client):
             follow_redirects=True
         )
 
-        # asserts, session should still be available
+        # check to make sure we were redirected
         assert res.status_code == 200
         assert res.request.path == "/"
+
+        # check session state
         assert session['username'] == 'teacher'
         assert session["fname"] == "Teacher"
         assert session["lname"] == "User"
@@ -44,21 +46,21 @@ def test_bad_login(client):
         # asserts, session should still be available
         assert res.status_code == 200
         assert res.request.path == "/auth/login"
-        assert "Invalid username or password" in res.text
+        assert "Invalid username or password" in res.get_data(as_text=True)
 
 
 def test_logout(client):
     """Tests logging out"""
 
     # use session_transaction to set prelim session state
-    with client.session_transaction() as session:
+    with client.session_transaction() as prelim_session:
 
         # set session 
-        session["id"] = "id_placeholder_idk"
-        session['username'] = 'teacher'
-        session["fname"] = "Teacher"
-        session["lname"] = "User"
-        session["role"] = 3
+        prelim_session["id"] = "id_placeholder_idk"
+        prelim_session['username'] = 'teacher'
+        prelim_session["fname"] = "Teacher"
+        prelim_session["lname"] = "User"
+        prelim_session["role"] = 3
 
     # use client context to keep session static after request is processed
     with client:
@@ -72,4 +74,4 @@ def test_logout(client):
         # assert we were logged out and redirected to login
         assert res.status_code == 200
         assert res.request.path == "/auth/login"
-        assert "You have been logged out." in res.text
+        assert "You have been logged out." in res.get_data(as_text=True)
