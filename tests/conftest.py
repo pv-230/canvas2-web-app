@@ -11,8 +11,6 @@ def init_db(db):
     Initialize the database.
     """
 
-    print("Initializing database...")
-
     # drop all collections
     db.drop_collection('users')
     db.drop_collection('classes')
@@ -112,7 +110,7 @@ def pytest_configure(config):
         print("Detected github actions, setting local MONGO_URI...")
 
         # set client to local database
-        os.environ['MONGO_URI'] = "mongodb://github-ci:temppass@localhost/canvas2_test"
+        os.environ['MONGO_URI'] = "mongodb://github-ci:temppass@localhost:27017/admin"
 
     # else, if at home, just use test atlas DB
     else:
