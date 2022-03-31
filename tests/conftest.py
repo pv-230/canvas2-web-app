@@ -123,14 +123,6 @@ def check_db(db):
     print("- Classes:", db['classes'].distinct('code'))
     print("- Assignments:", db['assignments'].distinct('name'))
 
-def cache_db(db):
-    """Caches certain DB entries for testing."""
-    
-    # get teacher data from db
-    pytest.teacher = db['users'].find_one(
-        {"username": "teacher"}
-    )
-
 def pytest_configure(config):
     """
     Allows plugins and conftest files to perform initial configuration.
@@ -178,10 +170,6 @@ def pytest_configure(config):
     # check database
     print("Checking database...")
     check_db(client['canvas2_test'])
-
-    # cache certain entries
-    print("Caching testing vars...")
-    cache_db(client['canvas2_test'])
 
     # save database conn to pytest, for use in tests
     pytest.db = client['canvas2_test']
