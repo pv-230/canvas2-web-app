@@ -80,7 +80,7 @@ def init_db(db):
     })
 
     # create assignments
-    # class 1 will have 2 assignments, class 2 will have 0
+    # class 1 will have 3 assignments, class 2 will have 0
     # deadlines might need to change later
     tempdue = datetime.now() + timedelta(days=7)
     assg1_id = db['assignments'].insert_one({
@@ -90,6 +90,10 @@ def init_db(db):
     db['assignments'].insert_one({
         'class': ObjectId(class1_id), 'name': 'Test Assignment 2', 
         'desc': 'This is the second assignment!', 'deadline': tempdue
+    })
+    db['assignments'].insert_one({
+        'class': ObjectId(class1_id), 'name': 'Test Assignment 3', 
+        'desc': 'This is the third assignment!', 'deadline': tempdue
     })
 
     # create submissions
@@ -107,7 +111,7 @@ def check_db(db):
     assert db['users'].count_documents({}) == 5
     assert db['classes'].count_documents({}) == 2
     assert db['enrollments'].count_documents({}) == 6
-    assert db['assignments'].count_documents({}) == 2
+    assert db['assignments'].count_documents({}) == 3
     assert db['submissions'].count_documents({}) == 1
 
     # get list of objects in each collection

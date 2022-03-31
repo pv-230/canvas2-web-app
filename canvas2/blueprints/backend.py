@@ -15,8 +15,8 @@ backend = Blueprint(
 def add_course():
     """Adds a course to the database.
 
-    TODO: Need to add functionality here to add a course into the database
     TODO: Add more form data as needed, going with bare minimum for now
+    TODO: Check perms against database, not just session variable
     TODO: Sanitize form input
     """
 
@@ -59,6 +59,13 @@ def submit_assignment():
     course = request.form["assg-course"]
     userid = request.form["assg-user-id"]
 
+    # make sure desired assignment even exists
+    temp = db_conn.db.assignments.find_one({
+        "_id": ObjectId(assgid), "class": ObjectId(course)
+    })
+    if not temp:
+        abort(400)
+
     # ensure user is submitting own document
     if not userid == session["id"]:
         abort(403)
@@ -70,11 +77,12 @@ def submit_assignment():
     if not temp:
         abort(403)
 
-    # make sure desired assignment even exists
-    temp = db_conn.db.assignments.find_one({
-        "_id": ObjectId(assgid), "class": ObjectId(course)
+    # make sure isnt already submitted
+    # NOTE: how this works may change in the future; i.e. revisions, etc.
+    temp = db_conn.db.submissions.find_one({
+        "user": ObjectId(userid), "assignment": ObjectId(assgid)
     })
-    if not temp:
+    if temp:
         abort(400)
 
     # save submission to db
