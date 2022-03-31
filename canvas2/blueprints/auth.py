@@ -67,7 +67,7 @@ def logout():
     """Logs out the user and redirects to the login page."""
 
     # clear session variables
-    del session["id"]
+    session.pop("id", None)
     del session["username"]
     del session["fname"]
     del session["lname"]
