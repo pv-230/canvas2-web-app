@@ -57,6 +57,9 @@ def init_db(db):
     class2_id = db['classes'].insert_one({
         'code': 'TEST002', 'name': 'Test Course 2', 'desc': 'This is the second test course!',
     }).inserted_id
+    db['classes'].insert_one({
+        'code': 'BLANK001', 'name': 'Hidden Course', 'desc': 'No-one should see this!',
+    }).inserted_id
 
     # create enrollments
     # teacher & ta are in both classes; student 1 is in first; student 2 is in second
@@ -109,7 +112,7 @@ def check_db(db):
 
     # check counts
     assert db['users'].count_documents({}) == 5
-    assert db['classes'].count_documents({}) == 2
+    assert db['classes'].count_documents({}) == 3
     assert db['enrollments'].count_documents({}) == 6
     assert db['assignments'].count_documents({}) == 3
     assert db['submissions'].count_documents({}) == 1
@@ -119,6 +122,14 @@ def check_db(db):
     print("- Users:", db['users'].distinct('username'))
     print("- Classes:", db['classes'].distinct('code'))
     print("- Assignments:", db['assignments'].distinct('name'))
+
+def cache_db(db):
+    """Caches certain DB entries for testing."""
+    
+    # get teacher data from db
+    pytest.teacher = db['users'].find_one(
+        {"username": "teacher"}
+    )
 
 def pytest_configure(config):
     """
@@ -167,6 +178,10 @@ def pytest_configure(config):
     # check database
     print("Checking database...")
     check_db(client['canvas2_test'])
+
+    # cache certain entries
+    print("Caching testing vars...")
+    cache_db(client['canvas2_test'])
 
     # save database conn to pytest, for use in tests
     pytest.db = client['canvas2_test']
