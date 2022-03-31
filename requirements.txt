@@ -1,5 +1,6 @@
 # Development
 Flask>=2.0.2
+Flask-PyMongo>=2.3.0
 python-dotenv>=0.19.2
 numpy>=1.16.2
 
@@ -9,6 +10,10 @@ flake8>=4.0.1
 # Testing
 pytest>=6.2.5
 coverage>=6.3
+
+# Database
+pymongo>=4.0.1
+dnspython>=2.2.1
 
 # Production
 waitress>=2.1.1

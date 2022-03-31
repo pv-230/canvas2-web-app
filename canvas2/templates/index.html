@@ -19,7 +19,7 @@
   </header>
   <div class="menu-box" hidden>
     <button type="button">Profile</button>
-    <button type="button">Logout</button>
+    <button type="button"><a href="{{ url_for('auth.logout') }}" style="color:white;">Logout</a></button>
   </div>
   <div class="content">
     {% block content %}{% endblock %}
