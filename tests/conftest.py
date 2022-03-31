@@ -6,6 +6,8 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from canvas2 import create_app
 
+MONGO_URI = None
+
 def init_db(db):
     """
     Initialize the database.
@@ -118,6 +120,9 @@ def pytest_configure(config):
     file after command line options have been parsed.
     """
 
+    # globals
+    global MONGO_URI
+
     # print
     print("Setting up test environment...")
 
@@ -126,7 +131,8 @@ def pytest_configure(config):
         print("Detected github actions, setting local MONGO_URI...")
 
         # set client to local database
-        os.environ['MONGO_URI'] = "mongodb://localhost:27017"
+        # NOTE: This proved to be a big PITA to get working.
+        MONGO_URI = "mongodb://localhost:27017/canvas2_test"
 
     # else, if at home, just use test atlas DB
     else:
@@ -136,14 +142,14 @@ def pytest_configure(config):
         load_dotenv(".flaskenv")
 
         # initialize database
-        os.environ['MONGO_URI'] = os.environ.get("MONGO_URI").replace("canvas2", "canvas2_test")
+        MONGO_URI = os.environ.get("MONGO_URI").replace("canvas2", "canvas2_test")
 
     # print our string
-    print("Using URI: " + os.environ.get("MONGO_URI"))
+    print("Configuring using URI: " + MONGO_URI)
 
     # initialize test database
     print("Re-initializing database...")
-    client = MongoClient(os.environ.get("MONGO_URI"))
+    client = MongoClient(MONGO_URI)
     init_db(client['canvas2_test'])
 
     # check database
@@ -170,9 +176,17 @@ def pytest_unconfigure(config):
 @pytest.fixture
 def app():
 
+    # globals
+    global MONGO_URI
+
+    # make sure our mongo uri is set
+    if not MONGO_URI:
+        raise Exception("MONGO_URI not set")
+
     # create app using testing config
     app = create_app({
         'TESTING': True,
+        'MONGO_URI': MONGO_URI
     })
 
     # return it

@@ -18,13 +18,12 @@ def init_db(app):
     with app.app_context():
 
         # make sure we have a conn string
-        if not os.environ.get("MONGO_URI"):
-            print("ERROR: MONGO_URI is not set!")
-            exit(-1)
+        if not app.config["MONGO_URI"]:
+            raise Exception("MONGO_URI is not set!")
+        print("db.py CONFIG URI:", app.config["MONGO_URI"])
 
         # init mongodb connection and save it in global state
         # start by creating our client with a connection timeout of 3 seconds
-        app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
         db_conn = PyMongo(
             app, serverSelectionTimeoutMS=3000
         )
