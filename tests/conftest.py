@@ -130,6 +130,37 @@ def pytest_configure(config):
     file after command line options have been parsed.
     """
 
+    # NOTE: A cautionary tale for any devs looking at this in the future:
+    #
+    # Getting the database to connect proved to be a bigger issue than expected. This project uses 
+    # two MongoDB drivers to help it run. They are PyMongo.MongoClient and Flask_PyMongo.PyMongo. 
+    # Flask_PyMongo is used in-app because it meshes with Flask better than the MongoClient driver.
+    # However, because our test suite is not a flask app, we have to use MongoClient out here to 
+    # prep the db before tests. IT IS EXTREMELY IMPORTANT TO KNOW THAT THESE TWO PACKAGES HAVE ONE
+    # FUNDAMENTAL DIFFERENCE FROM OTHER PACKAGES WHEN IT COMES TO CONNECTING USING A URI.
+    #
+    # Most packages (like PyMongo.MongoClient) would have you append a `defaultAuthDB` to the end 
+    # of your URI, used to specify which table to authenticate against, before letting you specify 
+    # the database you wish to actually use later in the runtime. FLASK_PYMONGO DOES NOT DO THIS.
+    # Flask_PyMongo instead desires the database you wish to use during runtime to be appended to 
+    # the end of the URI, rather than the defaultAuthDB.
+    #
+    # If you start getting mysterious runtime errors, where you confirm your collections are being 
+    # made in the test suite, but later not being properly reflected in the actual application, it 
+    # is more than likely that your MONGO_URI is malformed and PyMongo.MongoClient is working 
+    # properly while Flask_PyMongo.PyMongo is read/writing to whatever database you have appended, 
+    # rather than the one you desire. You should double check your MONGO_URI env var and make sure 
+    # it looks like this:
+    #
+    #     MONGO_URI=mongodb[+srv]://user:pass@host[:port]/database
+    #
+    # In the case of this project, `database` should always be either `canvas2` or `canvas2_test`.
+    # This bug has wasted so many hours of dev time, both while indev and while in testing that I 
+    # feel I MUST leave this long-ass note here. Don't make my mistakes again. And if you do, feel
+    # free to increment the counter below.
+    #
+    # Total man-hours wasted on this: ~5 hours
+
     # print
     print("Setting up test environment...")
 
@@ -138,11 +169,6 @@ def pytest_configure(config):
         print("Detected github actions, setting local MONGO_URI...")
 
         # set client to local database
-        # NOTE: This proved to be a big PITA to get working.
-        #       While most drivers will want the suffix to be set to the auth collection name,
-        #       Flask_PyMongo requires for it to be the table that you wish to default to.
-        #       This URI will still work for MongoClient luckily, but you'll still need to
-        #       pick the DB. Don't mess with this unless you know what you're doing.
         pytest.MONGO_URI = "mongodb://localhost:27017/canvas2_test"
 
     # else, if at home, just use test atlas DB
@@ -156,7 +182,18 @@ def pytest_configure(config):
         if not os.environ.get("MONGO_URI"):
             raise Exception("MONGO_URI env var is not set!")
             
-        # initialize database
+        # ensure the URI meets our specifications
+        # NOTE: "mirrored" with utils/db.py
+        if "canvas2" not in os.environ.get("MONGO_URI"):
+            raise Exception(
+                "MONGO_URI was loaded, but is improper!\n\n" +
+                "Survey says you appended either a random db or your default auth db to the end\n" +
+                "of your URI. STOP! Flask-PyMongo will not work with this URI! Your URI MUST end\n"+
+                "with the name of the default db you wish to use, i.e. either canvas2 or\n" +
+                "canvas2_test, no others! Please fix this and try again!"
+            )
+        
+        # set URI to atlas test DB
         pytest.MONGO_URI = os.environ.get("MONGO_URI").replace("canvas2", "canvas2_test")
 
     # print our string
