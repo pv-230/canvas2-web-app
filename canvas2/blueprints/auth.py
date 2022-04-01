@@ -1,12 +1,5 @@
-from flask import (
-    Blueprint,
-    request,
-    session,
-    render_template,
-    redirect,
-    url_for,
-    flash,
-)
+from flask import Blueprint, request, session, render_template, redirect, \
+    url_for, flash
 
 from ..utils.db import db_conn
 
