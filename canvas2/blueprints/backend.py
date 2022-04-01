@@ -1,15 +1,16 @@
 from bson import ObjectId
 from datetime import datetime
 from flask import Blueprint, request, session, redirect, url_for, abort
-
+from canvas2.plagiarism.jaccardsimilarity import parseText
 from ..utils.db import db_conn
+
+
 
 # create main backend blueprint
 backend = Blueprint(
     'backend', __name__,
     url_prefix="/secretary",  # cute nickname for backend ops, can be changed
 )
-
 
 @backend.route("/add-course", methods=["POST"])
 def add_course():
@@ -154,6 +155,7 @@ def submit_assignment():
         "class": assignment['class'],
         "user": ObjectId(userid),
         "contents": contents,
+        "parsedContents": parseText(contents),
         "timestamp": datetime.now(),
         "comments": []
     })
