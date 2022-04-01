@@ -14,10 +14,7 @@ backend = Blueprint(
 
 @backend.route("/add-course", methods=["POST"])
 def add_course():
-    """Adds a course to the database.
-
-    TODO: Add more form data as needed, going with bare minimum for now
-    """
+    """Adds a course to the database."""
 
     # get data from form
     # TODO: Sanitize form input

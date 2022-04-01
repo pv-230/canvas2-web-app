@@ -29,16 +29,16 @@ def login():
     TODO: Sanitize form input
     """
 
+    # if already logged in, redirect to index page
+    if "id" in session:
+        return redirect(url_for("frontend.index"))
+
     # if get, render login page
     if request.method == "GET":
         return render_template("login.html")
 
     # if post, authenticate user
     elif request.method == "POST":
-
-        # if already logged in, redirect to index page
-        if "id" in session:
-            return redirect(url_for("frontend.index"))
 
         # get form data
         username = request.form["username"]

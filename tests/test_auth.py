@@ -147,8 +147,8 @@ def test_signup_badusername(client):
         assert "Username already in use!" in res.get_data(as_text=True)
 
         # assert database hasnt actually been touched
-        admins = pytest.db["users"].find({"username": "teacher"})
-        assert len(list(admins)) == 1
+        teacher = pytest.db["users"].find({"username": "teacher"})
+        assert len(list(teacher)) == 1
 
 
 def test_signup_bademail(client):
@@ -177,5 +177,5 @@ def test_signup_bademail(client):
         assert "Email already in use!" in res.get_data(as_text=True)
 
         # assert database hasnt actually been touched
-        admins = pytest.db["users"].find({"email": "teacher@example.com"})
-        assert len(list(admins)) == 1
+        teacher = pytest.db["users"].find({"email": "teacher@example.com"})
+        assert len(list(teacher)) == 1
