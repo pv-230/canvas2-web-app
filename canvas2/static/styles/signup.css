@@ -74,15 +74,23 @@
   outline: 1px solid var(--gold);
 }
 
-.teacher-toggle {
-  margin-top: 16px;
+.role-dropdown {
   grid-column: 1 / 3;
-  justify-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
 }
 
 /* Sign up button styling */
 
-button {
+button:hover {
+  background-color: var(--garnet-brighter);
+}
+
+button,
+button:active {
   grid-column: 1 / 3;
   justify-self: center;
   padding: 8px 16px;
@@ -91,10 +99,7 @@ button {
   border-radius: 5px;
   color: var(--white);
   background-color: var(--garnet);
-}
-
-button:hover {
-  background-color: var(--garnet-brighter);
+  width: 100%;
 }
 
 /* Message flash box styling */

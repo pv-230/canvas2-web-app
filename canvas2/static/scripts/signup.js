@@ -1,7 +1,7 @@
 // Global element variables
 const errorBox = document.querySelector('.error-box');
 const flashedMessages = [...document.querySelectorAll('.flashed-message')];
-const checkbox = document.getElementById('teacher-check');
+const roleSelect = document.getElementById('role-select');
 const teacherNotice = document.querySelector('.teacher-notice');
 const submitButton = document.querySelector('button');
 const password = document.getElementById('password');
@@ -14,9 +14,9 @@ if (flashedMessages.length > 0) {
   errorBox.toggleAttribute('hidden');
 }
 
-// Shows a notice when the teacher account checkbox is checked
-checkbox.addEventListener('change', (e) => {
-  if (e.target.checked) {
+// Shows a notice when the teacher account is selected
+roleSelect.addEventListener('change', (e) => {
+  if (e.target.options.selectedIndex === 2) {
     teacherNotice.removeAttribute('hidden');
   } else {
     teacherNotice.setAttribute('hidden', '');
@@ -30,7 +30,7 @@ submitButton.addEventListener('click', (e) => {
   form.reportValidity();
 
   if (isValid) {
-    if (password.value === passwordConfirm.value && password.value) {
+    if (password.value && password.value === passwordConfirm.value) {
       form.submit();
     } else {
       password.style.cssText = 'border: 1px solid rgb(255, 0, 0, .5)';
