@@ -253,9 +253,7 @@ section:not(:first-child) {
   background-color: var(--garnet);
 }
 
-#assignment-entry {
-  width: 80ch;
-  height: 400px;
+#assg-entry {
   resize: none;
 }
 
