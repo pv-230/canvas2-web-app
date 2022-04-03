@@ -66,7 +66,10 @@
 
   if (submitBtns) {
     submitBtns.forEach((submitBtn) => {
-      submitBtn.addEventListener('click', openPopup);
+      if (submitBtn.classList.contains('assignment-btn')) {
+        // Only adds the event to buttons of unsubmitted assignments
+        submitBtn.addEventListener('click', openPopup);
+      }
     });
   }
 })();

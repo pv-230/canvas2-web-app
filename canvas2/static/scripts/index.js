@@ -4,7 +4,7 @@ const index = (() => {
 
   // Shows the profile menu when the profile icon is clicked
   const openProfileMenu = (e) => {
-    e.stopPropagation(); // Prevents closing if menu itself is clicked
+    e.stopPropagation(); // Prevents closing after profile button is clicked
     menuBox.removeAttribute('hidden');
   };
 

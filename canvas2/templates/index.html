@@ -18,8 +18,8 @@
     <button class="profile-btn" type="button"></button>
   </header>
   <div class="menu-box" hidden>
-    <button type="button">Profile</button>
-    <button type="button"><a href="{{ url_for('auth.logout') }}" style="color:white;">Logout</a></button>
+    <button class="menu-btn" type="button">Profile</button>
+    <a class="menu-btn" href="{{ url_for('auth.logout') }}">Logout</a>
   </div>
   <div class="content">
     {% block content %}{% endblock %}

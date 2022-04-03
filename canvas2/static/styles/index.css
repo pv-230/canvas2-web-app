@@ -73,12 +73,12 @@ header {
   z-index: 1;
 }
 
-.menu-box > button:hover {
+.menu-btn:hover {
   background-color: var(--garnet-brighter);
 }
 
-.menu-box > button,
-.menu-box > button:active {
+.menu-btn,
+.menu-btn:active {
   font-family: robotobold;
   letter-spacing: 0.5px;
   color: var(--white);
@@ -86,4 +86,5 @@ header {
   border: none;
   border-radius: 5px;
   padding: 8px;
+  text-align: center;
 }
