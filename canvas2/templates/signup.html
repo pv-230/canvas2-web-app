@@ -15,10 +15,29 @@
     <img src="../static/images/favicon.svg" alt="">
     <h1>Sign up for Canvas2</h1>
   </div>
+
+  <!-- Flashed messages and static error messages -->
+  <div class="error-box" hidden>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="flashed-message">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <p class="error-message" hidden></p>
+  </div>
+  <div class="teacher-notice" hidden>
+    <p>
+      Teacher accounts must be approved by an administrator before use.
+      This process may take some time to complete.
+    </p>
+  </div>
+
   <div class="signup-frame">
     <form
       id="signup-form"
-      action="{{ url_for('create_account') }}"
+      action="{{ url_for('auth.signup') }}"
       method="POST"
       autocomplete="off"
     >
@@ -57,23 +76,5 @@
       </div>
       <button type="submit">Create account</button>
     </form>
-  </div>
-
-  <!-- Flashed messages and static error messages -->
-  <div class="error-box" hidden>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <p class="flashed-message">{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-    <p class="error-message" hidden></p>
-  </div>
-  <div class="teacher-notice" hidden>
-    <p>
-      Teacher accounts must be approved by an administrator before use.
-      This process may take some time to complete.
-    </p>
   </div>
 {% endblock %}

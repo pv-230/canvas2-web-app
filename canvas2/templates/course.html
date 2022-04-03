@@ -13,7 +13,7 @@
   <div class="main-content" data-code="{{ course['code'] }}">
     <section>
       <h2 class="section-title">{{ course["title"] }}</h2>
-      <p class="course-description">{{ course["description"] }}</p>
+      <p class="course-description">{{ course["desc"] }}</p>
     </section>
 
     <section>
@@ -26,25 +26,24 @@
                 <div class="assignment-title">{{ assignment["title"] }}</div>
                 <p>{{ assignment["description"] }}</p>
                 <p>
-                  Due: {{ assignment["dueDate"] }} at {{ assignment["dueTime"] }}
+                  Due: {{ assignment["deadline"] }} UTC
                 </p>
-                {% if role == "student" %}
-                  <div class="submit-status">
-                    Submitted: {{ assignment["isSubmitted"] }}
-                  </div>
-                {% endif %}
               </div>
-              {% if role == "student" %}
-                <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
-              {% elif role == "teacher" or role == "ta" %}
-                <a class="assignment-btn" href="./{{ course['code'] }}">MANAGE</a>
+              {% if session['role'] == 1 %}
+                {% if assignment["_id"] in course["submissions"] %}
+                  <button class="assignment-btn-submitted submit-btn" type="button">SUBMITTED</button>
+                {% else %}
+                  <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
+                {% endif %}
+              {% elif session['role'] >= 2 %}
+                <a class="assignment-btn" href="">MANAGE</a>
               {% endif %}
             </div>
           {% endfor %}
 
 
           <!-- Button for teachers to add assignments -->
-          {% if role == "teacher" %}
+          {% if session['role'] >= 3 %}
             <button class="add-assignment-card" type="button">
               <div class="add-icon-frame">
                 <img
@@ -64,7 +63,7 @@
     
     <section>
       <h2 class="section-title">People</h2>
-      {% if role == "teacher" %}
+      {% if session['role'] >= 3 %}
         <button class="link-btn" type="button">Generate invite link</button>
       {% endif %}
       <table class="user-table">
@@ -74,7 +73,7 @@
             <th scope="col">
               <div class="role-head">
                 <span>Role</span>
-                {% if role == "teacher" %}
+                {% if session['role'] >= 3 %}
                   <button class="role-btn manage">Manage</button>
                 {% endif %}
               </div>
@@ -82,34 +81,34 @@
           </tr>
         </thead>
         <tbody>
-          {% for user in course["users"] %}
+          {% for user in course["enrolled"] %}
             <tr>
-              <td>{{ user["name"] }}</td>
+              <td>{{ user["lastname"] }}, {{ user["firstname"] }}</td>
               <td>
                 <div 
                   class="role-cell"
                   data-id="{{ user['name'] }}"
                   data-role="{{ user['role'] }}"
                 >
-                  {% if user["role"] == "teacher" %}
+                  {% if user['role'] == 3 %}
                     Instructor
                     <img
                       class="table-icon"
                       src="{{ url_for('static', filename='images/star-icon.svg') }}"
                       hidden
                     />
-                  {% elif user["role"] == "ta" %}
+                  {% elif user['role'] == 2 %}
                     Teaching Assistant
-                    {% if role == "teacher" %}
+                    {% if session['role'] >= 3 %}
                       <img
                         class="table-icon remove-ta"
                         src="{{ url_for('static', filename='images/down-arrow.svg') }}"
                         hidden
                       />
                     {% endif %}
-                  {% elif user["role"] == "student" %}
+                  {% elif user["role"] == 1 %}
                     Student
-                    {% if role == "teacher" %}
+                    {% if session['role'] >= 3 %}
                       <img
                         class="table-icon set-ta"
                         src="{{ url_for('static', filename='images/up-arrow.svg') }}"
@@ -129,43 +128,52 @@
   <!-- Background to center popup windows -->
   <div class="popup-bg" hidden>
     <!-- Popup window for submitting assignments -->
-    {% if role == "student" %}
+    {% if session['role'] == 1 %}
       <div class="popup-window submit-window" hidden>
         <div class="popup-header">
           <h3>Submit Assignment</h3>
           <div class="close-btn"></div>
         </div>
-        <form id="popup-form" action="{{ url_for('submit_assignment') }}" method="POST">
-            <textarea
-              type='text'
-              id="assignment-entry"
-              name="assignment-entry"
-              placeholder="Enter your submission here"
-              required></textarea>
+        <form id="popup-form" action="{{ url_for('backend.submit_assignment') }}" method="POST">
+            <div class="form-input-group"> <!-- This should eventually be set by JS and hidden. -A -->
+              <label for="assg-id">Assignment ID</label>
+              <input type='text' id="assg-id" name="assg-id" required>
+            </div>
+            <div class="form-input-group">
+              <label for="assg-entry">Contents</label>
+              <textarea
+                type='text'
+                id="assg-entry"
+                name="assg-entry"
+                rows="20" cols="80"
+                placeholder="Enter your submission here"
+                required></textarea>
+              </div>
             <button class="form-btn" type="submit">Submit</button>
-            <input name="course-code" value="{{ course['code'] }}" hidden>
+            <input name="assg-course" value="{{ course['_id'] }}" hidden>
+            <input name="assg-user-id" value="{{ session['id'] }}" hidden>
         </form>
       </div>
     {% endif %}
 
     <!-- Popup window for teachers to create assignments -->
-    {% if role == "teacher" %}
+    {% if session['role'] >= 3 %}
       <div class="popup-window add-assignment-window" hidden>
         <div class="popup-header">
           <h3>Add Assignment</h3>
           <div class="close-btn"></div>
         </div>
-        <form id="popup-form" action="{{ url_for('add_assignment') }}" method="POST">
+        <form id="popup-form" action="{{ url_for('backend.add_assignment') }}" method="POST">
             <div class="form-input-group">
-              <label for="assignment-name">Name</label>
-              <input type='text' id="assignment-name" name="assignment-name" required>
+              <label for="assg-name">Name</label>
+              <input type='text' id="assg-name" name="assg-name" required>
             </div>
             <div class="form-input-group">
-              <label for="assignment-descrip">Description</label>
+              <label for="assg-desc">Description</label>
               <textarea
                 type='text'
-                id="assignment-descrip"
-                name="assignment-descrip"
+                id="assg-desc"
+                name="assg-desc"
                 required></textarea>
             </div>
             <div class="form-input-group">
@@ -173,7 +181,7 @@
               <input type='datetime-local' id="due-date" name="due-date" required>
             </div>
             <button class="form-btn" type="submit">Add</button>
-            <input name="course-code" value="{{ course['code'] }}" hidden>
+            <input name="course-code" value="{{ course['_id'] }}" hidden>
         </form>
       </div>
     {% endif %}

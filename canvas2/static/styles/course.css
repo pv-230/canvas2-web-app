@@ -83,6 +83,22 @@ section:not(:first-child) {
   text-align: center;
 }
 
+.assignment-btn-submitted:hover {
+  background-color: rgb(5, 150, 5);
+}
+
+.assignment-btn-submitted,
+.assignment-btn-submitted:active {
+  width: 100%;
+  padding: 8px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: rgb(5, 170, 5);
+  font-family: robotomedium;
+  color: var(--white);
+  text-align: center;
+}
+
 /* People section styling */
 
 .link-btn:hover {
