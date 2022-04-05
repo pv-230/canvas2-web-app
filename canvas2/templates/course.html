@@ -36,7 +36,12 @@
                   <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
                 {% endif %}
               {% elif session['role'] >= 2 %}
-                <a class="assignment-btn" href="">MANAGE</a>
+                <a
+                  class="assignment-btn"
+                  href="{{ url_for('frontend.manage_assignment', id=assignment['_id']) }}"
+                >
+                  MANAGE
+                </a>
               {% endif %}
             </div>
           {% endfor %}

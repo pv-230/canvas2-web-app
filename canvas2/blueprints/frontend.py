@@ -112,3 +112,10 @@ def course_page(code):
 
     # return course page
     return render_template("course.html", session=session, course=course)
+
+
+@frontend.route("/a/<id>")
+def manage_assignment(id):
+    """Renders the page where teachers can manage assignments."""
+
+    return render_template("assignment.html")

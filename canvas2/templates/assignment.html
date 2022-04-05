@@ -1,0 +1,61 @@
+<!-- This file represents the page where teachers can grade assignments. -->
+
+<!-- HTML head extension -->
+{% extends "index.html" %}
+{% block title %}Manage Assignment{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/assignment.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/assignment.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="main-content">
+    <section>
+      <div class="section-title-group">
+        <h2 class="section-title">Assignment Details</h2>
+        <button class="edit-details-btn">Edit</button>
+      </div>
+      <div class="details-group">
+        <div class="details-pair">
+          <h3>Title:</h3>
+          <p>Test assignment #1</p>
+        </div>
+        <div class="details-pair">
+          <h3>Description:</h3>
+          <p>This is a test assignment</p>
+        </div>
+        <div class="details-pair">
+          <h3>Due Date:</h3>
+          <p>2022-04-08 18:54:00 UTC</p>
+        </div>
+      </div>
+    </section>
+    
+    <section>
+      <h2 class="section-title">Submissions</h2>
+      <table class="student-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Submit Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>John Smith</td>
+            <td>
+              <div class="submit-date-row">
+                N/A
+                <button class="view-btn">View</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+  <div class="popup-bg">
+
+  </div>
+{% endblock %}
