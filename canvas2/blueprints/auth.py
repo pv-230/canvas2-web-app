@@ -136,7 +136,7 @@ def signup():
                 "username": uname,
                 "email": email,
                 "password": passwd,
-                "role": role,
+                "role": int(role),
                 "approved": auto_approve_users,
             }
         )

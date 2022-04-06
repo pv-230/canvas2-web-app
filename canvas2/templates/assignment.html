@@ -12,22 +12,18 @@
 {% block content %}
   <div class="main-content">
     <section>
-      <div class="section-title-group">
-        <h2 class="section-title">Assignment Details</h2>
+      <div class="assg-title-group">
+        <h2 class="section-title">{{ crs_info["code"] }} - {{ asg_info["title"] }}</h2>
         <button class="edit-details-btn">Edit</button>
       </div>
       <div class="details-group">
         <div class="details-pair">
-          <h3>Title:</h3>
-          <p>Test assignment #1</p>
-        </div>
-        <div class="details-pair">
           <h3>Description:</h3>
-          <p>This is a test assignment</p>
+          <p>{{ asg_info["description"] }}</p>
         </div>
         <div class="details-pair">
           <h3>Due Date:</h3>
-          <p>2022-04-08 18:54:00 UTC</p>
+          <p>{{ asg_info["deadline"] }}</p>
         </div>
       </div>
     </section>
@@ -38,21 +34,46 @@
         <thead>
           <tr>
             <th scope="col">Name</th>
-            <th scope="col">Submit Date</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Similarity Score</th>
+            <th scope="col">Grade</th>
+            <th scope="col">View</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>John Smith</td>
-            <td>
-              <div class="submit-date-row">
-                N/A
-                <button class="view-btn">View</button>
-              </div>
-            </td>
-          </tr>
+          <!-- obj has ["user"] and ["assignment"] -->
+          {% for obj in sub_info %}
+            <tr>
+              <td>{{ obj["user"]["lastname"] }}, {{ obj["user"]["firstname"] }}</td>
+
+              {% if obj["assignment"] %}
+                <!-- Displays the most recent timestamp -->
+                <td>{{ obj["assignment"][obj["assignment"]|length - 1]["timestamp"] }}</td>
+                <td>*</td>
+                <td>*</td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <button class="view-btn" type="button">Manage</button>
+                  </div>
+                </td>
+              {% else %}
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>*</td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <button class="view-btn inactive" type="button">N/A</button>
+                  </div>
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
+      <div class="save-revert-btns">
+        <button class="revert-btn" type="button">Revert</button>
+        <button class="save-btn" type="button">Save</button>
+      </div>
     </section>
   </div>
   <div class="popup-bg">

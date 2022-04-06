@@ -114,8 +114,74 @@ def course_page(code):
     return render_template("course.html", session=session, course=course)
 
 
-@frontend.route("/a/<id>")
-def manage_assignment(id):
+@frontend.route("/c/<cid>/a/<aid>")
+def manage_assignment(aid, cid):
     """Renders the page where teachers can manage assignments."""
 
-    return render_template("assignment.html")
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # Prevents page access by students
+    if session["role"] < 2:
+        abort(401)
+
+    asg_info = db_conn.db.assignments.find_one({"_id": ObjectId(aid)})
+    crs_info = db_conn.db.classes.find_one({"_id": ObjectId(cid)})
+    sub_info = db_conn.db.enrollments.aggregate(
+        [
+            {"$match": {"class": ObjectId(cid)}},
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "user",
+                    "foreignField": "_id",
+                    "as": "user",
+                }
+            },
+            {"$unwind": {"path": "$user"}},
+            {
+                "$redact": {
+                    "$cond": {
+                        "if": {"$lt": ["$user.role", 2]},
+                        "then": "$$KEEP",
+                        "else": "$$PRUNE",
+                    }
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "submissions",
+                    "let": {"e_assg": ObjectId(aid), "e_user": "$user._id"},
+                    "pipeline": [
+                        {
+                            "$match": {
+                                "$expr": {
+                                    "$and": [
+                                        {"$eq": ["$$e_user", "$user"]},
+                                        {"$eq": ["$$e_assg", "$assignment"]},
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    "as": "assignment",
+                }
+            },
+            {
+                "$project": {
+                    "user.password": 0,
+                    "assignment.assignment": 0,
+                    "assignment.class": 0,
+                    "assignment.user": 0,
+                }
+            },
+        ]
+    )
+
+    return render_template(
+        "assignment.html",
+        sub_info=sub_info,
+        asg_info=asg_info,
+        crs_info=crs_info
+    )

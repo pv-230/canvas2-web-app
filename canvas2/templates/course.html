@@ -38,7 +38,7 @@
               {% elif session['role'] >= 2 %}
                 <a
                   class="assignment-btn"
-                  href="{{ url_for('frontend.manage_assignment', id=assignment['_id']) }}"
+                  href="{{ url_for('frontend.manage_assignment', aid=assignment['_id'], cid=course['_id']) }}"
                 >
                   MANAGE
                 </a>
