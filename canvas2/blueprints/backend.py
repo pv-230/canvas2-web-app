@@ -170,3 +170,47 @@ def submit_assignment():
 
     # return redirect to same page, forcing a refresh
     return redirect(request.referrer)
+
+
+@backend.route("/edit-assg", methods=["POST"])
+def edit_assignment():
+    """Updates the details for an assignment"""
+
+    # get data from form
+    title = request.form["assg-name"]
+    desc = request.form["assg-desc"]
+    duedate = request.form["due-date"]
+    classid = request.form["course-id"]
+    assgid = request.form["assg-id"]
+
+    # make sure at user is at least logged in
+    if "id" not in session:
+        abort(401)  # unauthorized
+
+    # ensure user exists and is a teacher
+    teacher = db_conn.db.users.find_one({"_id": ObjectId(session["id"])})
+    if not teacher or not teacher["role"] >= 3:
+        abort(403)  # forbidden
+
+    # ensure teacher is enrolled in course
+    # NOTE: teacher['_id'] is already of form ObjectID, so no need to convert
+    enrollment = db_conn.db.enrollments.find_one(
+        {"user": teacher["_id"], "class": ObjectId(classid)}
+    )
+    if not enrollment:
+        abort(403)  # forbidden
+
+    # make assignment in database
+    db_conn.db.assignments.update_one(
+        {"_id": ObjectId(assgid)},
+        {
+            "$set": {
+                "title": title,
+                "description": desc,
+                "deadline": datetime.strptime(duedate, "%Y-%m-%dT%H:%M"),
+            }
+        }
+    )
+
+    # return redirect to same page, forcing a refresh
+    return redirect(request.referrer)

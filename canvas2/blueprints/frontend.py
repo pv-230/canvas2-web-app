@@ -126,7 +126,7 @@ def manage_assignment(aid, cid):
     if session["role"] < 2:
         abort(401)
 
-    asg_info = db_conn.db.assignments.find_one({"_id": ObjectId(aid)})
+    assg_info = db_conn.db.assignments.find_one({"_id": ObjectId(aid)})
     crs_info = db_conn.db.classes.find_one({"_id": ObjectId(cid)})
     sub_info = db_conn.db.enrollments.aggregate(
         [
@@ -182,6 +182,6 @@ def manage_assignment(aid, cid):
     return render_template(
         "assignment.html",
         sub_info=sub_info,
-        asg_info=asg_info,
+        assg_info=assg_info,
         crs_info=crs_info
     )

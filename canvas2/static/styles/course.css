@@ -227,7 +227,7 @@ section:not(:first-child) {
   resize: none;
 }
 
-#assignment-descrip {
+#assg-desc {
   width: 40ch;
   height: 100px;
   resize: none;

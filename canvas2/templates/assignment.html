@@ -9,25 +9,29 @@
   <script defer src="{{ url_for('static', filename='scripts/assignment.js') }}"></script>
 {% endblock %}
 
+<!-- Page content -->
 {% block content %}
   <div class="main-content">
+
+    <!-- Assignment details section -->
     <section>
       <div class="assg-title-group">
-        <h2 class="section-title">{{ crs_info["code"] }} - {{ asg_info["title"] }}</h2>
+        <h2 class="section-title">{{ crs_info["code"] }} - {{ assg_info["title"] }}</h2>
         <button class="edit-details-btn">Edit</button>
       </div>
       <div class="details-group">
         <div class="details-pair">
           <h3>Description:</h3>
-          <p>{{ asg_info["description"] }}</p>
+          <p>{{ assg_info["description"] }}</p>
         </div>
         <div class="details-pair">
           <h3>Due Date:</h3>
-          <p>{{ asg_info["deadline"] }}</p>
+          <p>{{ assg_info["deadline"] }}</p>
         </div>
       </div>
     </section>
     
+    <!-- Submissions section -->
     <section>
       <h2 class="section-title">Submissions</h2>
       <table class="student-table">
@@ -45,7 +49,8 @@
           {% for obj in sub_info %}
             <tr>
               <td>{{ obj["user"]["lastname"] }}, {{ obj["user"]["firstname"] }}</td>
-
+              
+              <!-- Displays information about student's submission -->
               {% if obj["assignment"] %}
                 <!-- Displays the most recent timestamp -->
                 <td>{{ obj["assignment"][obj["assignment"]|length - 1]["timestamp"] }}</td>
@@ -56,13 +61,15 @@
                     <button class="view-btn" type="button">Manage</button>
                   </div>
                 </td>
+
+              <!-- No submission found for the user -->
               {% else %}
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>*</td>
                 <td class="btn-cell">
                   <div class="btn-wrapper">
-                    <button class="view-btn inactive" type="button">N/A</button>
+                    <button class="inactive-btn" type="button">N/A</button>
                   </div>
                 </td>
               {% endif %}
@@ -70,13 +77,52 @@
           {% endfor %}
         </tbody>
       </table>
+
       <div class="save-revert-btns">
         <button class="revert-btn" type="button">Revert</button>
         <button class="save-btn" type="button">Save</button>
       </div>
     </section>
   </div>
-  <div class="popup-bg">
 
+  <!-- Popup windows -->
+  <div class="popup-bg" hidden>
+    <div class="popup-window edit-assg-window" hidden>
+      <div class="popup-header">
+        <h3>Edit Assignment</h3>
+        <div class="close-btn"></div>
+      </div>
+      <form id="popup-form" action="{{ url_for('backend.edit_assignment') }}" method="POST">
+          <div class="form-input-group">
+            <label for="assg-name">Name</label>
+            <input
+              type='text'
+              id="assg-name"
+              name="assg-name"
+              value="{{ assg_info['title'] }}"
+              required>
+          </div>
+          <div class="form-input-group">
+            <label for="assg-desc">Description</label>
+            <textarea
+              type='text'
+              id="assg-desc"
+              name="assg-desc"
+              required>{{ assg_info['description'] }}</textarea>
+          </div>
+          <div class="form-input-group">
+            <label for="due-date">Due date</label>
+            <input
+              type='datetime-local'
+              id="due-date"
+              name="due-date"
+              value="{{ assg_info['deadline'] }}"
+              required>
+          </div>
+          <button class="form-btn" type="submit">Save</button>
+          <input name="assg-id" value="{{ assg_info['_id'] }}" hidden>
+          <input name="course-id" value="{{ crs_info['_id'] }}" hidden>
+      </form>
+    </div>
   </div>
 {% endblock %}
