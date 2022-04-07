@@ -186,6 +186,10 @@ def manage_assignment(aid, cid):
         ]
     )
 
+    # The T in the datetime string gets removed somewhere and we need it back
+    # so chrome can automatically fill the datetime element value
+    assg_info["deadline"] = str(assg_info["deadline"]).replace(" ", "T")
+
     return render_template(
         "assignment.html",
         student_subs=student_subs,

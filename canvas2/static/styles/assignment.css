@@ -99,9 +99,12 @@ section:not(:first-child) {
   white-space: nowrap;
 }
 
-.sim-col,
+.sim-col {
+  width: 105px;
+}
+
 .grade-col {
-  width: max-content;
+  width: 70px;
 }
 
 .view-col {
@@ -278,6 +281,10 @@ td.btn-cell {
   width: 40ch;
   height: 100px;
   resize: none;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 /* Manage submission window styling */

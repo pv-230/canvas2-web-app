@@ -233,6 +233,10 @@ section:not(:first-child) {
   resize: none;
 }
 
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 /* Add assignment button styling */
 
 .add-assignment-card {

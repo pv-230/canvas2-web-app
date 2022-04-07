@@ -246,8 +246,6 @@ def submission_info(sid):
     if request.method == "POST":
         comment = request.form["comment"]
         grade = request.form["grade"]
-        print(comment, flush=True)
-        print(grade, flush=True)
 
         if comment:
             pass  # Add comment to document's comment field (use sid)
