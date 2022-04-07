@@ -118,7 +118,7 @@ section:not(:first-child) {
   width: 80px;
 }
 
-#grade {
+.grade {
   max-width: 100%;
 }
 
@@ -350,10 +350,10 @@ td.btn-cell {
   background-color: var(--black);
   padding: 4px;
   max-height: 72px;
+  max-width: 80ch;
   overflow: auto;
-}
-
-.comment-group > p {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
   font-family: robotolight;
 }
 

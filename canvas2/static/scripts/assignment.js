@@ -2,6 +2,9 @@
 
 // Assignment management module
 (() => {
+  // State
+  let newGrades = {};
+
   // Frames
   const mainContent = document.querySelector('.main-content');
   const popupBg = document.querySelector('.popup-bg');
@@ -9,12 +12,17 @@
   const editAssgWindow = document.querySelector('.edit-assg-window');
   const manageSubWindow = document.querySelector('.manage-sub-window');
   const submissionContents = document.querySelector('.submission-contents');
-  const submissionComments = document.getElementById('comments');
+  const commentGroup = document.querySelector('.comment-group');
+  const windowGrade = document.getElementById('window-grade');
+  const gradeCells = [...document.querySelectorAll('.grade-cell')];
 
   // Buttons
   const viewBtns = [...document.querySelectorAll('.view-btn')];
-  const closeBtns = [...document.querySelectorAll('.close-btn')];
+  const closeBtnEditAssg = document.querySelector('.close-btn-edit-assg');
+  const closeBtnManageSub = document.querySelector('.close-btn-manage-sub');
   const editBtn = document.querySelector('.edit-details-btn');
+  const revertBtn = document.querySelector('.revert-btn');
+  const saveBtn = document.querySelector('.save-btn');
 
   // Forms
   const editAssgForm = document.forms['edit-assg-form'];
@@ -26,7 +34,10 @@
    * @param {String} sid Submission id
    */
   const loadSubContents = (sid) => {
-    // Builds the POST request
+    submissionContents.textContent = 'Loading contents...';
+    commentGroup.textContent = 'Loading comments...';
+
+    // Builds the GET request
     const request = new Request(`/secretary/s/${sid}/submission-info`, {
       method: 'GET',
       headers: {
@@ -37,14 +48,28 @@
     fetch(request)
       .then((response) => {
         if (response.ok) {
-          // Adds the submission info the submission management window
-          response.json().then((contents) => {
-            submissionContents.textContent = contents[0]['contents'];
-            if (contents[0]['comments'].length > 0) {
-              console.log(contents[0]['comments']);
+          response.json().then((data) => {
+            // Adds submission contents to the window
+            submissionContents.textContent = data[0]['contents'];
+
+            // Remove the "Loading comments" string
+            commentGroup.removeChild(commentGroup.firstChild);
+
+            if (data[0]['comments'].length > 0) {
+              // Adds any comments to the comment block
+              data[0]['comments'].forEach((comment) => {
+                const commentPara = document.createElement('p');
+                commentPara.textContent = comment;
+                commentGroup.appendChild(commentPara);
+              });
             } else {
-              console.log('Empty comments');
+              // No comments found
+              const commentPara = document.createElement('p');
+              commentPara.textContent = 'No comments.';
+              commentGroup.appendChild(commentPara);
             }
+
+            windowGrade.setAttribute('value', data[0]['grade']);
           });
         }
       })
@@ -55,6 +80,8 @@
 
   /**
    * Opens a popup window and blurs the background.
+   *
+   * @param {Event} e
    */
   const openPopup = (e) => {
     mainContent.style.cssText = 'filter: blur(5px);';
@@ -76,9 +103,9 @@
   };
 
   /**
-   * Closes popup window and hides any frames that were shown inside.
+   * Closes the popup window for editing assignment details.
    */
-  const closePopup = () => {
+  const closePopupEditAssg = () => {
     popupWindows.forEach((window) => {
       if (!window.hasAttribute('hidden')) {
         window.setAttribute('hidden', '');
@@ -86,14 +113,121 @@
     });
 
     editAssgForm.reset();
-    manageSubForm.reset();
-    manageSubForm.removeAttribute('action');
     mainContent.removeAttribute('style'); // Removes blur effect
     popupBg.setAttribute('hidden', '');
   };
 
+  /**
+   * Closes the popup window for managing submissions.
+   */
+  const closePopupManageSub = () => {
+    popupWindows.forEach((window) => {
+      if (!window.hasAttribute('hidden')) {
+        window.setAttribute('hidden', '');
+      }
+    });
+
+    manageSubForm.reset();
+    manageSubForm.removeAttribute('action');
+
+    // Clears the comment section
+    while (commentGroup.childElementCount > 0) {
+      commentGroup.removeChild(commentGroup.firstElementChild);
+    }
+
+    mainContent.removeAttribute('style'); // Removes blur effect
+    popupBg.setAttribute('hidden', '');
+  };
+
+  /**
+   * Allows the user to edit grades directly from the table.
+   *
+   * @param {Event} e
+   */
+  const editGrades = (e) => {
+    // These values go into the updated grades object
+    const subId = e.currentTarget.getAttribute('data-id');
+    const newGrade = Number.parseFloat(e.currentTarget.value);
+
+    if (newGrade && newGrade >= 0 && newGrade <= 100) {
+      // newGrade was a valid float
+      newGrades[subId] = newGrade.toFixed(2);
+      e.currentTarget.value = newGrade.toFixed(2);
+
+      // Change color of buttons
+      if (revertBtn.classList.contains('inactive')) {
+        revertBtn.classList.remove('inactive');
+        revertBtn.removeAttribute('disabled');
+      }
+      if (saveBtn.classList.contains('inactive')) {
+        saveBtn.classList.remove('inactive');
+        saveBtn.removeAttribute('disabled');
+      }
+    } else {
+      // newGrade was an invalid value, resets grade input to original
+      const oldGrade = e.currentTarget.getAttribute('value');
+      e.currentTarget.value = oldGrade;
+
+      // Sets the grade in the updated grades object to the original if exists
+      if (newGrades[subId] && newGrades[subId] !== oldGrade) {
+        newGrades[subId] = oldGrade;
+      }
+    }
+  };
+
+  /**
+   * Resets the grades that were edited in the table.
+   */
+  const resetGrades = () => {
+    // Reset values
+    gradeCells.forEach((cell) => {
+      cell.value = cell.getAttribute('value');
+    });
+
+    // Deactivate buttons
+    revertBtn.classList.add('inactive');
+    revertBtn.setAttribute('disabled', true);
+    saveBtn.classList.add('inactive');
+    saveBtn.setAttribute('disabled', true);
+
+    // Reset state
+    newGrades = {};
+  };
+
+  /**
+   * Sends the grades in the newGrades object as a JSON to the server.
+   */
+  const sendNewGrades = () => {
+    // Deactivate buttons
+    revertBtn.classList.add('inactive');
+    revertBtn.setAttribute('disabled', true);
+    saveBtn.classList.add('inactive');
+    saveBtn.setAttribute('disabled', true);
+
+    // Builds the POST request
+    const request = new Request(`/secretary/update-grades`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newGrades),
+    });
+
+    fetch(request)
+      .then((response) => {
+        if (response.ok) {
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   // Event listeners
-  closeBtns.forEach((button) => button.addEventListener('click', closePopup));
+
+  closeBtnEditAssg.addEventListener('click', closePopupEditAssg);
+  closeBtnManageSub.addEventListener('click', closePopupManageSub);
 
   if (viewBtns) {
     viewBtns.forEach((viewBtn) => {
@@ -104,4 +238,14 @@
   if (editBtn) {
     editBtn.addEventListener('click', openPopup);
   }
+
+  if (gradeCells) {
+    gradeCells.forEach((cell) => {
+      cell.addEventListener('change', editGrades);
+    });
+  }
+
+  revertBtn.addEventListener('click', resetGrades);
+
+  saveBtn.addEventListener('click', sendNewGrades);
 })();

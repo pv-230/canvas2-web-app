@@ -166,6 +166,8 @@ def submit_assignment():
             "contents": contents,
             "timestamp": datetime.now(),
             "comments": [],
+            "grade": 0.0,
+            "simscore": 0.0,
         }
     )
 
@@ -201,7 +203,7 @@ def edit_assignment():
     if not enrollment:
         abort(403)  # forbidden
 
-    # make assignment in database
+    # Updates the assignment in the database
     db_conn.db.assignments.update_one(
         {"_id": ObjectId(assgid)},
         {
@@ -224,7 +226,7 @@ def submission_info(sid):
     if "id" not in session:
         return redirect(url_for("auth.login"))
 
-    # Prevents page access by students
+    # Prevents access by students
     if session["role"] < 2:
         abort(401)
 
@@ -248,8 +250,40 @@ def submission_info(sid):
         grade = request.form["grade"]
 
         if comment:
-            pass  # Add comment to document's comment field (use sid)
+            db_conn.db.submissions.update_one(
+                {"_id": ObjectId(sid)},
+                {
+                    "$push": {
+                        "comments": comment
+                    }
+                }
+            )
+
         if grade:
-            pass  # Set document's grade field to the form data
+            db_conn.db.submissions.update_one(
+                {"_id": ObjectId(sid)},
+                {
+                    "$set": {
+                        "grade": float(grade)
+                    }
+                }
+            )
 
         return redirect(request.referrer)
+
+
+@backend.route('/update-grades', methods=["POST"])
+def update_grades():
+    """Allows the updating of grades for multiple submissions"""
+
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # Prevents access by students
+    if session["role"] < 2:
+        abort(401)
+
+    # print(request.json)
+
+    return redirect(request.referrer)

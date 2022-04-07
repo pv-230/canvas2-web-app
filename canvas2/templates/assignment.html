@@ -54,16 +54,18 @@
               {% if obj["assignment"] %}
                 <!-- Displays the most recent timestamp -->
                 <td>{{ obj["assignment"][obj["assignment"]|length - 1]["timestamp"] }}</td>
-                <td>*</td>
+                <td>{{ obj["assignment"][obj["assignment"]|length - 1]["simscore"] }}</td>
                 <td>
                   <input 
                     type="number"
-                    id="grade"
+                    class="grade grade-cell"
                     name="grade"
                     min="0"
                     max="100"
                     step="0.01"
-                    value="0"
+                    value="{{ obj['assignment'][obj['assignment']|length - 1]['grade'] }}"
+                    data-id="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}"
+                    autocomplete="off"
                   />
                 </td>
                 <td class="btn-cell">
@@ -82,17 +84,7 @@
               {% else %}
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>
-                  <input 
-                    type="number"
-                    id="grade"
-                    name="grade"
-                    min="0"
-                    max="100"
-                    step="0.01"
-                    value="0"
-                  />
-                </td>
+                <td>N/A</td>
                 <td class="btn-cell">
                   <div class="btn-wrapper">
                     <button class="inactive-btn" type="button">N/A</button>
@@ -105,8 +97,8 @@
       </table>
 
       <div class="save-revert-btns">
-        <button class="revert-btn inactive" type="button">Revert</button>
-        <button class="save-btn inactive" type="button">Save</button>
+        <button class="revert-btn inactive" type="button" disabled>Revert</button>
+        <button class="save-btn inactive" type="button" disabled>Save</button>
       </div>
     </section>
   </div>
@@ -118,7 +110,7 @@
     <div class="popup-window edit-assg-window" hidden>
       <div class="popup-header">
         <h3>Edit Assignment</h3>
-        <div class="close-btn"></div>
+        <div class="close-btn close-btn-edit-assg"></div>
       </div>
       <div class="popup-contents">
         <form
@@ -163,25 +155,24 @@
     <div class="popup-window manage-sub-window" hidden>
       <div class="popup-header">
         <h3>Manage Submission</h3>
-        <div class="close-btn"></div>
+        <div class="close-btn close-btn-manage-sub"></div>
       </div>
       <div class="popup-contents">
-        
         <div class="first-form-row">
           <div class="sim-score">
             <h4>Similarity Score:</h4>
             <p>Loading...</p>
           </div>
           <div class="grade-field">
-            <label for="grade">Set Grade:</label>
+            <label for="window-grade">Set Grade:</label>
             <input
               type="number"
-              id="grade"
+              class="grade"
+              id="window-grade"
               name="grade"
               min="0"
               max="100"
               step="0.01"
-              value="0"
               form="manage-sub-form"
             >
           </div>
@@ -192,15 +183,7 @@
         </div>
         <div class="form-input-group">
           <h4>Comments:</h4>
-          <div class="comment-group">
-            <p>This is a test comment.</p>
-            <p>This is a test comment.</p>
-            <p>This is a test comment.</p>
-            <p>This is a test comment.</p>
-            <p>This is a test comment.</p>
-            <p>This is a test comment.</p>
-            <p>This is a test comment.</p>
-          </div>
+          <div class="comment-group"></div>
         </div>
         <form
           class="popup-form"
@@ -216,7 +199,6 @@
                 name="comment"
               >
             </div>
-            
           </div>
           <button class="form-btn" type="submit">Save</button>
         </form>
