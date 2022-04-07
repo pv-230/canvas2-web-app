@@ -1,6 +1,7 @@
 from bson import ObjectId
 from datetime import datetime
 from flask import Blueprint, request, session, redirect, url_for, abort
+import json
 
 from ..utils.db import db_conn
 
@@ -214,3 +215,43 @@ def edit_assignment():
 
     # return redirect to same page, forcing a refresh
     return redirect(request.referrer)
+
+
+@backend.route("/s/<sid>/submission-info", methods=["GET", "POST"])
+def submission_info(sid):
+
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # Prevents page access by students
+    if session["role"] < 2:
+        abort(401)
+
+    # Gets a submission's contents and comments
+    if request.method == "GET":
+        sub_info = list(db_conn.db.submissions.find(
+            {"_id": ObjectId(sid)},
+            {
+                "parsedContents": 0,
+                "_id": 0,
+                "assignment": 0,
+                "class": 0,
+                "user": 0,
+                "timestamp": 0
+            }
+        ))
+        return json.dumps(sub_info)
+
+    if request.method == "POST":
+        comment = request.form["comment"]
+        grade = request.form["grade"]
+        print(comment, flush=True)
+        print(grade, flush=True)
+
+        if comment:
+            pass  # Add comment to document's comment field (use sid)
+        if grade:
+            pass  # Set document's grade field to the form data
+
+        return redirect(request.referrer)

@@ -37,16 +37,16 @@
       <table class="student-table">
         <thead>
           <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Timestamp</th>
-            <th scope="col">Similarity Score</th>
-            <th scope="col">Grade</th>
-            <th scope="col">View</th>
+            <th scope="col" class="name-col">Name</th>
+            <th scope="col" class="time-col">Timestamp</th>
+            <th scope="col" class="sim-col">Sim Score</th>
+            <th scope="col" class="grade-col">Grade</th>
+            <th scope="col" class="view-col">View</th>
           </tr>
         </thead>
         <tbody>
           <!-- obj has ["user"] and ["assignment"] -->
-          {% for obj in sub_info %}
+          {% for obj in student_subs %}
             <tr>
               <td>{{ obj["user"]["lastname"] }}, {{ obj["user"]["firstname"] }}</td>
               
@@ -58,7 +58,13 @@
                 <td>*</td>
                 <td class="btn-cell">
                   <div class="btn-wrapper">
-                    <button class="view-btn" type="button">Manage</button>
+                    <button
+                      class="view-btn"
+                      type="button"
+                      data-id="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}"
+                    >
+                      Manage
+                    </button>
                   </div>
                 </td>
 
@@ -87,12 +93,20 @@
 
   <!-- Popup windows -->
   <div class="popup-bg" hidden>
+
+    <!-- Window for editing the assignment details -->
     <div class="popup-window edit-assg-window" hidden>
       <div class="popup-header">
         <h3>Edit Assignment</h3>
         <div class="close-btn"></div>
       </div>
-      <form id="popup-form" action="{{ url_for('backend.edit_assignment') }}" method="POST">
+      <div class="popup-contents">
+        <form
+          class="popup-form"
+          id="edit-assg-form"
+          action="{{ url_for('backend.edit_assignment') }}"
+          method="POST"
+        >
           <div class="form-input-group">
             <label for="assg-name">Name</label>
             <input
@@ -105,7 +119,6 @@
           <div class="form-input-group">
             <label for="assg-desc">Description</label>
             <textarea
-              type='text'
               id="assg-desc"
               name="assg-desc"
               required>{{ assg_info['description'] }}</textarea>
@@ -122,7 +135,66 @@
           <button class="form-btn" type="submit">Save</button>
           <input name="assg-id" value="{{ assg_info['_id'] }}" hidden>
           <input name="course-id" value="{{ crs_info['_id'] }}" hidden>
-      </form>
+        </form>
+      </div>
+    </div>
+
+    <!-- Window for managing submissions -->
+    <div class="popup-window manage-sub-window" hidden>
+      <div class="popup-header">
+        <h3>Manage Submission</h3>
+        <div class="close-btn"></div>
+      </div>
+      <div class="popup-contents">
+        <div class="sim-score">
+          <h4>Similarity Score:</h4>
+          <p>Loading...</p>
+        </div>
+        <div class="form-input-group">
+          <h4>Contents:</h4>
+          <textarea class="submission-contents" readonly></textarea>
+        </div>
+        <div class="form-input-group">
+          <h4>Comments:</h4>
+          <div class="comment-group">
+            <p>This is a test comment.</p>
+            <p>This is a test comment.</p>
+            <p>This is a test comment.</p>
+            <p>This is a test comment.</p>
+            <p>This is a test comment.</p>
+            <p>This is a test comment.</p>
+            <p>This is a test comment.</p>
+          </div>
+        </div>
+        <form
+          class="popup-form"
+          id="manage-sub-form"
+          method="POST"
+        >
+          <div class="form-wrapper">
+            <div class="add-comment-field">
+              <label for="add-comment">Add Comment:</label>
+              <input
+                type="text"
+                id="add-comment"
+                name="comment"
+              >
+            </div>
+            <div class="grade-field">
+              <label for="grade">Set Grade:</label>
+              <input
+                type="number"
+                id="grade"
+                name="grade"
+                min="0"
+                max="100"
+                step="0.01"
+              >
+            </div>
+          </div>
+          <button class="form-btn" type="submit">Save</button>
+        </form>
+      </div>
     </div>
   </div>
 {% endblock %}

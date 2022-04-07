@@ -126,9 +126,14 @@ def manage_assignment(aid, cid):
     if session["role"] < 2:
         abort(401)
 
+    # Gets assignment information
     assg_info = db_conn.db.assignments.find_one({"_id": ObjectId(aid)})
+
+    # Gets course information
     crs_info = db_conn.db.classes.find_one({"_id": ObjectId(cid)})
-    sub_info = db_conn.db.enrollments.aggregate(
+
+    # Builds an object containing all students and their submissions
+    student_subs = db_conn.db.enrollments.aggregate(
         [
             {"$match": {"class": ObjectId(cid)}},
             {
@@ -174,6 +179,8 @@ def manage_assignment(aid, cid):
                     "assignment.assignment": 0,
                     "assignment.class": 0,
                     "assignment.user": 0,
+                    "assignment.contents": 0,
+                    "assignment.parsedContents": 0
                 }
             },
         ]
@@ -181,7 +188,7 @@ def manage_assignment(aid, cid):
 
     return render_template(
         "assignment.html",
-        sub_info=sub_info,
+        student_subs=student_subs,
         assg_info=assg_info,
         crs_info=crs_info
     )
