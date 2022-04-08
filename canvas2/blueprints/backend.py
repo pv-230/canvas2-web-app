@@ -284,6 +284,14 @@ def update_grades():
     if session["role"] < 2:
         abort(401)
 
-    # print(request.json)
+    for id in request.json:
+        db_conn.db.submissions.update_one(
+            {"_id": ObjectId(id)},
+            {
+                "$set": {
+                    "grade": float(request.json[id])
+                }
+            }
+        )
 
     return redirect(request.referrer)

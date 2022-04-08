@@ -36,6 +36,7 @@
   const loadSubContents = (sid) => {
     submissionContents.textContent = 'Loading contents...';
     commentGroup.textContent = 'Loading comments...';
+    windowGrade.value = '*';
 
     // Builds the GET request
     const request = new Request(`/secretary/s/${sid}/submission-info`, {
@@ -69,7 +70,7 @@
               commentGroup.appendChild(commentPara);
             }
 
-            windowGrade.setAttribute('value', data[0]['grade']);
+            windowGrade.value = data[0]['grade'];
           });
         }
       })
