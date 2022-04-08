@@ -5,7 +5,6 @@ from canvas2.plagiarism.jaccard.jaccardsimilarity import parseText, shingles
 from ..utils.db import db_conn
 
 
-
 # create main backend blueprint
 backend = Blueprint(
     "backend",
