@@ -1,7 +1,7 @@
 from bson import ObjectId
 from datetime import datetime
 from flask import Blueprint, request, session, redirect, url_for, abort
-from canvas2.plagiarism.jaccardsimilarity import parseText
+from canvas2.plagiarism.jaccard.jaccardsimilarity import parseText, shingles
 from ..utils.db import db_conn
 
 
@@ -163,7 +163,7 @@ def submit_assignment():
         "class": assignment['class'],
         "user": ObjectId(userid),
         "contents": contents,
-        "parsedContents": parseText(contents),
+        "parsedContents": repr(shingles(parseText(contents))),
         "timestamp": datetime.now(),
         "comments": []
     })

@@ -29,22 +29,29 @@ def wordCompression(words: list) -> list:
     Ignore any words that are among the 1000 most common words in English
     Words are lemmatized into their base form
     Resulting words get reduced to their most common synonym (this combats plagiarism by rewording)
+    1000 most common words in English source: https://gist.github.com/deekayen/4148741
     """
 
+    # Create a set from the 1000 most common words in English
     ignoreThese = set()
-    with open("assets/mostCommonWords.txt", "r") as f:
+    with open("../assets/mostCommonWords.txt", "r") as f:
         for line in f:
             ignoreThese.add(line.strip())
 
+    # Clean input text by removing non-alphanumeric characters and converting to lowercase
     words = [
         word.lower()
         for word in words
         if word.isalnum() and word.lower() not in ignoreThese
     ]
 
+    # Create a frequency list of the most common words in English (used to find most common synonyms)
     frequencyList = FreqDist(x.lower() for x in brown.words())
+
+    # Lemmatize words (e.g. "dogs" -> "dog")
     words = [WordNetLemmatizer().lemmatize(word) for word in words]
 
+    # Find the most common synonym for each word
     seen = dict()
     for i, word in enumerate(words):
         if word in seen:
@@ -66,22 +73,21 @@ def wordCompression(words: list) -> list:
                 words[i] = stack[0][0]
                 seen[word] = stack[0][0]
 
-    words = [word for word in words if word.isalnum() and word not in ignoreThese]
+    # Filter out words that are among the 1000 most common words in English once more
+    words = [word for word in words if word.isalnum()
+             and word not in ignoreThese]
     return words
 
 
-# Shingling algorithm inspired by:
-# http://ethen8181.github.io/machine-learning/clustering_old/text_similarity/text_similarity.html#jaccard-similarity
-
-
-def shingles(words: list, k: int) -> set:
+def shingles(words: list, k=5) -> set:
     """
     Return a list of shingles of length k
+    Source: http://ethen8181.github.io/machine-learning/clustering_old/text_similarity/text_similarity.html#jaccard-similarity (k-shingling, modified)
     """
     words = " ".join(words)
     shingles = set()
     for i in range(len(words) - k + 1):
-        shingles.add("".join(words[i : i + k]))
+        shingles.add("".join(words[i: i + k]))
     return shingles
 
 
@@ -98,5 +104,4 @@ def compareDocs(doc1: str, doc2: str, k: int) -> float:
     """
     shingles1 = shingles(parseText(doc1), k)
     shingles2 = shingles(parseText(doc2), k)
-
     return similarityScore(shingles1, shingles2)
