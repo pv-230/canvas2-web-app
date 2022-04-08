@@ -1,0 +1,95 @@
+import secrets
+from bson import ObjectId
+from datetime import datetime, timedelta
+from flask import Blueprint, request, session, render_template, redirect, url_for, abort
+
+from ..utils.db import db_conn
+
+# NOTE: backend was getting cluttered so I moved over here. -A
+
+# create main backend blueprint
+invites = Blueprint(
+    "invites",
+    __name__,
+    url_prefix="/invite",
+)
+
+
+@invites.route("/create", methods=["POST"])
+def create_invite():
+    """Joins a class using a given invite code."""
+
+    # get vars; make sure post meets specs
+    if "inv-class" not in request.form:
+        abort(400)
+    else:
+        course = request.form["inv-class"]
+    print(course)
+
+    # ensure user is logged in
+    if "id" not in session:
+        abort(401)
+
+    # ensure user is permitted to do this operation
+    if not session["role"] >= 3:
+        abort(403)
+
+    # make invite code
+    db_conn.db.invites.insert_one(
+        {
+            "class": ObjectId(course),
+            "code": secrets.token_urlsafe(16),
+            "expires": datetime.now() + timedelta(days=7),
+        }
+    )
+
+    # return to referrer
+    return redirect(request.referrer)
+
+
+@invites.route("/j/<code>", methods=["GET", "POST"])
+def join_invite(code):
+    """
+    GET: Renders the page where a user can join a class.
+    POST: Joins a class using a given invite code.
+    """
+
+    # get invite data
+    invite = db_conn.db.invites.find_one({"code": code})
+    if not invite:
+        abort(404)
+
+    # get course data
+    course = db_conn.db.classes.find_one({"_id": invite["class"]})
+    if not course:
+        abort(500)
+
+    # if get, render page
+    if request.method == "GET":
+
+        # NOTE: temp response, till frontend consent page is made
+        return f"""
+        <p>You have been invited to join the class:<code>{course["title"]}</code></p>
+        <p>Please click the button below to join the class.</p>
+        <form action="/invite/j/{code}" method="POST">
+            <input type="submit" value="Join Class">
+        </form>
+        """
+
+    # if post, actually join the class
+    elif request.method == "POST":
+
+        # ensure user is logged in
+        if "id" not in session:
+            abort(401)
+
+        # enroll user in course
+        db_conn.db.enrollments.insert_one(
+            {
+                "user": ObjectId(session["id"]),
+                "class": ObjectId(course["_id"]),
+            }
+        )
+
+        # redirect to course page
+        return redirect(url_for("frontend.course_page", code=course["_id"]))

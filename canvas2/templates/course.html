@@ -63,9 +63,22 @@
     
     <section>
       <h2 class="section-title">People</h2>
+
+      <!-- Invite Link for Teachers-->
       {% if session['role'] >= 3 %}
-        <button class="link-btn" type="button">Generate invite link</button>
+        {% if not course['invite'] %}
+        <form action="/invite/create" method="POST">
+          <input type='text' name="inv-class" value="{{ course['_id'] }}" hidden>
+          <button class="link-btn" type="submit">Generate invite link</button>
+        </form>
+        {% else %}
+        <div>
+          <p>Invite link: {{ url_for('invites.join_invite', code=course['invite']['code']) }}</p>
+        </div>
+        {% endif %}
       {% endif %}
+
+      <!-- User Table -->
       <table class="user-table">
         <thead>
           <tr>
