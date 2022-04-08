@@ -1,5 +1,6 @@
 from flask import Blueprint, request, session, render_template, redirect, \
     url_for, flash
+import bcrypt
 
 from ..utils.db import db_conn
 
@@ -42,11 +43,13 @@ def login():
         user = db_conn.db["users"].find_one({"username": username})
         print("User: ", user)
 
-        # TODO: password checking goes here
-        password = password  # shut up flask8
-
         # if no user, error and return
         if user is None:
+            flash("Invalid username or password", "error")
+            return redirect(url_for("auth.login"))
+
+        # if user exists, check password
+        if not bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
             flash("Invalid username or password", "error")
             return redirect(url_for("auth.login"))
 
@@ -127,6 +130,12 @@ def signup():
             flash("Email already in use!", "error")
             return redirect(url_for("auth.signup"))
 
+        # format password
+        hashpass = bcrypt.hashpw(
+            passwd.encode("utf-8"),
+            bcrypt.gensalt()
+        ).decode("utf-8")
+
         # insert user into database
         auto_approve_users = True  # For later... ;) -A
         db_conn.db["users"].insert_one(
@@ -135,7 +144,7 @@ def signup():
                 "lastname": lame,
                 "username": uname,
                 "email": email,
-                "password": passwd,
+                "password": hashpass,
                 "role": role,
                 "approved": auto_approve_users,
             }
