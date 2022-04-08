@@ -61,7 +61,12 @@ a:hover {
   margin-top: 4px;
 }
 
-button {
+button:hover {
+  background-color: var(--garnet-brighter);
+}
+
+button,
+button:active {
   width: 100%;
   margin-top: 24px;
   padding: 8px 0;
@@ -70,10 +75,6 @@ button {
   border-radius: 5px;
   color: var(--white);
   background-color: var(--garnet);
-}
-
-button:hover {
-  background-color: var(--garnet-brighter);
 }
 
 /* Login form styling */
