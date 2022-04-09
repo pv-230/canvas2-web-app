@@ -218,15 +218,7 @@ def init_nltk():
     """
     Initializes the NLTK library with required corpora and tokenizers.
     """
-    downloaded_corpora = set(os.listdir(nltk.data.find("corpora")))
-    downloaded_tokenizers = set(os.listdir(nltk.data.find("tokenizers")))
-
-    required_corpora = set(["stopwords", "brown", "omw-1.4", "wordnet"])
-    required_tokenizers = set(["punkt"])
-
-    required = required_corpora.union(
-        required_tokenizers) - downloaded_corpora - downloaded_tokenizers
-
+    required = ["stopwords", "brown", "omw-1.4", "wordnet", "punkt"]
     for x in required:
         nltk.download(x)
 
