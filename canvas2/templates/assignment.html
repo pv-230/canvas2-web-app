@@ -17,7 +17,9 @@
     <section>
       <div class="assg-title-group">
         <h2 class="section-title">{{ crs_info["code"] }} - {{ assg_info["title"] }}</h2>
-        <button class="edit-details-btn">Edit</button>
+        {% if session['role'] >= 3 %}
+          <button class="edit-details-btn">Edit</button>
+        {% endif %}
       </div>
       <div class="details-group">
         <div class="details-pair">
@@ -161,7 +163,7 @@
         <div class="first-form-row">
           <div class="sim-score">
             <h4>Similarity Score:</h4>
-            <p>Loading...</p>
+            <p class="simscore"></p>
           </div>
           <div class="grade-field">
             <label for="window-grade">Set Grade:</label>

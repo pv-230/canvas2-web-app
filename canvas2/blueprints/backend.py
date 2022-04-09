@@ -230,21 +230,37 @@ def submission_info(sid):
     if session["role"] < 2:
         abort(401)
 
+    # ensure user exists and is ta role or greater
+    user = db_conn.db.users.find_one({"_id": ObjectId(session["id"])})
+    if not user or not user["role"] >= 2:
+        abort(403)  # forbidden
+
+    # ensure user is enrolled in course
+    sub = db_conn.db.submissions.find_one(
+            {"_id": ObjectId(sid)},
+            {"class": 1}
+        )
+    enrollment = db_conn.db.enrollments.find_one(
+        {"user": user["_id"], "class": sub["class"]}
+    )
+    if not enrollment:
+        abort(403)  # forbidden
+
     # Gets a submission's contents and comments
     if request.method == "GET":
-        sub_info = list(db_conn.db.submissions.find(
+        sub_info = db_conn.db.submissions.find_one(
             {"_id": ObjectId(sid)},
             {
-                "parsedContents": 0,
-                "_id": 0,
-                "assignment": 0,
-                "class": 0,
-                "user": 0,
-                "timestamp": 0
+                "contents": 1,
+                "comments": 1,
+                "grade": 1,
+                "simscore": 1,
+                "_id": 0  # ObjectID not hashable (JSON.dumps() errors out)
             }
-        ))
+        )
         return json.dumps(sub_info)
 
+    # Updates the submission grade and adds a new comment (if either exists)
     if request.method == "POST":
         comment = request.form["comment"]
         grade = request.form["grade"]
@@ -284,7 +300,24 @@ def update_grades():
     if session["role"] < 2:
         abort(401)
 
+    # ensure user exists and is ta role or greater
+    user = db_conn.db.users.find_one({"_id": ObjectId(session["id"])})
+    if not user or not user["role"] >= 2:
+        abort(403)  # forbidden
+
     for id in request.json:
+        # ensure user is enrolled in course that has the submission
+        sub = db_conn.db.submissions.find_one(
+                {"_id": ObjectId(id)},
+                {"class": 1}
+            )
+        enrollment = db_conn.db.enrollments.find_one(
+            {"user": user["_id"], "class": sub["class"]}
+        )
+        if not enrollment:
+            abort(403)  # forbidden
+
+        # Perform the update for a submission
         db_conn.db.submissions.update_one(
             {"_id": ObjectId(id)},
             {

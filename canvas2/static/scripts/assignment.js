@@ -15,6 +15,7 @@
   const commentGroup = document.querySelector('.comment-group');
   const windowGrade = document.getElementById('window-grade');
   const gradeCells = [...document.querySelectorAll('.grade-cell')];
+  const simScore = document.querySelector('.simscore');
 
   // Buttons
   const viewBtns = [...document.querySelectorAll('.view-btn')];
@@ -37,6 +38,7 @@
     submissionContents.textContent = 'Loading contents...';
     commentGroup.textContent = 'Loading comments...';
     windowGrade.value = '*';
+    simScore.textContent = 'Loading...';
 
     // Builds the GET request
     const request = new Request(`/secretary/s/${sid}/submission-info`, {
@@ -51,14 +53,14 @@
         if (response.ok) {
           response.json().then((data) => {
             // Adds submission contents to the window
-            submissionContents.textContent = data[0]['contents'];
+            submissionContents.textContent = data['contents'];
 
             // Remove the "Loading comments" string
             commentGroup.removeChild(commentGroup.firstChild);
 
-            if (data[0]['comments'].length > 0) {
+            if (data['comments'].length > 0) {
               // Adds any comments to the comment block
-              data[0]['comments'].forEach((comment) => {
+              data['comments'].forEach((comment) => {
                 const commentPara = document.createElement('p');
                 commentPara.textContent = comment;
                 commentGroup.appendChild(commentPara);
@@ -70,7 +72,8 @@
               commentGroup.appendChild(commentPara);
             }
 
-            windowGrade.value = data[0]['grade'];
+            windowGrade.value = data['grade'];
+            simScore.textContent = data['simscore'];
           });
         }
       })
