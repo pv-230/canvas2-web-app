@@ -3,6 +3,7 @@ import re
 from nltk.stem import WordNetLemmatizer
 from nltk import FreqDist
 from nltk.corpus import brown
+from pathlib import Path
 
 
 def parseTextFile(inputFile: str) -> list:
@@ -34,7 +35,9 @@ def wordCompression(words: list) -> list:
 
     # Create a set from the 1000 most common words in English
     ignoreThese = set()
-    with open("../assets/mostCommonWords.txt", "r") as f:
+
+    stopwordsPath = Path(__file__).parent.parent / "assets" / "mostCommonWords.txt"
+    with open(stopwordsPath, "r") as f:
         for line in f:
             ignoreThese.add(line.strip())
 
@@ -89,6 +92,15 @@ def shingles(words: list, k=5) -> set:
     for i in range(len(words) - k + 1):
         shingles.add("".join(words[i: i + k]))
     return shingles
+
+
+def shinglesString(text: str) -> str:
+    """
+    Return a string representation of a set of shingles
+    """
+    text = parseText(text)
+    sh = shingles(text)
+    return repr(sh)
 
 
 def similarityScore(shingle1: set, shingle2: set) -> float:

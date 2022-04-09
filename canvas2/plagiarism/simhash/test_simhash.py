@@ -1,12 +1,15 @@
 from similarsubstrings import *
+from pathlib import Path
 
 
 def test_set_1():
     '''
     Test set 1: test set for related sentence detection
     '''
-    sentences1 = parseTextFile('../testdocs/original1.txt')
-    sentences2 = parseTextFile('../testdocs/t2.txt')
+    testDirPath = Path(__file__).parent.parent / "testdocs"
+
+    sentences1 = parseTextFile(Path(testDirPath, "original1.txt"))
+    sentences2 = parseTextFile(Path(testDirPath, "t2.txt"))
 
     test1 = getHash(sentences1)
     test2 = getHash(sentences2)
@@ -23,8 +26,10 @@ def test_set_2():
     '''
     Test set 2: test set for the contigious substring detection
     '''
-    sentences1 = parseTextFile('../testdocs/original2.txt')
-    sentences2 = parseTextFile('../testdocs/s5.txt')
+    testDirPath = Path(__file__).parent.parent / "testdocs"
+
+    sentences1 = parseTextFile(Path(testDirPath, "original2.txt"))
+    sentences2 = parseTextFile(Path(testDirPath, "s5.txt"))
 
     test1 = getHash(sentences1)
     test2 = getHash(sentences2)

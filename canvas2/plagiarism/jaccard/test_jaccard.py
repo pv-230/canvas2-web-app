@@ -1,4 +1,5 @@
-from jaccardsimilarity import parseTextFile, shingles, similarityScore, parseText
+from jaccardsimilarity import parseTextFile, shingles, similarityScore, shinglesString
+from pathlib import Path
 
 
 def test_set_1():
@@ -7,20 +8,20 @@ def test_set_1():
     '''
     shingleSize = 5
 
-    testDir = "../testdocs/"
+    testDirPath = Path(__file__).parent.parent / "testdocs"
 
     # the US Constitution (parts of it)
-    words = parseTextFile(testDir + "original1.txt")
+    words = parseTextFile(Path(testDirPath, "original1.txt"))
     # US Constitution spun and paraphrased
-    test1 = parseTextFile(testDir + "t1.txt")
+    test1 = parseTextFile(Path(testDirPath, "t1.txt"))
     # US Constitution ran through spinner
-    test2 = parseTextFile(testDir + "t2.txt")
+    test2 = parseTextFile(Path(testDirPath, "t2.txt"))
     # US Constitution laundered though google translate
-    test3 = parseTextFile(testDir + "t3.txt")
+    test3 = parseTextFile(Path(testDirPath, "t3.txt"))
     # CCP resolution
-    test4 = parseTextFile(testDir + "t4.txt")
+    test4 = parseTextFile(Path(testDirPath, "t4.txt"))
     # Articles of Confederation (similar verbage test)
-    test5 = parseTextFile(testDir + "t5.txt")
+    test5 = parseTextFile(Path(testDirPath, "t5.txt"))
 
     shingles1 = shingles(words, shingleSize)
     testShingles1 = shingles(test1, shingleSize)
@@ -42,16 +43,16 @@ def test_set_2():
     '''
     shingleSize = 5
 
-    testDir = "../testdocs/"
+    testDirPath = Path(__file__).parent.parent / "testdocs"
 
     # sample AP English Language and Composition submission, with one testdoc s5 being a submission that has been ran through a spinner
     # https://apcentral.collegeboard.org/pdf/ap20-english-language-and-composition-student-samples-johnson.pdf
-    words = parseTextFile(testDir + "original2.txt")
-    test1 = parseTextFile(testDir + "s1.txt")
-    test2 = parseTextFile(testDir + "s2.txt")
-    test3 = parseTextFile(testDir + "s3.txt")
-    test4 = parseTextFile(testDir + "s4.txt")
-    test5 = parseTextFile(testDir + "s5.txt")
+    words = parseTextFile(Path(testDirPath, "original2.txt"))
+    test1 = parseTextFile(Path(testDirPath, "s1.txt"))
+    test2 = parseTextFile(Path(testDirPath, "s2.txt"))
+    test3 = parseTextFile(Path(testDirPath, "s3.txt"))
+    test4 = parseTextFile(Path(testDirPath, "s4.txt"))
+    test5 = parseTextFile(Path(testDirPath, "s5.txt"))
 
     shingles1 = shingles(words, shingleSize)
     testShingles1 = shingles(test1, shingleSize)
@@ -71,8 +72,5 @@ def test_set_3():
     '''
     Test set 3: used to see what the backend will be recieving as the parsed text for a submission
     '''
-    print(
-        repr(shingles(parseText(
-            "This is a submission for the course \n COP4521 - Secure, \n Parallel and Distributed Computing with Python"
-        )))
-    )
+    print(shinglesString(
+        "This is a submission for the course \n COP4521 - Secure, \n Parallel and Distributed Computing with Python"))
