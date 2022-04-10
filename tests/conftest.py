@@ -51,6 +51,21 @@ def init_db(db):
         )
         .inserted_id
     )
+    teacher2_id = (  # noqa: F841
+        db["users"]
+        .insert_one(
+            {
+                "username": "teacher2",
+                "password": "password",
+                "firstname": "Teacher2",
+                "lastname": "User",
+                "email": "teacher2@example.com",
+                "role": 3,
+                "approved": True,
+            }
+        )
+        .inserted_id
+    )
     asst_id = (
         db["users"]
         .insert_one(
@@ -103,7 +118,7 @@ def init_db(db):
         .insert_one(
             {
                 "code": "TEST001",
-                "name": "Test Course 1",
+                "title": "Test Course 1",
                 "desc": "This is the first test course!",
             }
         )
@@ -114,7 +129,7 @@ def init_db(db):
         .insert_one(
             {
                 "code": "TEST002",
-                "name": "Test Course 2",
+                "title": "Test Course 2",
                 "desc": "This is the second test course!",
             }
         )
@@ -123,7 +138,7 @@ def init_db(db):
     db["classes"].insert_one(
         {
             "code": "BLANK001",
-            "name": "Hidden Course",
+            "title": "Hidden Course",
             "desc": "No-one should see this!",
         }
     ).inserted_id
@@ -159,8 +174,8 @@ def init_db(db):
         .insert_one(
             {
                 "class": ObjectId(class1_id),
-                "name": "Test Assignment 1",
-                "desc": "This is the test assignment!",
+                "title": "Test Assignment 1",
+                "description": "This is the test assignment!",
                 "deadline": tempdue,
             }
         )
@@ -169,16 +184,16 @@ def init_db(db):
     db["assignments"].insert_one(
         {
             "class": ObjectId(class1_id),
-            "name": "Test Assignment 2",
-            "desc": "This is the second assignment!",
+            "title": "Test Assignment 2",
+            "description": "This is the second assignment!",
             "deadline": tempdue,
         }
     )
     db["assignments"].insert_one(
         {
             "class": ObjectId(class1_id),
-            "name": "Test Assignment 3",
-            "desc": "This is the third assignment!",
+            "title": "Test Assignment 3",
+            "description": "This is the third assignment!",
             "deadline": tempdue,
         }
     )
@@ -193,6 +208,8 @@ def init_db(db):
             "timestamp": datetime.now(),
             "contents": "This is the test submission!",
             "comments": [],
+            "simhash": 0.0,
+            "grade": 0.0,
         }
     )
 
@@ -201,7 +218,7 @@ def check_db(db):
     """Checks DB to make sure entries are in the right place."""
 
     # check counts
-    assert db["users"].count_documents({}) == 4
+    assert db["users"].count_documents({}) == 5
     assert db["classes"].count_documents({}) == 3
     assert db["enrollments"].count_documents({}) == 6
     assert db["assignments"].count_documents({}) == 3
@@ -211,7 +228,7 @@ def check_db(db):
     print("- Collections:", db.list_collection_names())
     print("- Users:", db["users"].distinct("username"))
     print("- Classes:", db["classes"].distinct("code"))
-    print("- Assignments:", db["assignments"].distinct("name"))
+    print("- Assignments:", db["assignments"].distinct("title"))
 
 
 def init_nltk():

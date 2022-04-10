@@ -136,36 +136,6 @@ section:not(:first-child) {
   height: 45px;
 }
 
-.remove-ta:hover,
-.set-ta:hover {
-  background-color: var(--inner-bg-color);
-  border-radius: 50%;
-}
-
-.role-cell {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.role-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.role-head > button:hover {
-  background-color: var(--garnet-brighter);
-}
-
-.role-head > button,
-.role-head > button:active {
-  background-color: var(--garnet);
-  border-radius: 8px;
-  padding: 4px 8px 4px 8px;
-  color: var(--white);
-}
-
 /* Popup window styling */
 
 .popup-bg:not([hidden]) {
@@ -257,10 +227,14 @@ section:not(:first-child) {
   resize: none;
 }
 
-#assignment-descrip {
+#assg-desc {
   width: 40ch;
   height: 100px;
   resize: none;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 /* Add assignment button styling */
