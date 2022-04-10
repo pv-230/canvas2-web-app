@@ -167,7 +167,6 @@ def submit_assignment():
             "timestamp": datetime.now(),
             "comments": [],
             "grade": 0.0,
-            "simscore": 0.0,
         }
     )
 
@@ -254,11 +253,10 @@ def submission_info(sid):
                 "contents": 1,
                 "comments": 1,
                 "grade": 1,
-                "simscore": 1,
-                "_id": 0  # ObjectID not hashable (JSON.dumps() errors out)
             }
         )
-        return json.dumps(sub_info)
+
+        return json.dumps(sub_info, default=str)
 
     # Updates the submission grade and adds a new comment (if either exists)
     if request.method == "POST":
@@ -266,11 +264,20 @@ def submission_info(sid):
         grade = request.form["grade"]
 
         if comment:
+            commentInfo = {
+                "userid": ObjectId(session["id"]),
+                "username": db_conn.db.users.find_one(
+                    {"_id": ObjectId(session["id"])}
+                )["username"],
+                "contents": comment,
+                "timestamp": datetime.now()
+            }
+
             db_conn.db.submissions.update_one(
                 {"_id": ObjectId(sid)},
                 {
                     "$push": {
-                        "comments": comment
+                        "comments": commentInfo
                     }
                 }
             )

@@ -62,7 +62,12 @@
               // Adds any comments to the comment block
               data['comments'].forEach((comment) => {
                 const commentPara = document.createElement('p');
-                commentPara.textContent = comment;
+                const username = comment['username'];
+                const timestamp = new Date(
+                  comment['timestamp']
+                ).toLocaleString();
+                const contents = comment['contents'];
+                commentPara.textContent = `${username} (${timestamp}): ${contents}`;
                 commentGroup.appendChild(commentPara);
               });
             } else {
@@ -73,7 +78,6 @@
             }
 
             windowGrade.value = data['grade'];
-            simScore.textContent = data['simscore'];
           });
         }
       })
