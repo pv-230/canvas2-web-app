@@ -2,6 +2,8 @@
 Flask>=2.0.2
 Flask-PyMongo>=2.3.0
 python-dotenv>=0.19.2
+numpy>=1.16.2
+nltk>=3.7
 
 # Linting
 flake8>=4.0.1
