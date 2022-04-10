@@ -3,7 +3,9 @@ from datetime import datetime
 from flask import Blueprint, request, session, redirect, url_for, abort
 import json
 
+from ..plagiarism.jaccard.jaccardsimilarity import shinglesString
 from ..utils.db import db_conn
+
 
 # create main backend blueprint
 backend = Blueprint(
@@ -11,7 +13,6 @@ backend = Blueprint(
     __name__,
     url_prefix="/secretary",  # cute nickname for backend ops, can be changed
 )
-
 
 @backend.route("/add-course", methods=["POST"])
 def add_course():
@@ -164,6 +165,7 @@ def submit_assignment():
             "class": assignment["class"],
             "user": ObjectId(userid),
             "contents": contents,
+            "parsedContents": shinglesString(contents),
             "timestamp": datetime.now(),
             "comments": [],
             "grade": 0.0,

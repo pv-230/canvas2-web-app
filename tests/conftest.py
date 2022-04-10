@@ -1,5 +1,6 @@
 import os
 import pytest
+import nltk
 from bson import ObjectId
 from datetime import datetime, timedelta
 from pymongo import MongoClient
@@ -230,6 +231,15 @@ def check_db(db):
     print("- Assignments:", db["assignments"].distinct("title"))
 
 
+def init_nltk():
+    """
+    Initializes the NLTK library with required corpora and tokenizers.
+    """
+    required = ["stopwords", "brown", "omw-1.4", "wordnet", "punkt"]
+    for x in required:
+        nltk.download(x)
+
+
 def pytest_configure(config):
     """
     Allows plugins and conftest files to perform initial configuration.
@@ -277,6 +287,9 @@ def pytest_configure(config):
 
     # print
     print("Setting up test environment...")
+
+    # initialize NLTK with corpora and tokenizers
+    init_nltk()
 
     # if on github, initialize database
     if os.environ.get("GITHUB_ACTIONS") == "true":
