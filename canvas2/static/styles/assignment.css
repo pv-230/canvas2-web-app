@@ -1,0 +1,380 @@
+.content {
+  position: relative;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+}
+
+/* From: https://stackoverflow.com/a/23374725 */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Section styling */
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: var(--content-width);
+  color: var(--white);
+  padding: 32px 0;
+}
+
+section:not(:first-child) {
+  border-top: 1px solid var(--border-color);
+}
+
+.section-title {
+  font-size: 2rem;
+}
+
+/* Assignment details section styling */
+
+.assg-title-group {
+  display: flex;
+  gap: 16px;
+}
+
+.edit-details-btn:hover {
+  background-color: rgb(0, 131, 212);
+}
+
+.edit-details-btn,
+.edit-details-btn:active {
+  height: fit-content;
+  padding: 8px 20px;
+  color: var(--white);
+  background-color: rgb(0, 110, 179);
+  border-radius: 4px;
+  font-family: robotobold;
+  letter-spacing: 0.5px;
+}
+
+.details-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.details-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.details-pair > h3 {
+  font-size: 1.2rem;
+  font-family: robotomedium;
+}
+
+.details-pair > p {
+  font-family: robotolight;
+}
+
+/* Submissions section styling */
+
+/* Table styling */
+
+.student-table {
+  border: 1px solid var(--border-color);
+  table-layout: fixed;
+  width: 100%;
+  max-width: 800px;
+}
+
+.student-table th {
+  font-family: robotomedium;
+  font-size: 1.2rem;
+}
+
+.student-table th,
+.student-table td {
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  vertical-align: middle;
+  height: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sim-col {
+  width: 105px;
+}
+
+.grade-col {
+  width: 80px;
+}
+
+.grade {
+  max-width: 100%;
+}
+
+.grade-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 80px;
+}
+
+.view-col {
+  width: 100px;
+}
+
+/* Table button styling */
+
+.view-btn:hover {
+  background-color: rgb(54, 112, 25);
+}
+
+.view-btn,
+.view-btn:active,
+.inactive-btn {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(25, 77, 0);
+  color: var(--white);
+  font-family: robotobold;
+  letter-spacing: 0.5px;
+}
+
+.inactive-btn {
+  background-color: rgb(75, 39, 39);
+}
+
+.btn-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+td.btn-cell {
+  padding: 0;
+}
+
+.save-revert-btns {
+  display: flex;
+  justify-content: end;
+  gap: 8px;
+  max-width: 800px;
+}
+
+.revert-btn,
+.save-btn {
+  padding: 8px 20px;
+  color: var(--white);
+  border-radius: 4px;
+  font-family: robotobold;
+  letter-spacing: 0.5px;
+}
+
+.revert-btn:hover {
+  background-color: rgb(201, 30, 0);
+}
+
+.revert-btn,
+.revert-btn:active {
+  background-color: rgb(151, 23, 0);
+}
+
+.save-btn:hover {
+  background-color: rgb(0, 131, 212);
+}
+
+.save-btn,
+.save-btn:active {
+  background-color: rgb(0, 110, 179);
+}
+
+.save-revert-btns > .inactive {
+  background-color: var(--inner-bg-color);
+}
+
+/* Popup window styling */
+
+.popup-bg:not([hidden]) {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-window:not([hidden]) {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--inner-bg-color);
+  border: solid 1px var(--border-color);
+  border-radius: 4px;
+  color: var(--white);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  background-color: #3a3a3a;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.popup-header > h3 {
+  font-size: 1.2rem;
+}
+
+.close-btn:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.close-btn,
+.close-btn:active {
+  width: 24px;
+  height: 24px;
+  background: center / 80% url(../images/close-btn.svg) no-repeat var(--garnet);
+  border-radius: 50%;
+}
+
+.popup-contents {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  gap: 16px;
+  max-height: 650px;
+  overflow: auto;
+}
+
+/* Popup form styling */
+
+.popup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  color: var(--white);
+}
+
+.form-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.form-btn:hover {
+  background-color: var(--garnet-brighter);
+}
+
+.form-btn,
+.form-btn:active {
+  width: max-content;
+  padding: 4px 16px;
+  margin-top: 8px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 4px;
+  color: var(--white);
+  background-color: var(--garnet);
+}
+
+/* Edit assignment form styling */
+
+#assg-desc {
+  width: 40ch;
+  height: 100px;
+  resize: none;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* Manage submission window styling */
+
+.sim-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.sim-score > p {
+  font-family: robotolight;
+}
+
+.submission-contents {
+  resize: none;
+  width: 80ch;
+  height: 200px;
+  outline: none;
+  overflow: auto;
+  font-family: robotolight;
+}
+
+.submission-contents:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.comment-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  background-color: var(--black);
+  padding: 4px;
+  max-height: 72px;
+  max-width: 80ch;
+  overflow: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-family: robotolight;
+}
+
+.form-wrapper {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
+.add-comment-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-comment-field {
+  flex: 1;
+}
+
+.first-form-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}

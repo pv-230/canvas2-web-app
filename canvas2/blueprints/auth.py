@@ -117,7 +117,7 @@ def signup():
         uname = request.form["username"]
         email = request.form["email"]
         passwd = request.form["password"]
-        role = request.form["role"] if "role" in request.form else 1
+        role = request.form["role"]
 
         # check database for user
         user = db_conn.db["users"].find_one({"username": uname})
@@ -144,8 +144,8 @@ def signup():
                 "lastname": lame,
                 "username": uname,
                 "email": email,
-                "password": hashpass,
-                "role": role,
+                "password": passwd,
+                "role": int(role),
                 "approved": auto_approve_users,
             }
         )

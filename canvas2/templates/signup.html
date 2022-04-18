@@ -70,9 +70,13 @@
           required
         >
       </div>
-      <div class="teacher-toggle">
-        <label for="teacher-check">Are you a teacher?</label>
-        <input type="checkbox" id="teacher-check" name="is-teacher">
+      <div class="role-dropdown">
+        <label for="role-select">Account type:</label>
+        <select name="role" id="role-select">
+         <option value="1">Student</option>
+         <option value="2">Teaching Assistant</option>
+         <option value="3">Teacher</option>
+        </select>
       </div>
       <button type="submit">Create account</button>
     </form>

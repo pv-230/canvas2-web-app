@@ -1,5 +1,6 @@
 import os
 import pytest
+import nltk
 from bson import ObjectId
 from datetime import datetime, timedelta
 from pymongo import MongoClient
@@ -45,6 +46,21 @@ def init_db(db):
                 "firstname": "Teacher",
                 "lastname": "User",
                 "email": "teacher@example.com",
+                "role": 3,
+                "approved": True,
+            }
+        )
+        .inserted_id
+    )
+    teacher2_id = (  # noqa: F841
+        db["users"]
+        .insert_one(
+            {
+                "username": "teacher2",
+                "password": "password",
+                "firstname": "Teacher2",
+                "lastname": "User",
+                "email": "teacher2@example.com",
                 "role": 3,
                 "approved": True,
             }
@@ -103,7 +119,7 @@ def init_db(db):
         .insert_one(
             {
                 "code": "TEST001",
-                "name": "Test Course 1",
+                "title": "Test Course 1",
                 "desc": "This is the first test course!",
             }
         )
@@ -114,7 +130,7 @@ def init_db(db):
         .insert_one(
             {
                 "code": "TEST002",
-                "name": "Test Course 2",
+                "title": "Test Course 2",
                 "desc": "This is the second test course!",
             }
         )
@@ -123,7 +139,7 @@ def init_db(db):
     db["classes"].insert_one(
         {
             "code": "BLANK001",
-            "name": "Hidden Course",
+            "title": "Hidden Course",
             "desc": "No-one should see this!",
         }
     ).inserted_id
@@ -159,8 +175,8 @@ def init_db(db):
         .insert_one(
             {
                 "class": ObjectId(class1_id),
-                "name": "Test Assignment 1",
-                "desc": "This is the test assignment!",
+                "title": "Test Assignment 1",
+                "description": "This is the test assignment!",
                 "deadline": tempdue,
             }
         )
@@ -169,16 +185,16 @@ def init_db(db):
     db["assignments"].insert_one(
         {
             "class": ObjectId(class1_id),
-            "name": "Test Assignment 2",
-            "desc": "This is the second assignment!",
+            "title": "Test Assignment 2",
+            "description": "This is the second assignment!",
             "deadline": tempdue,
         }
     )
     db["assignments"].insert_one(
         {
             "class": ObjectId(class1_id),
-            "name": "Test Assignment 3",
-            "desc": "This is the third assignment!",
+            "title": "Test Assignment 3",
+            "description": "This is the third assignment!",
             "deadline": tempdue,
         }
     )
@@ -193,6 +209,8 @@ def init_db(db):
             "timestamp": datetime.now(),
             "contents": "This is the test submission!",
             "comments": [],
+            "simhash": 0.0,
+            "grade": 0.0,
         }
     )
 
@@ -211,7 +229,16 @@ def check_db(db):
     print("- Collections:", db.list_collection_names())
     print("- Users:", db["users"].distinct("username"))
     print("- Classes:", db["classes"].distinct("code"))
-    print("- Assignments:", db["assignments"].distinct("name"))
+    print("- Assignments:", db["assignments"].distinct("title"))
+
+
+def init_nltk():
+    """
+    Initializes the NLTK library with required corpora and tokenizers.
+    """
+    required = ["stopwords", "brown", "omw-1.4", "wordnet", "punkt"]
+    for x in required:
+        nltk.download(x)
 
 
 def pytest_configure(config):
@@ -261,6 +288,9 @@ def pytest_configure(config):
 
     # print
     print("Setting up test environment...")
+
+    # initialize NLTK with corpora and tokenizers
+    init_nltk()
 
     # if on github, initialize database
     if os.environ.get("GITHUB_ACTIONS") == "true":

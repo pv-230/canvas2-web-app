@@ -140,7 +140,7 @@ def test_createassg_good(client):
         prelim_session["role"] = user["role"]
 
         # get class id from db
-        course = pytest.db["classes"].find_one({"name": "Test Course 2"})
+        course = pytest.db["classes"].find_one({"title": "Test Course 2"})
 
     # use client context
     with client:
@@ -174,7 +174,7 @@ def test_createassg_noauth(client):
     """Tests adding an assignment to a class without being logged in."""
 
     # get class id from db
-    course = pytest.db["classes"].find_one({"name": "Test Course 2"})
+    course = pytest.db["classes"].find_one({"title": "Test Course 2"})
 
     # use client context
     with client:
@@ -219,7 +219,7 @@ def test_createassg_nouser(client):
         prelim_session["role"] = 9
 
         # get class id from db
-        course = pytest.db["classes"].find_one({"name": "Test Course 2"})
+        course = pytest.db["classes"].find_one({"title": "Test Course 2"})
 
     # use client context
     with client:
@@ -267,7 +267,7 @@ def test_createassg_noperms(client):
         prelim_session["role"] = user["role"]
 
         # get class id from db
-        course = pytest.db["classes"].find_one({"name": "Test Course 2"})
+        course = pytest.db["classes"].find_one({"title": "Test Course 2"})
 
     # use client context
     with client:
@@ -315,7 +315,7 @@ def test_createassg_noenroll(client):
         prelim_session["role"] = user["role"]
 
         # get class id from db
-        course = pytest.db["classes"].find_one({"name": "Hidden Course"})
+        course = pytest.db["classes"].find_one({"title": "Hidden Course"})
 
     # use client context
     with client:
@@ -368,7 +368,7 @@ def test_submitassg_good(client):
 
         # get assignment id from db
         assignment = pytest.db["assignments"].find_one(
-            {"name": "Test Assignment 2"}
+            {"title": "Test Assignment 2"}
         )
 
     # use client context
@@ -412,7 +412,7 @@ def test_submitassg_noauth(client):
 
     # get assignment id from db
     assignment = pytest.db["assignments"].find_one(
-        {"name": "Test Assignment 2"}
+        {"title": "Test Assignment 2"}
     )
 
     # use client context
@@ -462,7 +462,7 @@ def test_submitassg_nouser(client):
 
         # get assignment id from db
         assignment = pytest.db["assignments"].find_one(
-            {"name": "Test Assignment 2"}
+            {"title": "Test Assignment 2"}
         )
 
     # use client context
@@ -521,7 +521,7 @@ def test_submitassg_noperms(client):
 
         # get assignment id from db
         assignment = pytest.db["assignments"].find_one(
-            {"name": "Test Assignment 2"}
+            {"title": "Test Assignment 2"}
         )
 
     # use client context
@@ -579,7 +579,7 @@ def test_submitassg_noforgery(client):
 
         # get assignment id from db
         assignment = pytest.db["assignments"].find_one(
-            {"name": "Test Assignment 2"}
+            {"title": "Test Assignment 2"}
         )
 
     # use client context
@@ -632,7 +632,7 @@ def test_submitassg_noassg(client):
 
         # get assignment id from db
         assignment = pytest.db["assignments"].find_one(
-            {"name": "Test Assignment 2"}
+            {"title": "Test Assignment 2"}
         )
 
     # use client context
@@ -685,7 +685,7 @@ def test_submitassg_noenroll(client):
 
         # get assignment id from db
         assignment = pytest.db["assignments"].find_one(
-            {"name": "Test Assignment 2"}
+            {"title": "Test Assignment 2"}
         )
 
     # use client context
@@ -738,7 +738,7 @@ def test_submitassg_noresubmit(client):
 
         # get assignment id from db
         assignment = pytest.db["assignments"].find_one(
-            {"name": "Test Assignment 1"}
+            {"title": "Test Assignment 1"}
         )
 
     # use client context

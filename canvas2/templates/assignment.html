@@ -1,0 +1,210 @@
+<!-- This file represents the page where teachers can grade assignments. -->
+
+<!-- HTML head extension -->
+{% extends "index.html" %}
+{% block title %}Manage Assignment{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/assignment.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/assignment.js') }}"></script>
+{% endblock %}
+
+<!-- Page content -->
+{% block content %}
+  <div class="main-content">
+
+    <!-- Assignment details section -->
+    <section>
+      <div class="assg-title-group">
+        <h2 class="section-title">{{ crs_info["code"] }} - {{ assg_info["title"] }}</h2>
+        {% if session['role'] >= 3 %}
+          <button class="edit-details-btn">Edit</button>
+        {% endif %}
+      </div>
+      <div class="details-group">
+        <div class="details-pair">
+          <h3>Description:</h3>
+          <p>{{ assg_info["description"] }}</p>
+        </div>
+        <div class="details-pair">
+          <h3>Due Date:</h3>
+          <p>{{ assg_info["deadline"] }}</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Submissions section -->
+    <section>
+      <h2 class="section-title">Submissions</h2>
+      <table class="student-table">
+        <thead>
+          <tr>
+            <th scope="col" class="name-col">Name</th>
+            <th scope="col" class="time-col">Timestamp</th>
+            <th scope="col" class="sim-col">Sim Score</th>
+            <th scope="col" class="grade-col">Grade</th>
+            <th scope="col" class="view-col">View</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- obj has ["user"] and ["assignment"] -->
+          {% for obj in student_subs %}
+            <tr>
+              <td>{{ obj["user"]["lastname"] }}, {{ obj["user"]["firstname"] }}</td>
+              
+              <!-- Displays information about student's submission -->
+              {% if obj["assignment"] %}
+                <!-- Displays the most recent timestamp -->
+                <td>{{ obj["assignment"][obj["assignment"]|length - 1]["timestamp"] }}</td>
+                <td>{{ obj["assignment"][obj["assignment"]|length - 1]["simscore"] }}</td>
+                <td>
+                  <input 
+                    type="number"
+                    class="grade grade-cell"
+                    name="grade"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value="{{ obj['assignment'][obj['assignment']|length - 1]['grade'] }}"
+                    data-id="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}"
+                    autocomplete="off"
+                  />
+                </td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <button
+                      class="view-btn"
+                      type="button"
+                      data-id="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}"
+                    >
+                      Manage
+                    </button>
+                  </div>
+                </td>
+
+              <!-- No submission found for the user -->
+              {% else %}
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <button class="inactive-btn" type="button">N/A</button>
+                  </div>
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="save-revert-btns">
+        <button class="revert-btn inactive" type="button" disabled>Revert</button>
+        <button class="save-btn inactive" type="button" disabled>Save</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Popup windows -->
+  <div class="popup-bg" hidden>
+
+    <!-- Window for editing the assignment details -->
+    <div class="popup-window edit-assg-window" hidden>
+      <div class="popup-header">
+        <h3>Edit Assignment</h3>
+        <div class="close-btn close-btn-edit-assg"></div>
+      </div>
+      <div class="popup-contents">
+        <form
+          class="popup-form"
+          id="edit-assg-form"
+          action="{{ url_for('backend.edit_assignment') }}"
+          method="POST"
+        >
+          <div class="form-input-group">
+            <label for="assg-name">Name</label>
+            <input
+              type='text'
+              id="assg-name"
+              name="assg-name"
+              value="{{ assg_info['title'] }}"
+              required>
+          </div>
+          <div class="form-input-group">
+            <label for="assg-desc">Description</label>
+            <textarea
+              id="assg-desc"
+              name="assg-desc"
+              required>{{ assg_info['description'] }}</textarea>
+          </div>
+          <div class="form-input-group">
+            <label for="due-date">Due date</label>
+            <input
+              type='datetime-local'
+              id="due-date"
+              name="due-date"
+              value="{{ assg_info['deadline'] }}"
+              required>
+          </div>
+          <button class="form-btn" type="submit">Save</button>
+          <input name="assg-id" value="{{ assg_info['_id'] }}" hidden>
+          <input name="course-id" value="{{ crs_info['_id'] }}" hidden>
+        </form>
+      </div>
+    </div>
+
+    <!-- Window for managing submissions -->
+    <div class="popup-window manage-sub-window" hidden>
+      <div class="popup-header">
+        <h3>Manage Submission</h3>
+        <div class="close-btn close-btn-manage-sub"></div>
+      </div>
+      <div class="popup-contents">
+        <div class="first-form-row">
+          <div class="sim-score">
+            <h4>Similarity Score:</h4>
+            <p class="simscore"></p>
+          </div>
+          <div class="grade-field">
+            <label for="window-grade">Set Grade:</label>
+            <input
+              type="number"
+              class="grade"
+              id="window-grade"
+              name="grade"
+              min="0"
+              max="100"
+              step="0.01"
+              form="manage-sub-form"
+            >
+          </div>
+        </div>
+        <div class="form-input-group">
+          <h4>Contents:</h4>
+          <textarea class="submission-contents" readonly></textarea>
+        </div>
+        <div class="form-input-group">
+          <h4>Comments:</h4>
+          <div class="comment-group"></div>
+        </div>
+        <form
+          class="popup-form"
+          id="manage-sub-form"
+          method="POST"
+        >
+          <div class="form-wrapper">
+            <div class="add-comment-field">
+              <label for="add-comment">Add Comment:</label>
+              <input
+                type="text"
+                id="add-comment"
+                name="comment"
+              >
+            </div>
+          </div>
+          <button class="form-btn" type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

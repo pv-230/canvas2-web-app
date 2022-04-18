@@ -21,7 +21,7 @@
       <div class="assignment-grid">
         {% if course["assignments"] %}
           {% for assignment in course["assignments"] %}
-            <div class="assignment-card">
+            <div class="assignment-card" data-id="{{ assignment['_id'] }}">
               <div class="assignment-text">
                 <div class="assignment-title">{{ assignment["title"] }}</div>
                 <p>{{ assignment["description"] }}</p>
@@ -36,7 +36,12 @@
                   <button class="assignment-btn submit-btn" type="button">SUBMIT</button>
                 {% endif %}
               {% elif session['role'] >= 2 %}
-                <a class="assignment-btn" href="">MANAGE</a>
+                <a
+                  class="assignment-btn"
+                  href="{{ url_for('frontend.manage_assignment', aid=assignment['_id'], cid=course['_id']) }}"
+                >
+                  MANAGE
+                </a>
               {% endif %}
             </div>
           {% endfor %}
@@ -83,14 +88,7 @@
         <thead>
           <tr>
             <th scope="col">Name</th>
-            <th scope="col">
-              <div class="role-head">
-                <span>Role</span>
-                {% if session['role'] >= 3 %}
-                  <button class="role-btn manage">Manage</button>
-                {% endif %}
-              </div>
-            </th>
+            <th scope="col">Role</th>
           </tr>
         </thead>
         <tbody>
@@ -98,38 +96,13 @@
             <tr>
               <td>{{ user["lastname"] }}, {{ user["firstname"] }}</td>
               <td>
-                <div 
-                  class="role-cell"
-                  data-id="{{ user['name'] }}"
-                  data-role="{{ user['role'] }}"
-                >
-                  {% if user['role'] == 3 %}
-                    Instructor
-                    <img
-                      class="table-icon"
-                      src="{{ url_for('static', filename='images/star-icon.svg') }}"
-                      hidden
-                    />
-                  {% elif user['role'] == 2 %}
-                    Teaching Assistant
-                    {% if session['role'] >= 3 %}
-                      <img
-                        class="table-icon remove-ta"
-                        src="{{ url_for('static', filename='images/down-arrow.svg') }}"
-                        hidden
-                      />
-                    {% endif %}
-                  {% elif user["role"] == 1 %}
-                    Student
-                    {% if session['role'] >= 3 %}
-                      <img
-                        class="table-icon set-ta"
-                        src="{{ url_for('static', filename='images/up-arrow.svg') }}"
-                        hidden
-                      />
-                    {% endif %}
-                  {% endif %}
-                </div>
+                {% if user['role'] == 3 %}
+                  Instructor
+                {% elif user['role'] == 2 %}
+                  Teaching Assistant
+                {% elif user["role"] == 1 %}
+                  Student
+                {% endif %}
               </td>
             </tr>
           {% endfor %}
@@ -148,23 +121,17 @@
           <div class="close-btn"></div>
         </div>
         <form id="popup-form" action="{{ url_for('backend.submit_assignment') }}" method="POST">
-            <div class="form-input-group"> <!-- This should eventually be set by JS and hidden. -A -->
-              <label for="assg-id">Assignment ID</label>
-              <input type='text' id="assg-id" name="assg-id" required>
-            </div>
-            <div class="form-input-group">
-              <label for="assg-entry">Contents</label>
-              <textarea
-                type='text'
-                id="assg-entry"
-                name="assg-entry"
-                rows="20" cols="80"
-                placeholder="Enter your submission here"
-                required></textarea>
-              </div>
+            <textarea
+              type='text'
+              id="assg-entry"
+              name="assg-entry"
+              rows="20" cols="80"
+              placeholder="Enter your submission here"
+              required></textarea>
             <button class="form-btn" type="submit">Submit</button>
             <input name="assg-course" value="{{ course['_id'] }}" hidden>
             <input name="assg-user-id" value="{{ session['id'] }}" hidden>
+            <input id="assg-id" name="assg-id" hidden>
         </form>
       </div>
     {% endif %}
