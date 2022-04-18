@@ -1,7 +1,7 @@
 import secrets
 from bson import ObjectId
 from datetime import datetime, timedelta
-from flask import Blueprint, request, session, render_template, redirect, url_for, abort
+from flask import Blueprint, request, session, render_template, redirect, url_for, abort, flash
 
 from ..utils.db import db_conn
 
@@ -11,20 +11,13 @@ from ..utils.db import db_conn
 invites = Blueprint(
     "invites",
     __name__,
-    url_prefix="/invite",
+    # url_prefix="/invite",
 )
 
 
-@invites.route("/create", methods=["POST"])
-def create_invite():
-    """Joins a class using a given invite code."""
-
-    # get vars; make sure post meets specs
-    if "inv-class" not in request.form:
-        abort(400)
-    else:
-        course = request.form["inv-class"]
-    print(course)
+@invites.route("/c/<code>/invite", methods=["POST"])
+def create_invite(code):
+    """Makes an invite for a class."""
 
     # ensure user is logged in
     if "id" not in session:
@@ -34,10 +27,29 @@ def create_invite():
     if not session["role"] >= 3:
         abort(403)
 
+    # ensure class even exists
+    course = db_conn.db.classes.find_one(
+        {
+            "_id": ObjectId(code),
+        }
+    )
+    if not course:
+        abort(400)
+
+    # ensure user is enrolled in the class
+    enroll = db_conn.db.enrollments.find_one(
+        {
+            "user": ObjectId(session["id"]),
+            "class": ObjectId(code)
+        }
+    )
+    if not enroll:
+        abort(401)
+
     # make invite code
     db_conn.db.invites.insert_one(
         {
-            "class": ObjectId(course),
+            "class": ObjectId(code),
             "code": secrets.token_urlsafe(16),
             "expires": datetime.now() + timedelta(days=7),
         }
@@ -67,11 +79,19 @@ def join_invite(code):
     # if get, render page
     if request.method == "GET":
 
+        # ensure user is logged in
+        if "id" not in session:
+            flash(
+                "You must be logged in to perform this action! " +
+                "Please log in or sign up first!", "error"
+            )
+            return redirect(url_for("auth.login"))
+
         # NOTE: temp response, till frontend consent page is made
         return f"""
         <p>You have been invited to join the class:<code>{course["title"]}</code></p>
         <p>Please click the button below to join the class.</p>
-        <form action="/invite/j/{code}" method="POST">
+        <form action="{url_for('invites.join_invite', code=code)}" method="POST">
             <input type="submit" value="Join Class">
         </form>
         """
@@ -79,9 +99,9 @@ def join_invite(code):
     # if post, actually join the class
     elif request.method == "POST":
 
-        # ensure user is logged in
+        # ensure logged in
         if "id" not in session:
-            abort(401)
+            abort(401)  # unauthorized
 
         # enroll user in course
         db_conn.db.enrollments.insert_one(

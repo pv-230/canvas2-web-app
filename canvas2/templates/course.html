@@ -72,7 +72,7 @@
       <!-- Invite Link for Teachers-->
       {% if session['role'] >= 3 %}
         {% if not course['invite'] %}
-        <form action="/invite/create" method="POST">
+        <form action="{{ url_for('invites.create_invite', code=course['_id']) }}" method="POST">
           <input type='text' name="inv-class" value="{{ course['_id'] }}" hidden>
           <button class="link-btn" type="submit">Generate invite link</button>
         </form>
