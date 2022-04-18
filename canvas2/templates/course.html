@@ -77,8 +77,11 @@
           <button class="link-btn" type="submit">Generate invite link</button>
         </form>
         {% else %}
-        <div>
-          <p>Invite link: {{ url_for('invites.join_invite', code=course['invite']['code']) }}</p>
+        <div class="inv-link-area">
+          <h3 class="inv-link-title">Invite link:</h3> 
+          <div class="inv-link">
+            {{ url_for('invites.join_invite', code=course['invite']['code']) }}
+          </div>
         </div>
         {% endif %}
       {% endif %}

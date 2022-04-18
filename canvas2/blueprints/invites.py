@@ -1,7 +1,8 @@
 import secrets
 from bson import ObjectId
 from datetime import datetime, timedelta
-from flask import Blueprint, request, session, render_template, redirect, url_for, abort, flash
+from flask import Blueprint, request, session, render_template, redirect,\
+    url_for, abort, flash
 
 from ..utils.db import db_conn
 
@@ -87,14 +88,17 @@ def join_invite(code):
             )
             return redirect(url_for("auth.login"))
 
-        # NOTE: temp response, till frontend consent page is made
-        return f"""
-        <p>You have been invited to join the class:<code>{course["title"]}</code></p>
-        <p>Please click the button below to join the class.</p>
-        <form action="{url_for('invites.join_invite', code=code)}" method="POST">
-            <input type="submit" value="Join Class">
-        </form>
-        """
+        # Redirects to course page if user already enrolled
+        enrollment = db_conn.db.enrollments.find_one(
+            {
+                "user": ObjectId(session["id"]),
+                "class": ObjectId(course["_id"]),
+            }
+        )
+        if enrollment:
+            return redirect(url_for("frontend.course_page", code=course["_id"]))  # noqa: E501
+
+        return render_template("invitation.html", course=course, code=code)
 
     # if post, actually join the class
     elif request.method == "POST":

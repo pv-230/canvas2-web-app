@@ -136,6 +136,27 @@ section:not(:first-child) {
   height: 45px;
 }
 
+.inv-link-area {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inv-link-title {
+  font-size: 1.2rem;
+  width: fit-content;
+  font-family: robotomedium;
+}
+
+.inv-link {
+  height: fit-content;
+  width: fit-content;
+  background-color: var(--inner-bg-color);
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
 /* Popup window styling */
 
 .popup-bg:not([hidden]) {

@@ -1,13 +1,13 @@
 import pytest
-from bson import ObjectId
 from datetime import datetime, timedelta
 
-# this file will only have one test that goes over many parts of the invite 
+# this file will only have one test that goes over many parts of the invite
 # process. i would split these into multiple tests but they're so intertwined
 # that its really not worth it tbh
 
+
 def test_invite_creation(client):
-    
+
     # use session_transaction to set prelim session state
     with client.session_transaction() as prelim_session:
 
@@ -48,8 +48,8 @@ def test_invite_creation(client):
         assert invite is not None
 
         # assert that the redirect contains the link
-        assert "Invite link: /j/" in res.get_data(as_text=True)
-    
+        assert f"{invite['code']}" in res.get_data(as_text=True)
+
     # clean up
     pytest.db["invites"].delete_many(
         {"class": class1["_id"]}
@@ -82,7 +82,7 @@ def test_invite_consent_good(client):
 
     # with client context
     with client:
-    
+
         # simulate student1 navigating to the invite page
         res = client.get("/j/AJMrfOM1p4CGBdidr2oLjw")
 
@@ -102,7 +102,7 @@ def test_invite_consent_noauth(client):
     """Tests using an invite while not logged in"""
 
     # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    with client.session_transaction():
 
         # go ahead and inject a class2 invite
         class2 = pytest.db["classes"].find_one({"code": "TEST002"})
@@ -114,7 +114,7 @@ def test_invite_consent_noauth(client):
 
     # with client context
     with client:
-    
+
         # simulate noauth navigating to the invite page
         res = client.get(
             "/j/AJMrfOM1p4CGBdidr2oLjw",
@@ -140,7 +140,7 @@ def test_invite_consent_noclass(client):
 
     # with client context
     with client:
-    
+
         # simulate noauth navigating to the invite page
         res = client.get(
             "/j/this_invite_does_not_exist",
@@ -177,7 +177,7 @@ def test_invite_joinclass_good(client):
 
     # with client context
     with client:
-    
+
         # simulate student1 navigating to the invite page
         res = client.post(
             "/j/AJMrfOM1p4CGBdidr2oLjw",
@@ -207,7 +207,7 @@ def test_invite_joinclass_noauth(client):
     """Tests using an invite while not logged in"""
 
     # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    with client.session_transaction():
 
         # go ahead and inject a class2 invite
         class2 = pytest.db["classes"].find_one({"code": "TEST002"})
@@ -219,7 +219,7 @@ def test_invite_joinclass_noauth(client):
 
     # with client context
     with client:
-    
+
         # simulate noauth navigating to the invite page
         res = client.post(
             "/j/AJMrfOM1p4CGBdidr2oLjw",

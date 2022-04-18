@@ -49,7 +49,7 @@ def login():
             return redirect(url_for("auth.login"))
 
         # if user exists, check password
-        if not bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
+        if not bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):  # noqa: E501
             flash("Invalid username or password", "error")
             return redirect(url_for("auth.login"))
 
@@ -144,7 +144,7 @@ def signup():
                 "lastname": lame,
                 "username": uname,
                 "email": email,
-                "password": passwd,
+                "password": hashpass,
                 "role": int(role),
                 "approved": auto_approve_users,
             }
