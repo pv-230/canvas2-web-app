@@ -282,6 +282,16 @@ section:not(:first-child) {
   transition: height 0.1s;
 }
 
+.copy-btn {
+  margin-left: 5px;
+  float: right;
+}
+
+.copy-btn-icon {
+  vertical-align: middle;
+  color: white;
+}
+
 .add-assignment-card:hover .add-icon {
   height: 100%;
   transition: height 0.1s;
