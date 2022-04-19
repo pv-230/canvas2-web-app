@@ -45,24 +45,25 @@
               {% endif %}
             </div>
           {% endfor %}
-
-
-          <!-- Button for teachers to add assignments -->
-          {% if session['role'] >= 3 %}
-            <button class="add-assignment-card" type="button">
-              <div class="add-icon-frame">
-                <img
-                  class="add-icon"
-                  src="{{ url_for('static', filename='images/plus-sign.svg') }}"
-                  alt="Plus sign"
-                />
-              </div>
-              <span>Add assignment</span>
-            </button>
-          {% endif %}
         {% else %}
-          <p>No assignments are currently posted.</p>
+            {% if session['role'] < 3 %}
+              <p>No assignments are currently posted.</p>
+            {% endif %}
         {% endif %}
+
+        <!-- Button for teachers to add assignments -->
+        {% if session['role'] >= 3 %}
+        <button class="add-assignment-card" type="button">
+          <div class="add-icon-frame">
+            <img
+              class="add-icon"
+              src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+              alt="Plus sign"
+            />
+          </div>
+          <span>Add assignment</span>
+        </button>
+      {% endif %}
       </div>
     </section>
     
@@ -80,7 +81,7 @@
         <div class="inv-link-area">
           <h3 class="inv-link-title">Invite link:</h3> 
           <div class="inv-link">
-            <div id="inv-link">{{ url_for('invites.join_invite', code=course['invite']['code'], _external=request.base_url ) }}</div>
+            <div id="inv-url">{{ url_for('invites.join_invite', code=course['invite']['code'], _external=request.base_url ) }}</div>
             <button class="form-btn copy-btn" onclick="copy_inv_url()">
               <img class="copy-btn-icon"
                 src="{{ url_for('static', filename='images/clipboard.svg') }}"
@@ -91,7 +92,7 @@
           <script>
             // we can beautify this later
             function copy_inv_url() {
-              const e = document.getElementById("inv-link");
+              const e = document.getElementById("inv-url");
               navigator.clipboard.writeText(e.innerHTML);
               alert("Copied Invite URL!");
             }

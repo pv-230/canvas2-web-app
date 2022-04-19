@@ -17,12 +17,12 @@
   <div class="welcome-box">
     <h2 class="welcome-text">You've been invited!</h1>
     <div class="inv-details">
-      Welcome to {{course["title"]}}.<br><br>
+      <p>Welcome to {{course["title"]}}.</p>
       {% if course['teachers'] %}
-      Class is taught by:
-      <ul>
+      <p class="teacher-list-title">Class is taught by:</p>
+      <ul class="teacher-list">
         {% for t in course['teachers'] %}
-        <li> - {{ t['lastname'] }}, {{ t['firstname'] }}</li>
+        <li>{{ t['lastname'] }}, {{ t['firstname'] }}</li>
         {% endfor %}
       </ul>
       {% endif %}

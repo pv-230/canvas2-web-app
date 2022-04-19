@@ -2,10 +2,6 @@
   --min-card-height: 150px;
 }
 
-.content {
-  position: relative;
-}
-
 .main-content {
   display: flex;
   flex-direction: column;
@@ -145,16 +141,20 @@ section:not(:first-child) {
 .inv-link-title {
   font-size: 1.2rem;
   width: fit-content;
-  font-family: robotomedium;
 }
 
 .inv-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   height: fit-content;
   width: fit-content;
   background-color: var(--inner-bg-color);
-  padding: 16px;
+  padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
+  font-family: robotolight;
 }
 
 /* Popup window styling */
@@ -265,11 +265,12 @@ section:not(:first-child) {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: none;
-  background-color: rgba(0, 0, 0, 0);
   color: var(--white);
   font-size: 1.5rem;
   height: var(--min-card-height);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--inner-bg-color);
 }
 
 .add-icon-frame {
@@ -282,9 +283,12 @@ section:not(:first-child) {
   transition: height 0.1s;
 }
 
+.copy-btn:active {
+  margin: 0;
+}
+
 .copy-btn {
-  margin-left: 5px;
-  float: right;
+  margin: 0;
 }
 
 .copy-btn-icon {

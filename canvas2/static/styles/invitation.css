@@ -65,3 +65,20 @@
   border-radius: 6px;
   font-family: robotomedium;
 }
+
+.teacher-list-title {
+  margin-top: 32px;
+  margin-bottom: 10px;
+}
+
+.teacher-list {
+  background-color: #3a3a3a;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.teacher-list > li {
+  list-style-type: disc;
+  margin: 5px 0 5px 30px;
+  font-family: robotolight;
+}
