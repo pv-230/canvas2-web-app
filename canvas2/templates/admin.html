@@ -32,40 +32,41 @@
           </tr>
         </thead>
         <tbody>
-          {% for request in requests %}
-            <tr>
-              <td>{{ request["lastname"] }}, {{ request["firstname"] }}</td>
-              <td>{{ request["username"] }}</td>
-              <td>{{ request["email"] }}</td>
-              <td class="btn-cell">
-                <form
-                  action="{{ url_for('admin.action', type='approveRequest') }}"
-                  method="POST"
-                >
-                  <input name="approve-id" value="{{ request['_id'] }}" hidden>
-                  <button
-                    class="approve-btn"
-                    type="submit"
+          {% if requests %}
+            {% for request in requests %}
+              <tr>
+                <td>{{ request["lastname"] }}, {{ request["firstname"] }}</td>
+                <td>{{ request["username"] }}</td>
+                <td>{{ request["email"] }}</td>
+                <td class="btn-cell">
+                  <form
+                    action="{{ url_for('admin.action', type='approveRequest') }}"
+                    method="POST"
                   >
-                    Approve
-                  </button>
-                </form>
-                <form
-                  action="{{ url_for('admin.action', type='denyRequest') }}"
-                  method="POST"
-                >
-                  <input name="deny-id" value="{{ request['_id'] }}" hidden>
-                  <button
-                    class="deny-btn"
-                    type="submit"
+                    <input name="approve-id" value="{{ request['_id'] }}" hidden>
+                    <button
+                      class="approve-btn"
+                      type="submit"
+                    >
+                      Approve
+                    </button>
+                  </form>
+                  <form
+                    action="{{ url_for('admin.action', type='denyRequest') }}"
+                    method="POST"
                   >
-                    Deny
-                  </button>
-                </form>
-              </td>
-            </tr>
-          {% endfor %}
-          {% if not requests %}
+                    <input name="deny-id" value="{{ request['_id'] }}" hidden>
+                    <button
+                      class="deny-btn"
+                      type="submit"
+                    >
+                      Deny
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
             <tr>
               <td class="empty-cell" colspan="4">No requests</td>
             </tr>

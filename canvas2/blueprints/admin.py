@@ -32,12 +32,8 @@ def panel():
         {"password": 0}
     )
 
-    # # find() always returns a cursor, even if no documents found
-    # if (len(list(requests)) == 0):
-    #     print("test")
-    #     requests = None  # Helps with template rendering
-
-    return render_template("admin.html", requests=requests)
+    req_list = list(requests)  # Helps with rendering the template
+    return render_template("admin.html", requests=req_list)
 
 
 @admin.route("/action/<type>", methods=["POST"])
