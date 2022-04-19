@@ -110,6 +110,16 @@ def course_page(code):
         )
         course["submissions"] = {s["assignment"]: s for s in submissions}
 
+    # else if TA or higher, check if there is an invite link
+    elif session["role"] >= 2:
+
+        # check if there is an invite link
+        invite = db_conn.db.invites.find_one(
+            {"class": ObjectId(code)}
+        )
+        if invite:
+            course["invite"] = invite
+
     # return course page
     return render_template("course.html", session=session, course=course)
 
