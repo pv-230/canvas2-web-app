@@ -32,6 +32,11 @@ def panel():
         {"password": 0}
     )
 
+    # # find() always returns a cursor, even if no documents found
+    # if (len(list(requests)) == 0):
+    #     print("test")
+    #     requests = None  # Helps with template rendering
+
     return render_template("admin.html", requests=requests)
 
 
@@ -67,4 +72,4 @@ def action(type):
             {"_id": ObjectId(request.form["deny-id"])}
         )
 
-    return redirect(request.referrer)
+    return redirect(url_for("admin.panel"))
