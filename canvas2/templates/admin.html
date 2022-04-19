@@ -6,18 +6,19 @@
 {% block head %}
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin.css') }}">
+  <script defer src="{{ url_for('static', filename='scripts/admin.js') }}"></script>
 {% endblock %}
 
 <!-- Content -->
 {% block content %}
 <sidebar>
-  <h2>Manage</h2>
-  <button type="button" class="item1">Approvals</button>
-  <button type="button" class="item2">Users</button>
-  <button type="button" class="item3">Courses</button>
+  <h2>Admin Panel</h2>
+  <button type="button" class="sidebar-btn selected">Approvals</button>
+  <button type="button" class="sidebar-btn">Users</button>
+  <button type="button" class="sidebar-btn">Courses</button>
 </sidebar>
 
 <div class="view-container">
-  <div class="view">Stuff</div>
+  <div class="view"></div>
 </div>
 {% endblock %}
