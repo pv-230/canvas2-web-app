@@ -137,7 +137,7 @@ def signup():
         ).decode("utf-8")
 
         # insert user into database
-        auto_approve_users = True  # For later... ;) -A
+        approved = False if int(role) == 3 else True
         db_conn.db["users"].insert_one(
             {
                 "firstname": fname,
@@ -146,12 +146,12 @@ def signup():
                 "email": email,
                 "password": hashpass,
                 "role": int(role),
-                "approved": auto_approve_users,
+                "approved": approved,
             }
         )
 
         # redirect
-        if auto_approve_users:
+        if approved:
             flash("Account created! You may now log in!", "info")
             return redirect(url_for("auth.login"))
         else:

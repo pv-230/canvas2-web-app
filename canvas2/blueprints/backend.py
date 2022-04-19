@@ -14,6 +14,7 @@ backend = Blueprint(
     url_prefix="/secretary",  # cute nickname for backend ops, can be changed
 )
 
+
 @backend.route("/add-course", methods=["POST"])
 def add_course():
     """Adds a course to the database."""

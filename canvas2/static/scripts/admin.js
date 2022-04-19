@@ -3,32 +3,16 @@
 // Assignment management module
 (() => {
   // Frames
-  const view = document.querySelector('.view', HTMLElement);
-
-  // Approval view
-  const approvals = document.createElement('div');
-  const appr_content = document.createElement('div');
-  appr_content.textContent = 'Approvals content';
-  approvals.appendChild(appr_content);
-  view.appendChild(approvals);
-
-  // Users view
-  const users = document.createElement('div');
-  const users_content = document.createElement('div');
-  users_content.textContent = 'Users content';
-  users.appendChild(users_content);
-
-  // Courses view
-  const courses = document.createElement('div');
-  const courses_content = document.createElement('div');
-  courses_content.textContent = 'Course content';
-  courses.appendChild(courses_content);
+  const requestsView = document.querySelector('.requests-view', HTMLElement);
+  const usersView = document.querySelector('.users-view', HTMLElement);
+  const coursesView = document.querySelector('.courses-view', HTMLElement);
 
   // Buttons
   const sidebarBtns = [...document.querySelectorAll('.sidebar-btn')];
 
   // State
-  let selected = sidebarBtns[0];
+  let selectedBtn = sidebarBtns[0];
+  let selectedView = requestsView;
 
   /**
    * Switches to the selected admin view.
@@ -38,24 +22,25 @@
     if (!e.target.classList.contains('selected')) {
       // Highlights the selected menu button
       e.target.classList.add('selected');
-      selected.classList.remove('selected');
-      selected = e.target;
+      selectedBtn.classList.remove('selected');
+      selectedBtn = e.target;
 
-      // Switches to the new view.
-      if (view.firstChild) {
-        view.removeChild(view.firstChild);
-
-        switch (e.target.textContent) {
-          case 'Approvals':
-            view.appendChild(approvals);
-            break;
-          case 'Users':
-            view.appendChild(users);
-            break;
-          case 'Courses':
-            view.appendChild(courses);
-            break;
-        }
+      switch (e.target.textContent) {
+        case 'Requests':
+          selectedView.setAttribute('hidden', true);
+          requestsView.removeAttribute('hidden');
+          selectedView = requestsView;
+          break;
+        case 'Users':
+          selectedView.setAttribute('hidden', true);
+          usersView.removeAttribute('hidden');
+          selectedView = usersView;
+          break;
+        case 'Courses':
+          selectedView.setAttribute('hidden', true);
+          coursesView.removeAttribute('hidden');
+          selectedView = coursesView;
+          break;
       }
     }
   };

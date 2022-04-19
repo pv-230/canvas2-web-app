@@ -13,12 +13,69 @@
 {% block content %}
 <sidebar>
   <h2>Admin Panel</h2>
-  <button type="button" class="sidebar-btn selected">Approvals</button>
+  <button type="button" class="sidebar-btn selected">Requests</button>
   <button type="button" class="sidebar-btn">Users</button>
   <button type="button" class="sidebar-btn">Courses</button>
 </sidebar>
 
 <div class="view-container">
-  <div class="view"></div>
+  <div class="view">
+    <div class="requests-view">
+      <h2 class="requests-table-title">Requests for Teacher Accounts</h2>
+      <table class="requests-table">
+        <thead>
+          <tr>
+            <th scope="col" class="name-col">Name</th>
+            <th scope="col" class="username-col">Username</th>
+            <th scope="col" class="email-col">Email</th>
+            <th scope="col" class="action-col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for request in requests %}
+            <tr>
+              <td>{{ request["lastname"] }}, {{ request["firstname"] }}</td>
+              <td>{{ request["username"] }}</td>
+              <td>{{ request["email"] }}</td>
+              <td class="btn-cell">
+                <form
+                  action="{{ url_for('admin.action', type='approveRequest') }}"
+                  method="POST"
+                >
+                  <input name="approve-id" value="{{ request['_id'] }}" hidden>
+                  <button
+                    class="approve-btn"
+                    type="submit"
+                  >
+                    Approve
+                  </button>
+                </form>
+                <form
+                  action="{{ url_for('admin.action', type='denyRequest') }}"
+                  method="POST"
+                >
+                  <input name="deny-id" value="{{ request['_id'] }}" hidden>
+                  <button
+                    class="deny-btn"
+                    type="submit"
+                  >
+                    Deny
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          {% if not requests %}
+            <tr>
+              <td class="empty-cell" colspan="4">No requests</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="users-view" hidden>Users Content</div>
+    <div class="courses-view" hidden>Courses Content</div>
+  </div>
 </div>
 {% endblock %}
