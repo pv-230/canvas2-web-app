@@ -98,6 +98,21 @@ def join_invite(code):
         if enrollment:
             return redirect(url_for("frontend.course_page", code=course["_id"]))  # noqa: E501
 
+        # otherwise, get teachers and render the page
+        teachers = db_conn.db.enrollments.aggregate([
+            {'$match': {'class': course['_id']}},
+            {'$lookup': {
+                'from': 'users',
+                'localField': 'user',
+                'foreignField': '_id',
+                'as': 'user'}},
+            {'$unwind': {'path': '$user'}},
+            {'$match': {'user.role': {'$gt': 1}}},
+            {'$replaceRoot': {'newRoot': '$user'}},
+            {'$project': {'password': 0}}
+        ])
+        course['teachers'] = list(teachers)
+
         return render_template("invitation.html", course=course, code=code)
 
     # if post, actually join the class

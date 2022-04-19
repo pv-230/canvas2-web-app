@@ -17,7 +17,15 @@
   <div class="welcome-box">
     <h2 class="welcome-text">You've been invited!</h1>
     <div class="inv-details">
-      Welcome to {{course["title"]}}.
+      Welcome to {{course["title"]}}.<br><br>
+      {% if course['teachers'] %}
+      Class is taught by:
+      <ul>
+        {% for t in course['teachers'] %}
+        <li> - {{ t['lastname'] }}, {{ t['firstname'] }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
     </div>
 
     <form
