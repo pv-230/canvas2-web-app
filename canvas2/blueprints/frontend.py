@@ -26,7 +26,9 @@ def index():
     if "id" not in session:
         return redirect(url_for("auth.login"))
 
-    # else, render home page
+    # if role is user, redirect to the admin panel
+    elif session["role"] == 4:
+        return redirect(url_for("admin.panel"))
     else:
 
         # get all classes by user id
