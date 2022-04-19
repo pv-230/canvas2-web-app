@@ -23,7 +23,7 @@ def panel():
         return redirect(url_for("auth.login"))
 
     # Prevents page access by non-admins
-    if session["role"] < 3:
+    if session["role"] < 4:
         abort(401)
 
     return render_template("admin.html")

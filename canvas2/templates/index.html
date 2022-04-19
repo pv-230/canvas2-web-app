@@ -15,7 +15,10 @@
       <a class="header-logo" href="/"></a>
       <a class="header-title" href="/">Canvas 2</a>
     </div>
-    <button class="profile-btn" type="button"></button>
+    <div class="profile-group">
+      <span class="navbar-welcome-text">Welcome, {{ session["username"] }}</span>
+      <button class="profile-btn" type="button"></button>
+    </div>
   </header>
   <div class="menu-box" hidden>
     <button class="menu-btn" type="button">Profile</button>

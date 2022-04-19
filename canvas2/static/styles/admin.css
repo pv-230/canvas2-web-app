@@ -23,12 +23,15 @@ sidebar {
   cursor: pointer;
 }
 
+.sidebar-btn:active {
+  background-color: #ceb8883d;
+}
+
 sidebar > h2,
 .sidebar-btn {
   background-color: var(--inner-bg-color-darker);
   padding: 8px;
   text-align: center;
-  font-family: robotomedium;
   font-size: 1.5rem;
   width: 90%;
   color: var(--white);
