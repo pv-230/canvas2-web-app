@@ -21,27 +21,28 @@ def init_db(db):
     db.drop_collection("submissions")
 
     # insert users
-    # admin_id = (
-    #     db["users"]
-    #     .insert_one(
-    #         {
-    #             "username": "admin",
-    #             "password": "password",
-    #             "firstname": "Admin",
-    #             "lastname": "User",
-    #             "email": "admin@example.com",
-    #             "role": 4,
-    #             "approved": True,
-    #         }
-    #     )
-    #     .inserted_id
-    # )
+    # NOTE: username == password for testing purposes
+    admin_id = (
+        db["users"]
+        .insert_one(
+            {
+                "username": "admin",
+                "password": "$2b$14$XvXqLn3QFEkJHHOzEMkgAuIHcXvw.2jcnaddbY9hBcglJxmDeAtmi",
+                "firstname": "Admin",
+                "lastname": "User",
+                "email": "admin@example.com",
+                "role": 4,
+                "approved": True,
+            }
+        )
+        .inserted_id
+    ); admin_id = admin_id # flask8: noqa; shhhhh......
     teacher_id = (
         db["users"]
         .insert_one(
             {
                 "username": "teacher",
-                "password": "password",
+                "password": "$2b$14$asNJZSOhP/vUd9tdnzsd3OclY2vWnusEYDS9tAyJVPb.4F5VUcj2q",
                 "firstname": "Teacher",
                 "lastname": "User",
                 "email": "teacher@example.com",
@@ -71,7 +72,7 @@ def init_db(db):
         .insert_one(
             {
                 "username": "teachasst",
-                "password": "password",
+                "password": "$2b$14$asNJZSOhP/vUd9tdnzsd3ONgDV4NouCVufDveRd9qtDuxSNaNncvK",
                 "firstname": "Assistant",
                 "lastname": "User",
                 "email": "teachasst@example.com",
@@ -86,7 +87,7 @@ def init_db(db):
         .insert_one(
             {
                 "username": "student1",
-                "password": "password",
+                "password": "$2b$14$asNJZSOhP/vUd9tdnzsd3OmV.pqlRhTijFwXRl3zgv68QTHPE1N2q",
                 "firstname": "Student1",
                 "lastname": "User",
                 "email": "student1@example.com",
@@ -102,7 +103,7 @@ def init_db(db):
             {
                 "username": "student2",
                 "password": "password",
-                "firstname": "Student2",
+                "firstname": "$2b$14$asNJZSOhP/vUd9tdnzsd3OJxxTLoFKtafOG1THK0cM5icGl0YHhfK",
                 "lastname": "User",
                 "email": "student2@example.com",
                 "role": 1,
@@ -218,7 +219,7 @@ def check_db(db):
     """Checks DB to make sure entries are in the right place."""
 
     # check counts
-    assert db["users"].count_documents({}) == 5
+    assert db["users"].count_documents({}) >= 4
     assert db["classes"].count_documents({}) == 3
     assert db["enrollments"].count_documents({}) == 6
     assert db["assignments"].count_documents({}) == 3

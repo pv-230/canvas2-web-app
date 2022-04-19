@@ -15,6 +15,7 @@ coverage>=6.3
 # Database
 pymongo>=4.0.1
 dnspython>=2.2.1
+bcrypt>=3.2.0
 
 # Production
 waitress>=2.1.1

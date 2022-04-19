@@ -2,10 +2,6 @@
   --min-card-height: 150px;
 }
 
-.content {
-  position: relative;
-}
-
 .main-content {
   display: flex;
   flex-direction: column;
@@ -136,6 +132,31 @@ section:not(:first-child) {
   height: 45px;
 }
 
+.inv-link-area {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inv-link-title {
+  font-size: 1.2rem;
+  width: fit-content;
+}
+
+.inv-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: fit-content;
+  width: fit-content;
+  background-color: var(--inner-bg-color);
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: robotolight;
+}
+
 /* Popup window styling */
 
 .popup-bg:not([hidden]) {
@@ -244,11 +265,12 @@ section:not(:first-child) {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: none;
-  background-color: rgba(0, 0, 0, 0);
   color: var(--white);
   font-size: 1.5rem;
   height: var(--min-card-height);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--inner-bg-color);
 }
 
 .add-icon-frame {
@@ -259,6 +281,19 @@ section:not(:first-child) {
 .add-icon {
   height: 90%;
   transition: height 0.1s;
+}
+
+.copy-btn:active {
+  margin: 0;
+}
+
+.copy-btn {
+  margin: 0;
+}
+
+.copy-btn-icon {
+  vertical-align: middle;
+  color: white;
 }
 
 .add-assignment-card:hover .add-icon {

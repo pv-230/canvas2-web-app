@@ -11,7 +11,7 @@ def test_login_good(client):
         # try logging in with user credentials
         res = client.post(
             "/auth/login",
-            data={"username": "teacher", "password": "pass"},
+            data={"username": "teacher", "password": "teacher"},
             follow_redirects=True,
         )
 
@@ -24,6 +24,25 @@ def test_login_good(client):
         assert session["fname"] == "Teacher"
         assert session["lname"] == "User"
         assert session["role"] == 3
+
+
+def test_login_badpass(client):
+    """Tests a login using bad password"""
+
+    # use client context to keep session static after request is processed
+    with client:
+
+        # try logging in with user credentials
+        res = client.post(
+            "/auth/login",
+            data={"username": "teacher", "password": "badpass"},
+            follow_redirects=True,
+        )
+
+        # asserts, session should still be available
+        assert res.status_code == 200
+        assert res.request.path == "/auth/login"
+        assert "Invalid username or password" in res.get_data(as_text=True)
 
 
 def test_login_baduser(client):
