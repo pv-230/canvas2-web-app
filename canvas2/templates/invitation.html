@@ -1,0 +1,39 @@
+<!-- This file represents course content. -->
+
+<!-- HTML head extension -->
+{% extends "base.html" %}
+{% block title %}Course Invitation{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/invitation.css') }}">
+{% endblock %}
+
+{% block container %}
+  <!-- Page Header -->
+  <div class="invite-header">
+    <img src="../static/images/favicon.svg" alt="">
+    <h1 class="page-title">Canvas2</h1>
+  </div>
+  <div class="welcome-box">
+    <h2 class="welcome-text">You've been invited!</h1>
+    <div class="inv-details">
+      <p>Welcome to {{course["title"]}}.</p>
+      {% if course['teachers'] %}
+      <p class="teacher-list-title">Class is taught by:</p>
+      <ul class="teacher-list">
+        {% for t in course['teachers'] %}
+        <li>{{ t['lastname'] }}, {{ t['firstname'] }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+
+    <form
+      id="accept-inv-form"
+      action="{{ url_for('invites.join_invite', code=code) }}"
+      method="POST"
+    >
+      <button class="join-btn" type="submit">Join</button>
+    </form>
+  </div>
+{% endblock %}
