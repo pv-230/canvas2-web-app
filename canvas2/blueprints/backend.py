@@ -365,7 +365,8 @@ def delete_assignment():
     })
 
     # return redirect to same page, forcing a refresh
-    return redirect(request.referrer)
+    code = request.form['crs-code']
+    return redirect(url_for("frontend.course_page", code=code))
 
 
 @backend.route('/delete_sub', methods=["POST"])

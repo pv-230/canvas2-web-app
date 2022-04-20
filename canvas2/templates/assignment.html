@@ -12,6 +12,19 @@
 <!-- Page content -->
 {% block content %}
   <div class="main-content">
+    <!-- Shows when clicking a delete button -->
+    <div class="confirmation-modal" hidden>
+      <p>Are you sure?</p>
+      <div class="confirm-btn-group">
+        <form id="del-btn-form" method="POST" action="">
+          <button type="submit" class="del-btn">Delete</button>
+          <input class="sub-id-input" type="text" value="" name="sub-id" hidden>
+          <input type="text" value="{{ assg_info['_id'] }}" name="assg-id" hidden>
+          <input type="text" value="{{ crs_info['_id'] }}" name="crs-code" hidden>
+        </form>
+        <button type="button" class="cancel-btn">Cancel</button>
+      </div>
+    </div>
 
     <!-- Assignment details section -->
     <section>
@@ -19,10 +32,7 @@
         <h2 class="section-title">{{ crs_info["code"] }} - {{ assg_info["title"] }}</h2>
         {% if session['role'] >= 3 %}
           <button class="edit-details-btn">Edit</button>
-          <form action="{ url_for('delete_assignment') }" method="POST">
-            <button type="submit" class="remove-assg-btn">Delete</button>
-            <input type="text" value="{{ assg_info['_id'] }}" name="assg-id" hidden>
-          </form>
+          <button type="submit" class="del-assg-btn" data-id="{{ assg_info['_id'] }}">Delete</button>
         {% endif %}
       </div>
       <div class="details-group">
@@ -88,15 +98,14 @@
                 </td>
                 <td class="btn-cell">
                   <div class="btn-wrapper">
-                    <form action="{{ url_for('delete_submission') }}" method="POST">
-                      <button
-                        class="del-btn"
-                        type="submit"
-                      >
-                        Delete
-                      </button>
-                      <input type="text" value="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}" name="sub-id" hidden>
-                    </form>
+                    <button
+                      class="del-sub-btn"
+                      type="submit"
+                      data-id="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}"
+                    >
+                      Delete
+                    </button>
+                    
                   </div>
                 </td>
 
@@ -105,6 +114,11 @@
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>N/A</td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <button class="inactive-btn" type="button">N/A</button>
+                  </div>
+                </td>
                 <td class="btn-cell">
                   <div class="btn-wrapper">
                     <button class="inactive-btn" type="button">N/A</button>
