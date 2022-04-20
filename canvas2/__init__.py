@@ -22,11 +22,12 @@ def create_app(test_config=None):
     init_db(app)
 
     # import blueprints
-    from .blueprints import frontend, backend, auth, invites
+    from .blueprints import frontend, backend, auth, invites, admin
     app.register_blueprint(frontend)
     app.register_blueprint(backend)
     app.register_blueprint(auth)
     app.register_blueprint(invites)
+    app.register_blueprint(admin)
 
     # return the app
     return app

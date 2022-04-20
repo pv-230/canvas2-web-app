@@ -9,6 +9,7 @@
   --black: #2c2a29; /* Used for background color */
   --border-color: #4e4e4e;
   --inner-bg-color: #424242;
+  --inner-bg-color-darker: #3a3a3a;
 
   /* Sizes */
   --content-width: max(300px, 75%);

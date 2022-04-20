@@ -63,6 +63,7 @@ a:hover {
 
 button:hover {
   background-color: var(--garnet-brighter);
+  cursor: pointer;
 }
 
 button,

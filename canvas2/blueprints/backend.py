@@ -14,6 +14,7 @@ backend = Blueprint(
     url_prefix="/secretary",  # cute nickname for backend ops, can be changed
 )
 
+
 @backend.route("/add-course", methods=["POST"])
 def add_course():
     """Adds a course to the database."""
@@ -90,7 +91,7 @@ def add_assignment():
     enrollment = db_conn.db.enrollments.find_one(
         {"user": teacher["_id"], "class": ObjectId(classid)}
     )
-    if not enrollment:
+    if session["role"] != 4 and not enrollment:
         abort(403)  # forbidden
 
     # TODO: make sure assignment already submitted
@@ -147,7 +148,7 @@ def submit_assignment():
     enrollment = db_conn.db.enrollments.find_one(
         {"user": ObjectId(userid), "class": assignment["class"]}
     )
-    if not enrollment:
+    if session["role"] != 4 and not enrollment:
         abort(403)  # forbidden
 
     # make sure isnt already submitted
@@ -201,7 +202,7 @@ def edit_assignment():
     enrollment = db_conn.db.enrollments.find_one(
         {"user": teacher["_id"], "class": ObjectId(classid)}
     )
-    if not enrollment:
+    if session["role"] != 4 and not enrollment:
         abort(403)  # forbidden
 
     # Updates the assignment in the database
@@ -244,7 +245,7 @@ def submission_info(sid):
     enrollment = db_conn.db.enrollments.find_one(
         {"user": user["_id"], "class": sub["class"]}
     )
-    if not enrollment:
+    if session["role"] != 4 and not enrollment:
         abort(403)  # forbidden
 
     # Gets a submission's contents and comments
@@ -323,7 +324,7 @@ def update_grades():
         enrollment = db_conn.db.enrollments.find_one(
             {"user": user["_id"], "class": sub["class"]}
         )
-        if not enrollment:
+        if session["role"] != 4 and not enrollment:
             abort(403)  # forbidden
 
         # Perform the update for a submission
