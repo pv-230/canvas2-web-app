@@ -16,6 +16,7 @@
   let selectedBtn = sidebarBtns[0];
   let selectedView = requestsView;
   let usersObject = null;
+  let timeout = null;
 
   /**
    * Switches to the selected admin view.
@@ -81,7 +82,10 @@
     fetch(request)
       .then((response) => {
         if (response.ok) {
-          window.location.reload();
+          // Clears the table
+          while (usersTableBody.firstElementChild) {
+            usersTableBody.removeChild(usersTableBody.firstElementChild);
+          }
         }
       })
       .catch((error) => {
@@ -96,7 +100,31 @@
   const editUser = (e) => {
     const userData = {};
 
-    /** @type {HTMLElement} */
+    // Clear the previous save button, if exists
+    const saveBtn = document.querySelector('.save-btn');
+    if (saveBtn) {
+      // Swap event listeners
+      saveBtn.removeEventListener('click', saveUserDetails);
+      saveBtn.addEventListener('click', editUser);
+
+      // Update button
+      saveBtn.textContent = 'Edit';
+      saveBtn.classList.remove('save-btn');
+      saveBtn.classList.add('edit-btn');
+
+      // Tables input fields to table cells
+      const tableRow = saveBtn.parentNode.parentNode;
+      const childrenArr = [...tableRow.children];
+      childrenArr.forEach((td) => {
+        if (!td.classList.contains('btn-cell')) {
+          const data = td.firstChild.getAttribute('value');
+          td.removeChild(td.firstChild);
+          td.textContent = data;
+        }
+      });
+    }
+
+    // Changes table cells to input fields
     const tableRow = e.target.parentNode.parentNode;
     const childrenArr = [...tableRow.children];
     childrenArr.forEach((td) => {
@@ -109,7 +137,7 @@
       }
     });
 
-    // Swap edit listeners
+    // Swap event listeners
     e.target.removeEventListener('click', editUser);
     e.target.addEventListener('click', saveUserDetails);
 
@@ -186,23 +214,26 @@
     });
 
     // Retrieves the users object
-    fetch(request)
-      .then((response) => {
-        if (response.ok) {
-          response.json().then((data) => {
-            usersObject = data;
-            populateTable(usersObject);
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            response.json().then((data) => {
+              usersObject = data;
+              populateTable(usersObject);
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 500);
   };
 
   // Event listeners
   sidebarBtns.forEach((btn) => {
     btn.addEventListener('click', selectView);
   });
-  searchBar.addEventListener('change', searchUsers);
+  searchBar.addEventListener('input', searchUsers);
 })();
