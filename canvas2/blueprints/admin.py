@@ -102,6 +102,9 @@ def action(type):
         db_conn.db.enrollments.delete_many(
             {"class": ObjectId(courseId)}
         )
+        db_conn.db.assignments.delete_many(
+            {"class": ObjectId(courseId)}
+        )
         db_conn.db.invites.delete_one(
             {"class": ObjectId(courseId)}
         )

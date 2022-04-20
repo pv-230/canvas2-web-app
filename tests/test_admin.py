@@ -1,6 +1,8 @@
 import json
 import pytest
 from secrets import token_hex
+from datetime import datetime
+from bson import ObjectId
 
 from .utils import setuser
 
@@ -189,6 +191,47 @@ def test_panel_baduser_approveteacher(client):
     
     # remove temp teacher user
     util_remove_teacher()
+
+
+def test_panel_removecourse(client):
+    """Sim removing a course"""
+
+    # set admin user
+    setuser(client, "admin")
+
+    # insert course
+    course_id = pytest.db["classes"].insert_one({
+        "code": "TEST404",
+        "title": "Delete Me!",
+        "desc": "I should not exist!",
+    }).inserted_id
+    assg_id = pytest.db["assignments"].insert_one({
+        "class": ObjectId(course_id),
+        "title": "Delete me too!",
+        "description": "This is the deleted assignment!",
+        "deadline": datetime.now(),
+    }).inserted_id
+
+    # with context...
+    with client:
+
+        # send post request to remove course
+        res = client.post(
+            "/admin/action/removeCourse",
+            json=str(course_id),
+            follow_redirects=True
+        )
+
+        # ensure we got a 200
+        assert res.status_code == 200
+
+        # ensure course is now deleted
+        assert pytest.db["courses"].find_one(
+            {"_id": course_id}
+        ) is None
+        assert pytest.db["assignments"].find_one(
+            {"_id": assg_id}
+        ) is None
 
 
 def test_panel_search(client):
