@@ -33,6 +33,7 @@
       action="{{ url_for('invites.join_invite', code=code) }}"
       method="POST"
     >
+      <a href="{{ url_for('frontend.index') }}">Back</a>
       <button class="join-btn" type="submit">Join</button>
     </form>
   </div>

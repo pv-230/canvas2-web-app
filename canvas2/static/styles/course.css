@@ -65,6 +65,7 @@ section:not(:first-child) {
 
 .assignment-btn:hover {
   background-color: rgb(20, 135, 207);
+  cursor: pointer;
 }
 
 .assignment-btn,
@@ -79,12 +80,7 @@ section:not(:first-child) {
   text-align: center;
 }
 
-.assignment-btn-submitted:hover {
-  background-color: rgb(5, 150, 5);
-}
-
-.assignment-btn-submitted,
-.assignment-btn-submitted:active {
+.assignment-btn-submitted {
   width: 100%;
   padding: 8px;
   border-bottom-left-radius: 10px;
@@ -99,6 +95,7 @@ section:not(:first-child) {
 
 .link-btn:hover {
   background-color: rgb(0, 141, 12);
+  cursor: pointer;
 }
 
 .link-btn,
@@ -198,6 +195,7 @@ section:not(:first-child) {
 
 .close-btn:hover {
   background-color: var(--garnet-brighter);
+  cursor: pointer;
 }
 
 .close-btn,
@@ -230,6 +228,7 @@ section:not(:first-child) {
 
 .form-btn:hover {
   background-color: var(--garnet-brighter);
+  cursor: pointer;
 }
 
 .form-btn,
@@ -294,6 +293,12 @@ section:not(:first-child) {
 .copy-btn-icon {
   vertical-align: middle;
   color: white;
+}
+
+.add-assignment-card:hover {
+  background-color: #474747;
+  box-shadow: 0 0 8px var(--gold);
+  cursor: pointer;
 }
 
 .add-assignment-card:hover .add-icon {

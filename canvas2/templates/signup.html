@@ -78,7 +78,10 @@
          <option value="3">Teacher</option>
         </select>
       </div>
-      <button type="submit">Create account</button>
+      <div class="button-group">
+        <a href="{{ url_for('auth.login') }}">Back</a>
+        <button type="submit">Create account</button>
+      </div>
     </form>
   </div>
 {% endblock %}

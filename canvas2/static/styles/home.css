@@ -11,7 +11,6 @@
   width: var(--content-width);
   padding: 32px 0 8px 0;
   font-size: 3rem;
-  font-family: robotomedium;
   text-align: center;
   color: var(--white);
   border-bottom: 1px solid var(--border-color);
@@ -28,9 +27,11 @@
   width: var(--content-width);
 }
 
-.course-card:hover {
+.course-card:hover,
+.add-course-card:hover {
   background-color: #474747;
   box-shadow: 0 0 8px var(--gold);
+  cursor: pointer;
 }
 
 .course-card,
@@ -134,6 +135,7 @@
 
 .add-course-btn:hover {
   background-color: var(--garnet-brighter);
+  cursor: pointer;
 }
 
 /* Add course form header styling */
@@ -163,4 +165,5 @@
 
 .close-btn-frame:hover {
   background-color: var(--garnet-brighter);
+  cursor: pointer;
 }
