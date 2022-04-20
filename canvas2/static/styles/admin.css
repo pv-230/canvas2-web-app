@@ -74,7 +74,8 @@ sidebar > h2 {
 /* View styling */
 
 .requests-view:not([hidden]),
-.users-view:not([hidden]) {
+.users-view:not([hidden]),
+.courses-view:not([hidden]) {
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -228,4 +229,120 @@ form {
 
 .users-table input {
   width: 100%;
+}
+
+/* Courses view styling */
+
+.courses-view:not([hidden]) {
+  position: relative;
+}
+
+.content-title {
+  width: 100%;
+  padding: 0px 0 10px 0;
+  font-size: 3rem;
+  text-align: center;
+  color: var(--white);
+  border-bottom: 1px solid #eeeeee4b;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 300px);
+  grid-auto-rows: 150px;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.course-card:hover {
+  background-color: var(--inner-bg-color);
+  box-shadow: 0 0 8px var(--gold);
+  cursor: pointer;
+}
+
+.course-card,
+.course-card:active {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 16px;
+  font-size: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--inner-bg-color-darker);
+  color: var(--white);
+}
+
+.course-title {
+  font-family: robotolight;
+}
+
+.close-btn-frame {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  background: center / 80% url(../images/close-btn.svg) no-repeat var(--garnet);
+  border-radius: 50%;
+}
+
+.close-btn-frame:hover {
+  background-color: var(--garnet-brighter);
+  cursor: pointer;
+}
+
+.confirmation-modal:not([hidden]) {
+  position: absolute;
+  top: 171px;
+  left: 643px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--inner-bg-color);
+  border: solid 1px var(--border-color);
+  border-radius: 4px;
+  color: var(--white);
+  padding: 16px;
+  gap: 8px;
+}
+
+.confirm-btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.remove-crs-btn:hover {
+  background-color: var(--garnet-brighter);
+  cursor: pointer;
+}
+
+.remove-crs-btn,
+.remove-crs-btn:active {
+  font-size: 1.2rem;
+  color: var(--white);
+  text-decoration: none;
+  background-color: var(--garnet);
+  padding: 8px 16px;
+  border-radius: 5px;
+}
+
+.cancel-btn:hover {
+  background-color: #585858;
+  cursor: pointer;
+}
+
+.cancel-btn,
+.cancel-btn:active {
+  font-size: 1.2rem;
+  color: var(--white);
+  text-decoration: none;
+  background-color: #3a3a3a;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
 }

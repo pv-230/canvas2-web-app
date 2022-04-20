@@ -8,9 +8,14 @@
   const coursesView = document.querySelector('.courses-view', HTMLElement);
   const usersTableBody = document.querySelector('.users-tbody', HTMLElement);
   const searchBar = document.querySelector('.search-bar', HTMLElement);
+  const closeBtns = [...document.querySelectorAll('.close-btn-frame')];
+  const courseCards = [...document.querySelectorAll('.course-card')];
+  const confModal = document.querySelector('.confirmation-modal', HTMLElement);
 
   // Buttons
   const sidebarBtns = [...document.querySelectorAll('.sidebar-btn')];
+  const removeCrsBtn = document.querySelector('.remove-crs-btn');
+  const cancelBtn = document.querySelector('.cancel-btn');
 
   // State
   let selectedBtn = sidebarBtns[0];
@@ -23,13 +28,13 @@
    * @param {Event} e
    */
   const selectView = (e) => {
-    if (!e.target.classList.contains('selected')) {
+    if (!e.currentTarget.classList.contains('selected')) {
       // Highlights the selected menu button
-      e.target.classList.add('selected');
+      e.currentTarget.classList.add('selected');
       selectedBtn.classList.remove('selected');
-      selectedBtn = e.target;
+      selectedBtn = e.currentTarget;
 
-      switch (e.target.textContent) {
+      switch (e.currentTarget.textContent) {
         case 'Requests':
           selectedView.setAttribute('hidden', true);
           requestsView.removeAttribute('hidden');
@@ -57,7 +62,7 @@
     const fields = [];
 
     // Collects the input field data
-    const tableRow = e.target.parentNode.parentNode;
+    const tableRow = e.currentTarget.parentNode.parentNode;
     const childrenArr = [...tableRow.children];
     childrenArr.forEach((td) => {
       if (!td.classList.contains('btn-cell')) {
@@ -67,7 +72,7 @@
     });
 
     // Attach user ID
-    fields.push(e.target.getAttribute('data-id'));
+    fields.push(e.currentTarget.getAttribute('data-id'));
 
     // Builds the POST request
     const request = new Request(`/admin/action/updateUserInfo`, {
@@ -98,8 +103,6 @@
    * @param {Event} e
    */
   const editUser = (e) => {
-    const userData = {};
-
     // Clear the previous save button, if exists
     const saveBtn = document.querySelector('.save-btn');
     if (saveBtn) {
@@ -125,7 +128,7 @@
     }
 
     // Changes table cells to input fields
-    const tableRow = e.target.parentNode.parentNode;
+    const tableRow = e.currentTarget.parentNode.parentNode;
     const childrenArr = [...tableRow.children];
     childrenArr.forEach((td) => {
       if (!td.classList.contains('btn-cell')) {
@@ -138,13 +141,13 @@
     });
 
     // Swap event listeners
-    e.target.removeEventListener('click', editUser);
-    e.target.addEventListener('click', saveUserDetails);
+    e.currentTarget.removeEventListener('click', editUser);
+    e.currentTarget.addEventListener('click', saveUserDetails);
 
     // Update button
-    e.target.textContent = 'Save';
-    e.target.classList.remove('edit-btn');
-    e.target.classList.add('save-btn');
+    e.currentTarget.textContent = 'Save';
+    e.currentTarget.classList.remove('edit-btn');
+    e.currentTarget.classList.add('save-btn');
   };
 
   /**
@@ -195,7 +198,8 @@
       tableData.classList.add('empty-cell');
       tableData.setAttribute('colspan', '5');
       tableData.textContent = 'No users found';
-      usersTableBody.appendChild(tableData);
+      tableRow.appendChild(tableData);
+      usersTableBody.appendChild(tableRow);
     }
   };
 
@@ -210,7 +214,7 @@
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(e.target.value),
+      body: JSON.stringify(e.currentTarget.value),
     });
 
     // Retrieves the users object
@@ -228,12 +232,75 @@
         .catch((error) => {
           console.log(error);
         });
-    }, 500);
+    }, 300);
+  };
+
+  /**
+   * Displays the confirmation modal.
+   * @param {Event} e
+   */
+  const showConfirmation = (e) => {
+    e.stopPropagation();
+    const courseId = e.currentTarget.getAttribute('data-id');
+    confModal.removeAttribute('hidden');
+    confModal.style = `left: ${e.x - 540}px; top: ${e.y - 75}px;`;
+    removeCrsBtn.setAttribute(
+      'data-id',
+      `${e.currentTarget.getAttribute('data-id')}`
+    );
+  };
+
+  /**
+   * Hides the confirmation modal.
+   * @param {Event} e
+   */
+  const hideConfirmation = (e) => {
+    confModal.setAttribute('hidden', true);
+    confModal.style = '';
+    removeCrsBtn.removeAttribute('data-id');
+  };
+
+  /**
+   * Displays the confirmation modal.
+   * @param {Event} e
+   */
+  const removeCourse = (e) => {
+    // Builds the POST request
+    const request = new Request(`/admin/action/removeCourse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(e.currentTarget.getAttribute('data-id')),
+    });
+
+    // Sends the request
+    fetch(request)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   // Event listeners
   sidebarBtns.forEach((btn) => {
     btn.addEventListener('click', selectView);
   });
+
   searchBar.addEventListener('input', searchUsers);
+
+  closeBtns.forEach((btn) => {
+    btn.addEventListener('click', showConfirmation);
+  });
+
+  courseCards.forEach((card) => {
+    card.addEventListener('click', (e) => {
+      window.location.href = `/c/${e.currentTarget.getAttribute('data-id')}`;
+    });
+  });
+
+  cancelBtn.addEventListener('click', hideConfirmation);
+  removeCrsBtn.addEventListener('click', removeCourse);
 })();

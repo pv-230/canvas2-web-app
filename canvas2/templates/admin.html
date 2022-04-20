@@ -20,6 +20,8 @@
 
 <div class="view-container">
   <div class="view">
+
+    <!-- Requests view -->
     <div class="requests-view">
       <h2 class="requests-table-title">Requests for Teacher Accounts</h2>
       <table class="requests-table">
@@ -75,6 +77,7 @@
       </table>
     </div>
 
+    <!-- Users view -->
     <div class="users-view" hidden>
       <h2 class="users-table-title">Search</h2>
       <input class="search-bar" type="text" autocomplete="off">
@@ -95,7 +98,29 @@
         </tbody>
       </table>
     </div>
-    <div class="courses-view" hidden>Courses Content</div>
+
+
+    <!-- Courses view -->
+    <div class="courses-view" hidden>
+      <h2 class="content-title">Courses</h2>
+      <div class="course-grid">
+        {% for course in courses %}
+          <div class="course-card" data-id="{{ course['_id'] }}">
+            <div class="close-btn-frame" data-id="{{ course['_id'] }}"></div>
+            <div class="course-code">{{ course["code"] }}</div>
+            <div class="course-title">{{ course["title"] }}</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="confirmation-modal" hidden>
+        <p>Are you sure?</p>
+        <div class="confirm-btn-group">
+          <button type="button" class="remove-crs-btn">Remove</button>
+          <button type="button" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
