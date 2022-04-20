@@ -19,6 +19,10 @@
         <h2 class="section-title">{{ crs_info["code"] }} - {{ assg_info["title"] }}</h2>
         {% if session['role'] >= 3 %}
           <button class="edit-details-btn">Edit</button>
+          <form action="{ url_for('delete_assignment') }" method="POST">
+            <button type="submit" class="remove-assg-btn">Delete</button>
+            <input type="text" value="{{ assg_info['_id'] }}" name="assg-id" hidden>
+          </form>
         {% endif %}
       </div>
       <div class="details-group">
@@ -44,6 +48,7 @@
             <th scope="col" class="sim-col">Sim Score</th>
             <th scope="col" class="grade-col">Grade</th>
             <th scope="col" class="view-col">View</th>
+            <th scope="col" class="del-col">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -79,6 +84,19 @@
                     >
                       Manage
                     </button>
+                  </div>
+                </td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <form action="{{ url_for('delete_submission') }}" method="POST">
+                      <button
+                        class="del-btn"
+                        type="submit"
+                      >
+                        Delete
+                      </button>
+                      <input type="text" value="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}" name="sub-id" hidden>
+                    </form>
                   </div>
                 </td>
 
