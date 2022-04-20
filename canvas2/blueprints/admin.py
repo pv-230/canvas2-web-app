@@ -92,7 +92,19 @@ def action(type):
 
     # Removes a course
     if type == "removeCourse":
-        print(request.json)
+        courseId = request.json
+
+        # Deletes the course from the db and also deletes all related
+        # enrollments and invites
+        db_conn.db.classes.delete_one(
+            {"_id": ObjectId(courseId)}
+        )
+        db_conn.db.enrollments.delete_many(
+            {"class": ObjectId(courseId)}
+        )
+        db_conn.db.invites.delete_one(
+            {"class": ObjectId(courseId)}
+        )
 
     return redirect(url_for("admin.panel"))
 
