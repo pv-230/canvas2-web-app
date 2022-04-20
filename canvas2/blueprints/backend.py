@@ -338,3 +338,59 @@ def update_grades():
         )
 
     return redirect(request.referrer)
+
+
+@backend.route('/delete_assg', methods=["POST"])
+def delete_assignment():
+    """Deletes an submission from the database"""
+
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # Prevents access by students
+    if session["role"] < 2:
+        abort(401)
+
+    # ensure user exists and is ta role or greater
+    user = db_conn.db.users.find_one({
+        "_id": ObjectId(session["id"])
+    })
+    if not user or not user["role"] >= 2:
+        abort(403)  # forbidden
+
+    # remove the assignment from the database
+    db_conn.db.assignments.delete_one({
+        "_id": ObjectId(request.form["assg-id"])
+    })
+
+    # return redirect to same page, forcing a refresh
+    return redirect(request.referrer)
+
+
+@backend.route('/delete_sub', methods=["POST"])
+def delete_submission():
+    """Deletes an submission from the database"""
+
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # Prevents access by students
+    if session["role"] < 2:
+        abort(401)
+
+    # ensure user exists and is ta role or greater
+    user = db_conn.db.users.find_one({
+        "_id": ObjectId(session["id"])
+    })
+    if not user or not user["role"] >= 2:
+        abort(403)  # forbidden
+
+    # remove the assignment from the database
+    db_conn.db.submissions.delete_one({
+        "_id": ObjectId(request.form["sub-id"])
+    })
+
+    # return redirect to same page, forcing a refresh
+    return redirect(request.referrer)
