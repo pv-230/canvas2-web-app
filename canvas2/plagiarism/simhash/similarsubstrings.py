@@ -157,7 +157,7 @@ def getCommonSubstrings(text1: list, text2: list) -> str:
     Return a string representation of a set of shingles
     """
     hash1 = getHash(text1)
-    hash2 = getHash(text1)
+    hash2 = getHash(text2)
 
     similarSentences = getSimilarSentences(hash1, hash2)
     return similarSentences
