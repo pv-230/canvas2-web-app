@@ -12,6 +12,19 @@
 <!-- Page content -->
 {% block content %}
   <div class="main-content">
+    <!-- Shows when clicking a delete button -->
+    <div class="confirmation-modal" hidden>
+      <p>Are you sure?</p>
+      <div class="confirm-btn-group">
+        <form id="del-btn-form" method="POST" action="">
+          <button type="submit" class="del-btn">Delete</button>
+          <input class="sub-id-input" type="text" value="" name="sub-id" hidden>
+          <input type="text" value="{{ assg_info['_id'] }}" name="assg-id" hidden>
+          <input type="text" value="{{ crs_info['_id'] }}" name="crs-code" hidden>
+        </form>
+        <button type="button" class="cancel-btn">Cancel</button>
+      </div>
+    </div>
 
     <!-- Assignment details section -->
     <section>
@@ -19,6 +32,7 @@
         <h2 class="section-title">{{ crs_info["code"] }} - {{ assg_info["title"] }}</h2>
         {% if session['role'] >= 3 %}
           <button class="edit-details-btn">Edit</button>
+          <button type="submit" class="del-assg-btn" data-id="{{ assg_info['_id'] }}">Delete</button>
         {% endif %}
       </div>
       <div class="details-group">
@@ -44,6 +58,7 @@
             <th scope="col" class="sim-col">Sim Score</th>
             <th scope="col" class="grade-col">Grade</th>
             <th scope="col" class="view-col">View</th>
+            <th scope="col" class="del-col">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -81,12 +96,29 @@
                     </button>
                   </div>
                 </td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <button
+                      class="del-sub-btn"
+                      type="submit"
+                      data-id="{{ obj['assignment'][obj['assignment']|length - 1]['_id'] }}"
+                    >
+                      Delete
+                    </button>
+                    
+                  </div>
+                </td>
 
               <!-- No submission found for the user -->
               {% else %}
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>N/A</td>
+                <td class="btn-cell">
+                  <div class="btn-wrapper">
+                    <button class="inactive-btn" type="button">N/A</button>
+                  </div>
+                </td>
                 <td class="btn-cell">
                   <div class="btn-wrapper">
                     <button class="inactive-btn" type="button">N/A</button>

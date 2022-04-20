@@ -16,6 +16,8 @@
   const windowGrade = document.getElementById('window-grade');
   const gradeCells = [...document.querySelectorAll('.grade-cell')];
   const simScore = document.querySelector('.simscore');
+  const confModal = document.querySelector('.confirmation-modal', HTMLElement);
+  const subIdInput = document.querySelector('.sub-id-input');
 
   // Buttons
   const viewBtns = [...document.querySelectorAll('.view-btn')];
@@ -24,11 +26,15 @@
   const editBtn = document.querySelector('.edit-details-btn');
   const revertBtn = document.querySelector('.revert-btn');
   const saveBtn = document.querySelector('.save-btn');
+  const delAssgBtn = document.querySelector('.del-assg-btn');
+  const delSubBtn = [...document.querySelectorAll('.del-sub-btn')];
+  const cancelBtn = document.querySelector('.cancel-btn');
   const reportBtn = document.querySelector('.report-btn');
 
   // Forms
   const editAssgForm = document.forms['edit-assg-form'];
   const manageSubForm = document.forms['manage-sub-form'];
+  const delBtnForm = document.forms['del-btn-form'];
 
   /**
    * Requests information for the specified submission from the db.
@@ -237,33 +243,58 @@
   };
 
   /**
+   * Displays the confirmation modal.
+   * @param {Event} e
+   */
+  const showConfirmation = (e) => {
+    const id = e.currentTarget.getAttribute('data-id');
+    confModal.removeAttribute('hidden');
+    confModal.style = `left: ${e.x - 220}px; top: ${e.y - 75}px;`;
+
+    if (e.currentTarget.classList.contains('del-assg-btn')) {
+      delBtnForm.setAttribute('action', '/secretary/delete_assg');
+    } else if (e.currentTarget.classList.contains('del-sub-btn')) {
+      delBtnForm.setAttribute('action', '/secretary/delete_sub');
+      subIdInput.setAttribute('value', id);
+    }
+  };
+
+  /**
+   * Hides the confirmation modal.
+   * @param {Event} e
+   */
+  const hideConfirmation = (e) => {
+    confModal.setAttribute('hidden', true);
+    confModal.style = '';
+  };
+
+  /**
    * Returns a report of the similar sentences in the assignment.
    */
-   const getSimilarityReport = () => {
+  const getSimilarityReport = () => {
     const sid = reportBtn.getAttribute('data-id');
 
     const request = new Request(`/secretary/s/${sid}/similarity-report`, {
-        method: 'GET',
+      method: 'GET',
     });
 
-    fetch(request)
-        .then((response) => {
-            if (response.ok) {
-                response.json().then((data) => {
-                    if (data['error']) {
-                        alert(data['error']);
-                    } else {
-                        const a = document.createElement('a');
-                        a.href = `data:text/plain;charset=utf-8,${encodeURIComponent(
+    fetch(request).then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          if (data['error']) {
+            alert(data['error']);
+          } else {
+            const a = document.createElement('a');
+            a.href = `data:text/plain;charset=utf-8,${encodeURIComponent(
               data
             )}`;
-                        a.download = `similarity-report-${sid}.txt`;
-                        a.click();
-                    }
-                })
-            };
-        })
-}
+            a.download = `similarity-report-${sid}.txt`;
+            a.click();
+          }
+        });
+      }
+    });
+  };
   // Event listeners
 
   closeBtnEditAssg.addEventListener('click', closePopupEditAssg);
@@ -290,6 +321,11 @@
   }
 
   revertBtn.addEventListener('click', resetGrades);
-
   saveBtn.addEventListener('click', sendNewGrades);
+
+  delAssgBtn.addEventListener('click', showConfirmation);
+  delSubBtn.forEach((btn) => {
+    btn.addEventListener('click', showConfirmation);
+  });
+  cancelBtn.addEventListener('click', hideConfirmation);
 })();

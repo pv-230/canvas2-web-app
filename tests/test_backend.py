@@ -608,3 +608,74 @@ def test_submitassg_noenroll(client):
         pytest.db["submissions"].delete_one(
             {"assignment": assignment["_id"], "user": user["_id"]}
         )
+
+def test_delete_assignment(client):
+
+    # set teach
+    user = setuser(client, "teacher")
+
+    # get assignment id from db
+    course = pytest.db["classes"].find_one({"code": "TEST002"})
+    assg_id = pytest.db["assignments"].insert_one({
+        "class": course['_id'],
+        "title": "Delete me too!",
+        "description": "This is the deleted assignment!",
+        "deadline": datetime.now(),
+    }).inserted_id
+
+    # use client context
+    with client:
+
+        res = client.post(
+            "/secretary/delete_assg",
+            data={
+                "assg-id": str(assg_id),
+                "crs-code": str(course["_id"])
+            },
+            headers={"Referer": "/c/" + str(course['_id'])},
+            follow_redirects=True,
+        )
+
+        # check to make sure we were allowed
+        assert res.status_code == 200
+
+        # ensure assignment was deleted
+        assignment = pytest.db["assignments"].find_one({
+            "_id": assg_id
+        })
+        assert assignment is None
+
+
+def test_delete_submission(client):
+
+    # set teach
+    setuser(client, "teacher")
+
+    # get assignment id from db
+    assg = pytest.db["assignments"].find_one({"title": "Test Assignment 2"})
+    sub_id = pytest.db["assignments"].insert_one({
+        "class": assg['_id'],
+        "title": "Delete me too!",
+        "description": "This is the deleted submission!",
+    }).inserted_id  # literally whatever
+
+    # use client context
+    with client:
+
+        res = client.post(
+            "/secretary/delete_sub",
+            data={
+                "sub-id": str(sub_id),
+            },
+            headers={"Referer": "/c/" + str(assg['class'])},
+            follow_redirects=True,
+        )
+
+        # check to make sure we were allowed
+        assert res.status_code == 200
+
+        # ensure assignment was deleted
+        assignment = pytest.db["submissions"].find_one({
+            "_id": sub_id
+        })
+        assert assignment is None

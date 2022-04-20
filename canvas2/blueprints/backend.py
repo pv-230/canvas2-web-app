@@ -343,79 +343,136 @@ def update_grades():
     return redirect(request.referrer)
 
 
+@backend.route('/delete_assg', methods=["POST"])
+def delete_assignment():
+    """Deletes an submission from the database"""
+
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # Prevents access by students
+    if session["role"] < 2:
+        abort(401)
+
+    # ensure user exists and is ta role or greater
+    user = db_conn.db.users.find_one({
+        "_id": ObjectId(session["id"])
+    })
+    if not user or not user["role"] >= 2:
+        abort(403)  # forbidden
+
+    # remove the assignment from the database
+    db_conn.db.assignments.delete_one({
+        "_id": ObjectId(request.form["assg-id"])
+    })
+
+    # return redirect to same page, forcing a refresh
+    code = request.form['crs-code']
+    return redirect(url_for("frontend.course_page", code=code))
+
+
+@backend.route('/delete_sub', methods=["POST"])
+def delete_submission():
+    """Deletes an submission from the database"""
+
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
+
+    # Prevents access by students
+    if session["role"] < 2:
+        abort(401)
+
+    # ensure user exists and is ta role or greater
+    user = db_conn.db.users.find_one({
+        "_id": ObjectId(session["id"])
+    })
+    if not user or not user["role"] >= 2:
+        abort(403)  # forbidden
+
+    # remove the assignment from the database
+    db_conn.db.submissions.delete_one({
+        "_id": ObjectId(request.form["sub-id"])
+    })
+
+    # return redirect to same page, forcing a refresh
+    return redirect(request.referrer)
+
+
 @backend.route("/s/<sid>/similarity-report", methods=["GET"])
 def similarity_report(sid):
-    
-        # if not logged in, send to login
-        if "id" not in session:
-            return redirect(url_for("auth.login"))
-    
-        # Prevents access by students
-        if session["role"] < 2:
-            abort(401)
-    
-        # ensure user exists and is ta role or greater
-        user = db_conn.db.users.find_one({"_id": ObjectId(session["id"])})
-        if not user or not user["role"] >= 2:
-            abort(403)
-        
-        # Gets a submission's contents and comments
-        if request.method == "GET":
-            sub_info = db_conn.db.submissions.find_one(
-                {"_id": ObjectId(sid)},
-                {
-                    "contents": 1,
-                    "comments": 1,
-                    "grade": 1,
-                    "simscore": 1,
-                    "simsub": 1,
-                }
-            )
 
-        try:
-            similar_sub_id = sub_info["simsub"]
-        except:
-            return json.dumps({'error': 'No similar submissions'}, default=str)
+    # if not logged in, send to login
+    if "id" not in session:
+        return redirect(url_for("auth.login"))
 
-        curr_contents = sub_info["contents"]
+    # Prevents access by students
+    if session["role"] < 2:
+        abort(401)
 
-        # Get the contents of the similar submission
-        similar_contents = db_conn.db.submissions.find_one(
-            {"_id": ObjectId(similar_sub_id)},
+    # ensure user exists and is ta role or greater
+    user = db_conn.db.users.find_one({"_id": ObjectId(session["id"])})
+    if not user or not user["role"] >= 2:
+        abort(403)
+
+    # Gets a submission's contents and comments
+    if request.method == "GET":
+        sub_info = db_conn.db.submissions.find_one(
+            {"_id": ObjectId(sid)},
             {
                 "contents": 1,
+                "comments": 1,
+                "grade": 1,
+                "simscore": 1,
+                "simsub": 1,
             }
         )
 
-        curr_contents_parsed = parseText(curr_contents)
-        similar_contents_parsed = parseText(similar_contents["contents"])
-        similar_sentences = getCommonSubstrings(curr_contents_parsed, similar_contents_parsed)
+    try:
+        similar_sub_id = sub_info["simsub"]
+    except:
+        return json.dumps({'error': 'No similar submissions'}, default=str)
 
-        sentences = []
-        for i, j in similar_sentences:
-            s1 = " ".join(curr_contents_parsed[i - 1])
-            s2 = " ".join(similar_contents_parsed[j - 1])
+    curr_contents = sub_info["contents"]
 
-            s1 = re.sub(r'\s+([^\s\w]|_)+', r'\1', s1)
-            s2 = re.sub(r'\s+([^\s\w]|_)+', r'\1', s2)
+    # Get the contents of the similar submission
+    similar_contents = db_conn.db.submissions.find_one(
+        {"_id": ObjectId(similar_sub_id)},
+        {
+            "contents": 1,
+        }
+    )
 
-            sentences.append((s1, s2))
+    curr_contents_parsed = parseText(curr_contents)
+    similar_contents_parsed = parseText(similar_contents["contents"])
+    similar_sentences = getCommonSubstrings(curr_contents_parsed, similar_contents_parsed)
 
-        res = ""
-        res += ("--------------- Similarity Report ---------------")
-        res += ("\n")
-        res += ("Similarity Score: " + str(sub_info["simscore"]))
-        res += ("\n")
-        res += ("# of Common Sentences: " + str(len(similar_sentences)))
-        res += ("\n")
-        res += ("\n")
-        res += ("--------------- Similar Sentences ---------------")
-        res += ("\n")
-        for s1, s2 in sentences:
-            res += ("Original: " + s1)
-            res += ("\n")
-            res += ("Similar: " + s2)
-            res += ("\n")
-            res += ("\n")
+    sentences = []
+    for i, j in similar_sentences:
+        s1 = " ".join(curr_contents_parsed[i - 1])
+        s2 = " ".join(similar_contents_parsed[j - 1])
 
-        return json.dumps(res, default=str)
+        s1 = re.sub(r'\s+([^\s\w]|_)+', r'\1', s1)
+        s2 = re.sub(r'\s+([^\s\w]|_)+', r'\1', s2)
+
+        sentences.append((s1, s2))
+
+    res = ""
+    res += ("--------------- Similarity Report ---------------")
+    res += ("\n")
+    res += ("Similarity Score: " + str(sub_info["simscore"]))
+    res += ("\n")
+    res += ("# of Common Sentences: " + str(len(similar_sentences)))
+    res += ("\n")
+    res += ("\n")
+    res += ("--------------- Similar Sentences ---------------")
+    res += ("\n")
+    for s1, s2 in sentences:
+        res += ("Original: " + s1)
+        res += ("\n")
+        res += ("Similar: " + s2)
+        res += ("\n")
+        res += ("\n")
+
+    return json.dumps(res, default=str)
