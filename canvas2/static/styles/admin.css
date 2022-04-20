@@ -71,9 +71,10 @@ sidebar > h2 {
   overflow: auto;
 }
 
-/* Requests view styling */
+/* View styling */
 
-.requests-view:not([hidden]) {
+.requests-view:not([hidden]),
+.users-view:not([hidden]) {
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -84,19 +85,25 @@ sidebar > h2 {
   padding: 16px;
 }
 
-.requests-table-title {
+/* Table styling */
+
+.requests-table-title,
+.users-table-title {
   font-size: 2rem;
   text-align: center;
 }
 
-.requests-table {
+.requests-table,
+.users-table {
   table-layout: fixed;
   width: 100%;
   max-width: 800px;
 }
 
 .requests-table th,
-.requests-table td {
+.requests-table td,
+.users-table th,
+.users-table td {
   border: 1px solid var(--border-color);
   padding: 8px;
   vertical-align: middle;
@@ -107,12 +114,14 @@ sidebar > h2 {
   background-color: var(--inner-bg-color-darker);
 }
 
-.requests-table th {
+.requests-table th,
+.users-table th {
   font-family: robotomedium;
   font-size: 1.2rem;
 }
 
-.requests-table td {
+.requests-table td,
+.users-table td {
   font-family: robotolight;
   background-color: #3f3f3f;
 }
@@ -164,4 +173,12 @@ form {
 .deny-btn,
 .deny-btn:active {
   background-color: rgb(121, 24, 24);
+}
+
+/* Users view styling */
+
+.search-bar {
+  width: clamp(20ch, 50%, 40ch);
+  border-radius: 20px;
+  padding: 4px 8px;
 }
