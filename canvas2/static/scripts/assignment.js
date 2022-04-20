@@ -24,6 +24,7 @@
   const editBtn = document.querySelector('.edit-details-btn');
   const revertBtn = document.querySelector('.revert-btn');
   const saveBtn = document.querySelector('.save-btn');
+  const reportBtn = document.querySelector('.report-btn');
 
   // Forms
   const editAssgForm = document.forms['edit-assg-form'];
@@ -39,6 +40,8 @@
     commentGroup.textContent = 'Loading comments...';
     windowGrade.value = '*';
     simScore.textContent = 'Loading...';
+
+    reportBtn.setAttribute('data-id', sid);
 
     // Builds the GET request
     const request = new Request(`/secretary/s/${sid}/submission-info`, {
@@ -78,6 +81,7 @@
             }
 
             windowGrade.value = data['grade'];
+            simScore.textContent = data['simscore'];
           });
         }
       })
@@ -232,6 +236,34 @@
       });
   };
 
+  /**
+   * Returns a report of the similar sentences in the assignment.
+   */
+   const getSimilarityReport = () => {
+    const sid = reportBtn.getAttribute('data-id');
+
+    const request = new Request(`/secretary/s/${sid}/similarity-report`, {
+        method: 'GET',
+    });
+
+    fetch(request)
+        .then((response) => {
+            if (response.ok) {
+                response.json().then((data) => {
+                    if (data['error']) {
+                        alert(data['error']);
+                    } else {
+                        const a = document.createElement('a');
+                        a.href = `data:text/plain;charset=utf-8,${encodeURIComponent(
+              data
+            )}`;
+                        a.download = `similarity-report-${sid}.txt`;
+                        a.click();
+                    }
+                })
+            };
+        })
+}
   // Event listeners
 
   closeBtnEditAssg.addEventListener('click', closePopupEditAssg);
@@ -251,6 +283,10 @@
     gradeCells.forEach((cell) => {
       cell.addEventListener('change', editGrades);
     });
+  }
+
+  if (reportBtn) {
+    reportBtn.addEventListener('click', getSimilarityReport);
   }
 
   revertBtn.addEventListener('click', resetGrades);

@@ -139,7 +139,7 @@ def getLCS(s1: list, s2: list) -> list:
                         longest = curr
         return longest
 
-    # find the LCS then remoce it from the strings and repeat until no LCS is found
+    # find the LCS then remove it from the strings and repeat until no LCS is found
     commonSubsequences = []
     while helperLCS(s1, s2) != "":
         curr = helperLCS(s1, s2)
@@ -150,3 +150,14 @@ def getLCS(s1: list, s2: list) -> list:
             commonSubsequences.append(curr)
 
     return commonSubsequences
+
+
+def getCommonSubstrings(text1: list, text2: list) -> str:
+    """
+    Return a string representation of a set of shingles
+    """
+    hash1 = getHash(text1)
+    hash2 = getHash(text1)
+
+    similarSentences = getSimilarSentences(hash1, hash2)
+    return similarSentences
