@@ -249,6 +249,7 @@ td.btn-cell {
 
 .close-btn:hover {
   background-color: var(--garnet-brighter);
+  cursor: pointer;
 }
 
 .close-btn,

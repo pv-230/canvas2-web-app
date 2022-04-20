@@ -65,6 +65,7 @@ section:not(:first-child) {
 
 .assignment-btn:hover {
   background-color: rgb(20, 135, 207);
+  cursor: pointer;
 }
 
 .assignment-btn,
@@ -79,12 +80,7 @@ section:not(:first-child) {
   text-align: center;
 }
 
-.assignment-btn-submitted:hover {
-  background-color: rgb(5, 150, 5);
-}
-
-.assignment-btn-submitted,
-.assignment-btn-submitted:active {
+.assignment-btn-submitted {
   width: 100%;
   padding: 8px;
   border-bottom-left-radius: 10px;
