@@ -1,9 +1,18 @@
 import nltk
 import re
+import threading
+from collections import deque
 from nltk.stem import WordNetLemmatizer
 from nltk import FreqDist
 from nltk.corpus import brown
 from pathlib import Path
+
+
+# frequencyList and seen are more effectly used as global variables, kinda ugly but the speedup is worth it
+global frequencyList
+frequencyList = FreqDist(x.lower() for x in brown.words())
+global seen
+seen = dict()
 
 
 def parseTextFile(inputFile: str) -> list:
@@ -21,6 +30,40 @@ def parseText(inputText: str) -> list:
     """
     sanitizedInput = re.sub(r"[^\w\s]", "", inputText).split()
     return wordCompression(sanitizedInput)
+
+
+def wordSynonym(word: str) -> str:
+    """
+    Reduce word to its most common synonym
+    """
+    if word in seen:
+        return seen[word]
+    else:
+        synonyms = set()
+        for syn in nltk.corpus.wordnet.synsets(word):
+            for l in syn.lemmas():
+                synonyms.add(l.name())
+        stack = deque()
+        for syn in synonyms:
+            if not stack:
+                stack.append((syn, frequencyList[syn]))
+            else:
+                if frequencyList[syn] > stack[-1][1]:
+                    stack.pop()
+                    stack.append((syn, frequencyList[syn]))
+        if stack:
+            seen[word] = stack[0][0]
+            return seen[word]
+        else:
+            seen[word] = word
+            return word
+
+
+def cleanWords(words: list) -> list:
+    """
+    Return a list of words that have been reduced to their most common synonym
+    """
+    return [wordSynonym(word) for word in words]
 
 
 def wordCompression(words: list) -> list:
@@ -48,33 +91,16 @@ def wordCompression(words: list) -> list:
         if word.isalnum() and word.lower() not in ignoreThese
     ]
 
-    # Create a frequency list of the most common words in English (used to find most common synonyms)
-    frequencyList = FreqDist(x.lower() for x in brown.words())
-
     # Lemmatize words (e.g. "dogs" -> "dog")
-    words = [WordNetLemmatizer().lemmatize(word) for word in words]
+    lemmatizer = WordNetLemmatizer()
+    words = [lemmatizer.lemmatize(word) for word in words]
 
-    # Find the most common synonym for each word
-    seen = dict()
-    for i, word in enumerate(words):
-        if word in seen:
-            words[i] = seen[word]
-        else:
-            synonyms = set()
-            for syn in nltk.corpus.wordnet.synsets(word):
-                for l in syn.lemmas():
-                    synonyms.add(l.name())
-            stack = []
-            for syn in synonyms:
-                if not stack:
-                    stack.append((syn, frequencyList[syn]))
-                else:
-                    if frequencyList[syn] > stack[-1][1]:
-                        stack.pop()
-                        stack.append((syn, frequencyList[syn]))
-            if stack:
-                words[i] = stack[0][0]
-                seen[word] = stack[0][0]
+    # Reduce words to their most common synonym using threading to speed up the process
+    temp = words[:]
+    t = threading.Thread(target=cleanWords, args=(temp,))
+    t.start()
+    t.join()
+    words = cleanWords(words)
 
     # Filter out words that are among the 1000 most common words in English once more
     words = [word for word in words if word.isalnum()

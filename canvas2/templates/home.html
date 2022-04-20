@@ -14,26 +14,30 @@
   <div class="main-content">
     <h2 class="content-title">Courses</h2>
     <div class="course-grid">
-      {% for course in courses %}
-        <a href="{{ url_for('frontend.course_page', code=course['_id']) }}">
-          <div class="course-card">
-            <div class="course-code">{{ course["code"] }}</div>
-            <div class="course-title">{{ course["title"] }}</div>
-          </div>
-        </a>
-      {% endfor %}
-      {% if session['role'] >= 3 %}
-        <!-- Button to add additional courses for teachers -->
-        <button class="add-course-card" type="button">
-          <div class="add-icon-frame">
-            <img
-              class="add-icon"
-              src="{{ url_for('static', filename='images/plus-sign.svg') }}"
-              alt="Plus sign"
-            />
-          </div>
-          <span>Add course</span>
-        </button>
+      {% if courses %}
+        {% for course in courses %}
+          <a href="{{ url_for('frontend.course_page', code=course['_id']) }}">
+            <div class="course-card">
+              <div class="course-code">{{ course["code"] }}</div>
+              <div class="course-title">{{ course["title"] }}</div>
+            </div>
+          </a>
+        {% endfor %}
+        {% if session['role'] >= 3 %}
+          <!-- Button to add additional courses for teachers -->
+          <button class="add-course-card" type="button">
+            <div class="add-icon-frame">
+              <img
+                class="add-icon"
+                src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+                alt="Plus sign"
+              />
+            </div>
+            <span>Add course</span>
+          </button>
+        {% endif %}
+      {% else %}
+        <p class="no-enrolled">No enrolled courses</p>
       {% endif %}
     </div>
   </div>
