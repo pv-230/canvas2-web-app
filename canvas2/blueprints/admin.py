@@ -28,14 +28,19 @@ def panel():
     if session["role"] < 4:
         abort(401)
 
+    # Retrieves all unapproved accounts
     requests = db_conn.db.users.find(
         {"approved": False},
         {"password": 0}
     )
 
+    # Retrieves all active courses
+    courses = db_conn.db.classes.find({})
+    courses = list(courses)
+
     # List casts help with template rendering
     req_list = list(requests)
-    return render_template("admin.html", requests=req_list)
+    return render_template("admin.html", requests=req_list, courses=courses)
 
 
 @admin.route("/action/<type>", methods=["POST"])

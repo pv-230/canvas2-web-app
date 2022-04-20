@@ -98,8 +98,6 @@
    * @param {Event} e
    */
   const editUser = (e) => {
-    const userData = {};
-
     // Clear the previous save button, if exists
     const saveBtn = document.querySelector('.save-btn');
     if (saveBtn) {
@@ -195,7 +193,8 @@
       tableData.classList.add('empty-cell');
       tableData.setAttribute('colspan', '5');
       tableData.textContent = 'No users found';
-      usersTableBody.appendChild(tableData);
+      tableRow.appendChild(tableData);
+      usersTableBody.appendChild(tableRow);
     }
   };
 
@@ -228,7 +227,7 @@
         .catch((error) => {
           console.log(error);
         });
-    }, 500);
+    }, 300);
   };
 
   // Event listeners
