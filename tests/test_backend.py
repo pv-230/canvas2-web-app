@@ -630,6 +630,7 @@ def test_delete_assignment(client):
             "/secretary/delete_assg",
             data={
                 "assg-id": str(assg_id),
+                "crs-code": str(course["_id"])
             },
             headers={"Referer": "/c/" + str(course['_id'])},
             follow_redirects=True,
