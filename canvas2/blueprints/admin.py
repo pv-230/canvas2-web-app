@@ -90,6 +90,10 @@ def action(type):
             }
         )
 
+    # Removes a course
+    if type == "removeCourse":
+        print(request.json)
+
     return redirect(url_for("admin.panel"))
 
 
