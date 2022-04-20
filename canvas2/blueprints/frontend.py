@@ -49,7 +49,7 @@ def index():
                 {"$replaceRoot": {"newRoot": "$class"}},
             ]
         )
-
+        courses = list(courses)
         return render_template("home.html", session=session, courses=courses)
 
 
