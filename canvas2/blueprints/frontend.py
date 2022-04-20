@@ -214,8 +214,7 @@ def manage_assignment(aid, cid):
             except:
                 continue
             simScore = round(similarityScore(curr_contents, comp_contents), 2)
-            if simScore > 0.20:
-                simSubs[curr_id].append((comp_id, simScore))
+            simSubs[curr_id].append((comp_id, simScore))
         if len(simSubs[curr_id]) > 0:
             mostSimilar = max(simSubs[curr_id], key=lambda x: x[1])
             db_conn.db.submissions.update_one({'_id': ObjectId(curr_id)}, {'$set': {'simscore': mostSimilar[1]}})

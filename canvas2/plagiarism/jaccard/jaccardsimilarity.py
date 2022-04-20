@@ -1,11 +1,14 @@
 import nltk
 import re
+import threading
 from collections import deque
 from nltk.stem import WordNetLemmatizer
 from nltk import FreqDist
 from nltk.corpus import brown
 from pathlib import Path
 
+
+# frequencyList and seen are more effectly used as global variables, kinda ugly but the speedup is worth it
 global frequencyList
 frequencyList = FreqDist(x.lower() for x in brown.words())
 global seen
@@ -30,6 +33,9 @@ def parseText(inputText: str) -> list:
 
 
 def wordSynonym(word: str) -> str:
+    """
+    Reduce word to its most common synonym
+    """
     if word in seen:
         return seen[word]
     else:
@@ -51,6 +57,13 @@ def wordSynonym(word: str) -> str:
         else:
             seen[word] = word
             return word
+
+
+def cleanWords(words: list) -> list:
+    """
+    Return a list of words that have been reduced to their most common synonym
+    """
+    return [wordSynonym(word) for word in words]
 
 
 def wordCompression(words: list) -> list:
@@ -82,8 +95,12 @@ def wordCompression(words: list) -> list:
     lemmatizer = WordNetLemmatizer()
     words = [lemmatizer.lemmatize(word) for word in words]
 
-    # Reduce words to their most common synonym
-    words = [wordSynonym(word) for word in words]
+    # Reduce words to their most common synonym using threading to speed up the process
+    temp = words[:]
+    t = threading.Thread(target=cleanWords, args=(temp,))
+    t.start()
+    t.join()
+    words = cleanWords(words)
 
     # Filter out words that are among the 1000 most common words in English once more
     words = [word for word in words if word.isalnum()
