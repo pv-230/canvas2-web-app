@@ -1,6 +1,8 @@
 import pytest
 from bson import ObjectId
 
+from .utils import setuser
+
 ###############################################################################
 #  EDIT ASSIGNMENT TESTS
 ###############################################################################
@@ -9,22 +11,12 @@ from bson import ObjectId
 def test_editassg_good(client):
     """Tests teacher's ability to edit assignment 1"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set teacher
+    setuser(client, "teacher")
 
     # get assignment id from db
     assignment = pytest.db["assignments"].find_one(
-        {"title": "Test Assignment 2"}
+        {"title": "Test Assignment 3"}
     )
 
     # use client context
@@ -66,23 +58,13 @@ def test_editassg_good(client):
 def test_editassg_studentedit(client):
     """Tests if students are able to edit assignments"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set student1
+    setuser(client, "student1")
 
     # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 1"}
-        )
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 1"}
+    )
 
     # use client context
     with client:
@@ -120,23 +102,13 @@ def test_editassg_studentedit(client):
 def test_editassg_taedit(client):
     """Tests if TA's are able to edit assignments"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get ta data from db
-        user = pytest.db["users"].find_one({"username": "teachasst"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set TA
+    setuser(client, "teachasst")
 
     # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 1"}
-        )
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 1"}
+    )
 
     # use client context
     with client:
@@ -174,23 +146,13 @@ def test_editassg_taedit(client):
 def test_editassg_wrongteacher(client):
     """Tests if the wrong teacher is able to edit assignments"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher2"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set teacher2
+    setuser(client, "teacher2")
 
     # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 1"}
-        )
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 1"}
+    )
 
     # use client context
     with client:
@@ -233,18 +195,8 @@ def test_editassg_wrongteacher(client):
 def test_managesub_teacher(client):
     """Tests teacher's ability to grade and comment on submissions"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set teacher
+    setuser(client, "teacher")
 
     # get assignment id from db
     assignment = pytest.db["assignments"].find_one(
@@ -293,18 +245,8 @@ def test_managesub_teacher(client):
 def test_managesub_ta(client):
     """Tests TA's ability to grade and comment on submissions"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teachasst"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set TA
+    setuser(client, "teachasst")
 
     # get assignment id from db
     assignment = pytest.db["assignments"].find_one(
@@ -353,18 +295,8 @@ def test_managesub_ta(client):
 def test_managesub_student(client):
     """Tests if students are able to manage submissions"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set student
+    setuser(client, "student1")
 
     # Get submission from db
     submission = pytest.db["submissions"].find_one(
@@ -405,18 +337,8 @@ def test_managesub_student(client):
 def test_managesub_tablegrade_teacher(client):
     """Tests teacher's ability to update grades with the submission table"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set teacher
+    setuser(client, "teacher")
 
     # get assignment id from db
     assignment = pytest.db["assignments"].find_one(
@@ -461,18 +383,8 @@ def test_managesub_tablegrade_teacher(client):
 def test_managesub_tablegrade_ta(client):
     """Tests TA's ability to update grades with the submission table"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get ta data from db
-        user = pytest.db["users"].find_one({"username": "teachasst"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set TA
+    setuser(client, "teachasst")
 
     # get assignment id from db
     assignment = pytest.db["assignments"].find_one(
@@ -517,18 +429,8 @@ def test_managesub_tablegrade_ta(client):
 def test_managesub_tablegrade_wrongteacher(client):
     """Tests if the wrong teacher is able to change grades"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher2"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set teacher 2
+    setuser(client, "teacher2")
 
     submission = pytest.db["submissions"].find_one(
         {"contents": "This is the test submission!"}

@@ -2,6 +2,8 @@ import pytest
 from bson import ObjectId
 from datetime import datetime, timedelta
 
+from .utils import setuser, setbogus
+
 ###############################################################################
 #  CLASS CREATION TESTS
 ###############################################################################
@@ -10,18 +12,8 @@ from datetime import datetime, timedelta
 def test_addcourse_good(client):
     """Tests adding a course to the database."""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set teacher
+    user = setuser(client, "teacher")
 
     # use client context
     with client:
@@ -82,18 +74,8 @@ def test_addcourse_noauth(client):
 def test_addcourse_noperms(client):
     """Tests adding a course to the database while a user doesnt have perms."""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
+    # set student
+    setuser(client, "student1")
 
     # use client context
     with client:
@@ -126,21 +108,11 @@ def test_addcourse_noperms(client):
 def test_createassg_good(client):
     """Tests adding an assignment to a class"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set teacher
+    setuser(client, "teacher")
 
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get class id from db
-        course = pytest.db["classes"].find_one({"title": "Test Course 2"})
+    # get class id from db
+    course = pytest.db["classes"].find_one({"title": "Test Course 2"})
 
     # use client context
     with client:
@@ -208,18 +180,11 @@ def test_createassg_nouser(client):
     """Tests adding an assignment using spoofed session data that doesnt
     exist."""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set bogus user
+    setbogus(client)
 
-        # set session vars
-        prelim_session["id"] = "6245d9258519c7e387c9e85f"
-        prelim_session["username"] = "bogus_user"
-        prelim_session["fname"] = "spoofed"
-        prelim_session["lname"] = "user"
-        prelim_session["role"] = 9
-
-        # get class id from db
-        course = pytest.db["classes"].find_one({"title": "Test Course 2"})
+    # get class id from db
+    course = pytest.db["classes"].find_one({"title": "Test Course 2"})
 
     # use client context
     with client:
@@ -253,21 +218,11 @@ def test_createassg_noperms(client):
     """Tests adding an assignment using student data, which shouldn't be
     allowed."""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set student
+    setuser(client, "student1")
 
-        # get user data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get class id from db
-        course = pytest.db["classes"].find_one({"title": "Test Course 2"})
+    # get class id from db
+    course = pytest.db["classes"].find_one({"title": "Test Course 2"})
 
     # use client context
     with client:
@@ -301,21 +256,11 @@ def test_createassg_noenroll(client):
     """Tests adding an assignment to a class we're not allowed to
     administer."""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set teacher
+    setuser(client, "teacher")
 
-        # get user data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get class id from db
-        course = pytest.db["classes"].find_one({"title": "Hidden Course"})
+    # get class id from db
+    course = pytest.db["classes"].find_one({"title": "Hidden Course"})
 
     # use client context
     with client:
@@ -353,23 +298,13 @@ def test_createassg_noenroll(client):
 def test_submitassg_good(client):
     """Tests Student1 submitting to Assignment 2"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set student
+    user = setuser(client, "student1")
 
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 2"}
-        )
+    # get assignment id from db
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 2"}
+    )
 
     # use client context
     with client:
@@ -408,7 +343,9 @@ def test_submitassg_noauth(client):
     """Tests Student1 submitting with no auth"""
 
     # get student 1 id
-    student1_id = pytest.db["users"].find_one({"username": "student1"})["_id"]
+    student1_id = pytest.db["users"].find_one(
+        {"username": "student1"}
+    )["_id"]
 
     # get assignment id from db
     assignment = pytest.db["assignments"].find_one(
@@ -450,20 +387,13 @@ def test_submitassg_noauth(client):
 def test_submitassg_nouser(client):
     """Tests submitting with spoofed user data"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set bogus user
+    setbogus(client)
 
-        # set session vars
-        prelim_session["id"] = "6245d9258519c7e387c9e85f"
-        prelim_session["username"] = "bogus_user"
-        prelim_session["fname"] = "spoofed"
-        prelim_session["lname"] = "user"
-        prelim_session["role"] = 9
-
-        # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 2"}
-        )
+    # get assignment id from db
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 2"}
+    )
 
     # use client context
     with client:
@@ -489,7 +419,7 @@ def test_submitassg_nouser(client):
         submission = pytest.db["submissions"].find_one(
             {
                 "assignment": assignment["_id"],
-                "user": ObjectId("6245d9258519c7e387c9e85f"),
+                "user": ObjectId("6245d9258519c7e387c9e85f"),  # bogus's user id
             }
         )
         assert submission is None
@@ -498,7 +428,7 @@ def test_submitassg_nouser(client):
         pytest.db["submissions"].delete_one(
             {
                 "assignment": assignment["_id"],
-                "user": ObjectId("6245d9258519c7e387c9e85f"),
+                "user": ObjectId("6245d9258519c7e387c9e85f"),  # bogus's user id
             }
         )
 
@@ -506,23 +436,13 @@ def test_submitassg_nouser(client):
 def test_submitassg_noperms(client):
     """Tests teacher submitting to Assignment 2"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set teacher
+    user = setuser(client, "teacher")
 
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 2"}
-        )
+    # get assignment id from db
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 2"}
+    )
 
     # use client context
     with client:
@@ -559,28 +479,18 @@ def test_submitassg_noperms(client):
 def test_submitassg_noforgery(client):
     """Tests Student2 submitting to Assignment 2 on Student1's behalf"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set student 2
+    setuser(client, "student2")
 
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "student2"})
+    # get student 1 id
+    student1_id = pytest.db["users"].find_one(
+        {"username": "student1"}
+    )["_id"]
 
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get student 1 id
-        student1_id = pytest.db["users"].find_one({"username": "student1"})[
-            "_id"
-        ]
-
-        # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 2"}
-        )
+    # get assignment id from db
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 2"}
+    )
 
     # use client context
     with client:
@@ -617,23 +527,13 @@ def test_submitassg_noforgery(client):
 def test_submitassg_noassg(client):
     """Tests Student1 submitting to a bogus assignment"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set student
+    user = setuser(client, "student1")
 
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 2"}
-        )
+    # get assignment id from db
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 2"}
+    )
 
     # use client context
     with client:
@@ -670,23 +570,13 @@ def test_submitassg_noassg(client):
 def test_submitassg_noenroll(client):
     """Tests Student2 submitting to a class they're not enrolled in"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set student 2
+    user = setuser(client, "student2")
 
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "student2"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 2"}
-        )
+    # get assignment id from db
+    assignment = pytest.db["assignments"].find_one(
+        {"title": "Test Assignment 2"}
+    )
 
     # use client context
     with client:
@@ -718,51 +608,3 @@ def test_submitassg_noenroll(client):
         pytest.db["submissions"].delete_one(
             {"assignment": assignment["_id"], "user": user["_id"]}
         )
-
-
-def test_submitassg_noresubmit(client):
-    """Tests Student2 submitting to a class they're not enrolled in"""
-
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
-
-        # get student data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get assignment id from db
-        assignment = pytest.db["assignments"].find_one(
-            {"title": "Test Assignment 1"}
-        )
-
-    # use client context
-    with client:
-
-        # try sending in submission
-        res = client.post(
-            "/secretary/submit-assg",
-            data={
-                "assg-id": assignment["_id"],
-                "assg-entry": "This assignment submission was made by PyTest! \
-                    (test_submitassg_noresubmit)",
-                "assg-course": assignment["class"],
-                "assg-user-id": str(user["_id"]),
-            },
-            headers={"Referer": "/c/" + str(assignment["class"])},
-            follow_redirects=True,
-        )
-
-        # check to make sure we were denied
-        assert res.status_code == 400
-
-        # ensure submission was not made
-        submissions = pytest.db["submissions"].find(
-            {"assignment": assignment["_id"], "user": user["_id"]}
-        )
-        assert len(list(submissions)) == 1

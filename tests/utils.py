@@ -1,6 +1,7 @@
 import pytest
 
-def util_setuser(client, username):
+
+def setuser(client, username):
     """Utility function"""
 
     # use session_transaction to set prelim session state
@@ -22,3 +23,17 @@ def util_setuser(client, username):
 
     # return user, in case its used in tests
     return user
+
+
+def setbogus(client):
+    """Sets data to a bogus user that doesnt exist"""
+
+    # use session_transaction to set prelim session state
+    with client.session_transaction() as prelim_session:
+
+        # set session vars
+        prelim_session["id"] = "6245d9258519c7e387c9e85f"
+        prelim_session["username"] = "bogus_user"
+        prelim_session["fname"] = "spoofed"
+        prelim_session["lname"] = "user"
+        prelim_session["role"] = 9

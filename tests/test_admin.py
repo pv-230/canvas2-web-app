@@ -1,13 +1,13 @@
 import pytest
 from flask import session
 
-from .utils import util_setuser
+from .utils import setuser
 
 def test_admin_redirect(client):
     """Ensure that admins get redirected"""
 
     # set admin user
-    util_setuser(client, "admin")
+    setuser(client, "admin")
 
     # with context...
     with client:

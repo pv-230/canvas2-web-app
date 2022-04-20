@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime, timedelta
 
-from .utils import util_setuser
+from .utils import setuser
 
 # this file will only have one test that goes over many parts of the invite
 # process. i would split these into multiple tests but they're so intertwined
@@ -53,7 +53,7 @@ def util_clean_c2_inv():
 def test_invite_creation(client):
 
     # set teacher user
-    util_setuser(client, "teacher")
+    setuser(client, "teacher")
 
     # get class 1 data from db
     class1 = pytest.db["classes"].find_one({"code": "TEST001"})
@@ -94,7 +94,7 @@ def test_invite_consent_good(client):
     """Tests using an invite, good transaction"""
 
     # set teacher user
-    util_setuser(client, "student1")
+    setuser(client, "student1")
 
     # go ahead and inject a class2 invite
     util_inject_c2_inv()
@@ -166,7 +166,7 @@ def test_invite_joinclass_good(client):
     """Tests using an invite to join a class"""
 
     # login as student 1
-    user = util_setuser(client, "student1")
+    user = setuser(client, "student1")
 
     # go ahead and inject a class2 invite
     # save class2 response this time
