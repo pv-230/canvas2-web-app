@@ -15,6 +15,7 @@
   // State
   let selectedBtn = sidebarBtns[0];
   let selectedView = requestsView;
+  let usersObject = null;
 
   /**
    * Switches to the selected admin view.
@@ -48,8 +49,79 @@
   };
 
   /**
-   *
-   * @param {Array} users
+   * Sends the user details that need to be saved to the server.
+   * @param {Event} e
+   */
+  const saveUserDetails = (e) => {
+    const fields = [];
+
+    // Collects the input field data
+    const tableRow = e.target.parentNode.parentNode;
+    const childrenArr = [...tableRow.children];
+    childrenArr.forEach((td) => {
+      if (!td.classList.contains('btn-cell')) {
+        const input = td.firstElementChild;
+        fields.push(input.value);
+      }
+    });
+
+    // Attach user ID
+    fields.push(e.target.getAttribute('data-id'));
+
+    // Builds the POST request
+    const request = new Request(`/admin/action/updateUserInfo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(fields),
+    });
+
+    // Sends the request
+    fetch(request)
+      .then((response) => {
+        if (response.ok) {
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  /**
+   * Allows an admin to edit details from the table.
+   * @param {Event} e
+   */
+  const editUser = (e) => {
+    const userData = {};
+
+    /** @type {HTMLElement} */
+    const tableRow = e.target.parentNode.parentNode;
+    const childrenArr = [...tableRow.children];
+    childrenArr.forEach((td) => {
+      if (!td.classList.contains('btn-cell')) {
+        const inputEl = document.createElement('input');
+        inputEl.setAttribute('type', 'text');
+        inputEl.setAttribute('value', `${td.textContent}`);
+        td.textContent = '';
+        td.appendChild(inputEl);
+      }
+    });
+
+    // Swap edit listeners
+    e.target.removeEventListener('click', editUser);
+    e.target.addEventListener('click', saveUserDetails);
+
+    // Update button
+    e.target.textContent = 'Save';
+    e.target.classList.remove('edit-btn');
+    e.target.classList.add('save-btn');
+  };
+
+  /**
+   * Produces rows in the table containing user data.
+   * @param {object} users
    */
   const populateTable = (users) => {
     // Clears the table
@@ -57,11 +129,16 @@
       usersTableBody.removeChild(usersTableBody.firstElementChild);
     }
 
-    if (users.length > 0) {
-      users.forEach((user) => {
+    if (Object.values(users).length > 0) {
+      Object.values(users).forEach((user) => {
         const tableRow = document.createElement('tr');
+
+        const tableData0 = document.createElement('td');
+        tableData0.textContent = `${user['lastname']}`;
+        tableRow.appendChild(tableData0);
+
         const tableData1 = document.createElement('td');
-        tableData1.textContent = `${user['lastname']}, ${user['firstname']}`;
+        tableData1.textContent = `${user['firstname']}`;
         tableRow.appendChild(tableData1);
 
         const tableData2 = document.createElement('td');
@@ -74,7 +151,13 @@
 
         const tableData4 = document.createElement('td');
         tableData4.classList.add('btn-cell');
-        tableData4.textContent = 'BUTTONS';
+        const editBtn = document.createElement('button');
+        editBtn.classList.add('edit-btn');
+        editBtn.setAttribute('type', 'button');
+        editBtn.setAttribute('data-id', user['_id']);
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', editUser);
+        tableData4.appendChild(editBtn);
         tableRow.appendChild(tableData4);
         usersTableBody.appendChild(tableRow);
       });
@@ -82,7 +165,7 @@
       const tableRow = document.createElement('tr');
       const tableData = document.createElement('td');
       tableData.classList.add('empty-cell');
-      tableData.setAttribute('colspan', '4');
+      tableData.setAttribute('colspan', '5');
       tableData.textContent = 'No users found';
       usersTableBody.appendChild(tableData);
     }
@@ -107,7 +190,8 @@
       .then((response) => {
         if (response.ok) {
           response.json().then((data) => {
-            populateTable(data);
+            usersObject = data;
+            populateTable(usersObject);
           });
         }
       })

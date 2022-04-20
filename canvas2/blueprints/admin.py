@@ -70,6 +70,21 @@ def action(type):
             {"_id": ObjectId(request.form["deny-id"])}
         )
 
+    # Updates a user's information
+    if type == "updateUserInfo":
+        userData = request.json
+        db_conn.db.users.update_one(
+            {"_id": ObjectId(userData[4])},
+            {
+                "$set": {
+                    "lastname": userData[0],
+                    "firstname": userData[1],
+                    "username": userData[2],
+                    "email": userData[3],
+                }
+            }
+        )
+
     return redirect(url_for("admin.panel"))
 
 
@@ -92,17 +107,19 @@ def search_users():
     users = db_conn.db.users.find(
         {
             "$or": [
-                {"firstname": {"$regex": f"^{request.json}"}},
-                {"lastname": {"$regex": f"^{request.json}"}},
-                {"username": {"$regex": f"^{request.json}"}},
-                {"email": {"$regex": f"^{request.json}"}}
+                {"firstname": {"$regex": f"^{request.json}", "$options": "i"}},
+                {"lastname": {"$regex": f"^{request.json}", "$options": "i"}},
+                {"username": {"$regex": f"^{request.json}", "$options": "i"}},
+                {"email": {"$regex": f"^{request.json}", "$options": "i"}}
             ]
         }
     )
 
+    # Convert to dict
     usersList = list(users)
-    for user in users:
-        user["_id"] = str(user["_id"])
-        usersList.append(user)
+    usersDict = dict()
+    for user in usersList:
+        user['_id'] = str(user["_id"])
+        usersDict[user['_id']] = user
 
-    return json.dumps(usersList, default=str)
+    return json.dumps(usersDict, default=str)
