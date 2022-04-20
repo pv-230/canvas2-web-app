@@ -1,33 +1,67 @@
 import pytest
 from datetime import datetime, timedelta
 
+from .utils import util_setuser
+
 # this file will only have one test that goes over many parts of the invite
 # process. i would split these into multiple tests but they're so intertwined
 # that its really not worth it tbh
 
 
+#
+# =====[ UTILS ]================================================================
+#
+
+
+def util_inject_c2_inv():
+    """
+    Adds an invite to class2 that always has code:
+    AJMrfOM1p4CGBdidr2oLjw
+    """
+
+    # search for class2 by code
+    class2 = pytest.db["classes"].find_one({"code": "TEST002"})
+
+    # make an invite for it
+    pytest.db["invites"].insert_one({
+        "class": class2['_id'],
+        "code": "AJMrfOM1p4CGBdidr2oLjw",
+        "expires": datetime.now() + timedelta(days=7),
+    })
+
+    # return class2, in case other tests need it
+    return class2
+
+
+def util_clean_c2_inv():
+    """
+    Cleans up invite to class2 that always has code:
+    AJMrfOM1p4CGBdidr2oLjw
+    """
+
+    # we're done now, delete the invite
+    pytest.db["invites"].delete_many(
+        {"code": "AJMrfOM1p4CGBdidr2oLjw"}
+    )
+
+
+#
+# =====[ TESTS ]================================================================
+#
+
+
 def test_invite_creation(client):
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set teacher user
+    util_setuser(client, "teacher")
 
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "teacher"})
+    # get class 1 data from db
+    class1 = pytest.db["classes"].find_one({"code": "TEST001"})
 
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # get class 1 data from db
-        class1 = pytest.db["classes"].find_one({"code": "TEST001"})
-
-        # make sure no invites already exist for class 1
-        pytest.db["invites"].delete_many(
-            {"class": class1["_id"]}
-        )
+    # make sure no invites already exist for class 1
+    pytest.db["invites"].delete_many(
+        {"class": class1["_id"]}
+    )
 
     # with client context
     with client:
@@ -59,26 +93,11 @@ def test_invite_creation(client):
 def test_invite_consent_good(client):
     """Tests using an invite, good transaction"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # set teacher user
+    util_setuser(client, "student1")
 
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # go ahead and inject a class2 invite
-        class2 = pytest.db["classes"].find_one({"code": "TEST002"})
-        pytest.db["invites"].insert_one({
-            "class": class2['_id'],
-            "code": "AJMrfOM1p4CGBdidr2oLjw",
-            "expires": datetime.now() + timedelta(days=7),
-        })
+    # go ahead and inject a class2 invite
+    util_inject_c2_inv()
 
     # with client context
     with client:
@@ -101,16 +120,8 @@ def test_invite_consent_good(client):
 def test_invite_consent_noauth(client):
     """Tests using an invite while not logged in"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction():
-
-        # go ahead and inject a class2 invite
-        class2 = pytest.db["classes"].find_one({"code": "TEST002"})
-        pytest.db["invites"].insert_one({
-            "class": class2['_id'],
-            "code": "AJMrfOM1p4CGBdidr2oLjw",
-            "expires": datetime.now() + timedelta(days=7),
-        })
+    # go ahead and inject a class2 invite
+    util_inject_c2_inv()
 
     # with client context
     with client:
@@ -154,26 +165,12 @@ def test_invite_consent_noclass(client):
 def test_invite_joinclass_good(client):
     """Tests using an invite to join a class"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction() as prelim_session:
+    # login as student 1
+    user = util_setuser(client, "student1")
 
-        # get teacher data from db
-        user = pytest.db["users"].find_one({"username": "student1"})
-
-        # set session vars
-        prelim_session["id"] = str(user["_id"])
-        prelim_session["username"] = user["username"]
-        prelim_session["fname"] = user["firstname"]
-        prelim_session["lname"] = user["lastname"]
-        prelim_session["role"] = user["role"]
-
-        # go ahead and inject a class2 invite
-        class2 = pytest.db["classes"].find_one({"code": "TEST002"})
-        pytest.db["invites"].insert_one({
-            "class": class2['_id'],
-            "code": "AJMrfOM1p4CGBdidr2oLjw",
-            "expires": datetime.now() + timedelta(days=7),
-        })
+    # go ahead and inject a class2 invite
+    # save class2 response this time
+    class2 = util_inject_c2_inv()
 
     # with client context
     with client:
@@ -206,16 +203,8 @@ def test_invite_joinclass_good(client):
 def test_invite_joinclass_noauth(client):
     """Tests using an invite while not logged in"""
 
-    # use session_transaction to set prelim session state
-    with client.session_transaction():
-
-        # go ahead and inject a class2 invite
-        class2 = pytest.db["classes"].find_one({"code": "TEST002"})
-        pytest.db["invites"].insert_one({
-            "class": class2['_id'],
-            "code": "AJMrfOM1p4CGBdidr2oLjw",
-            "expires": datetime.now() + timedelta(days=7),
-        })
+    # go ahead and inject a class2 invite
+    util_inject_c2_inv()
 
     # with client context
     with client:
