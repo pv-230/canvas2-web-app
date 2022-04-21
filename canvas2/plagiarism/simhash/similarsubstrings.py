@@ -1,3 +1,4 @@
+# flake8: noqa
 from collections import Counter
 from nltk import tokenize
 import numpy as np

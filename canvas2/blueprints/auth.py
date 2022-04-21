@@ -17,10 +17,6 @@ def login():
     """
     If GET, Renders the page where a user can login.
     IF POST, Authenticates the user and redirects to the index page.
-
-    TODO: Need function that verifies username/password
-      NOTE: Done! At least partially. -A
-    TODO: Sanitize form input
     """
 
     # if already logged in, redirect to index page
@@ -99,8 +95,6 @@ def signup():
     """
     If GET, Renders the page where a user can sign up.
     IF POST, Registers the user and redirects to the login page.
-
-    TODO: Sanitize form input
     """
 
     # if get, render login page

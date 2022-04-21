@@ -1,6 +1,6 @@
+# flake8: noqa
 from similarsubstrings import *
 from pathlib import Path
-
 
 def test_set_1():
     '''

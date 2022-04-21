@@ -36,6 +36,18 @@
             <span>Add course</span>
           </button>
         {% endif %}
+      {% elif session['role'] >= 3 %}
+        <!-- Button to add additional courses for teachers -->
+        <button class="add-course-card" type="button">
+          <div class="add-icon-frame">
+            <img
+              class="add-icon"
+              src="{{ url_for('static', filename='images/plus-sign.svg') }}"
+              alt="Plus sign"
+            />
+          </div>
+          <span>Add course</span>
+        </button>
       {% else %}
         <p class="no-enrolled">No enrolled courses</p>
       {% endif %}
