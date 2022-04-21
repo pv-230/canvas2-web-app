@@ -27,7 +27,7 @@
     if (e.currentTarget.classList.contains('submit-btn')) {
       // Opens the assignment submission window and sets the assignment id
       // in submission form to the id of the assignment that was opened
-      const assignmentCard = e.currentTarget.parentElement;
+      const assignmentCard = e.currentTarget.parentElement.parentElement;
       const assgId = assignmentCard.getAttribute('data-id');
       popupForm.elements['assg-id'].setAttribute('value', assgId);
       submitWindow.removeAttribute('hidden');
