@@ -146,6 +146,8 @@ sidebar > h2 {
   align-items: center;
   padding: 0;
   border: none;
+  border-right: 1px solid var(--black);
+  border-bottom: 1px solid var(--black);
 }
 
 form {
@@ -197,8 +199,6 @@ form {
   align-items: center;
   padding: 0;
   border: none;
-  border-right: 1px solid var(--black);
-  border-bottom: 1px solid var(--black);
 }
 
 .users-table .edit-btn:hover {
