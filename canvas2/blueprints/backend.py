@@ -5,7 +5,8 @@ import json
 import re
 
 from ..plagiarism.jaccard.jaccardsimilarity import shinglesString
-from ..plagiarism.simhash.similarsubstrings import getCommonSubstrings, parseText
+from ..plagiarism.simhash.similarsubstrings import getCommonSubstrings,\
+    parseText
 from ..utils.db import db_conn
 
 
@@ -22,7 +23,6 @@ def add_course():
     """Adds a course to the database."""
 
     # get data from form
-    # TODO: Sanitize form input
     title = request.form["course-name"]
     code = request.form["course-code"]
     desc = request.form["course-desc"]
@@ -41,7 +41,6 @@ def add_course():
     if not userdata["role"] >= 3:
         abort(403)  # forbidden
 
-    # TODO: Add code to check if course already exists
     # NOTE: unsure if we'll want to implement this atm, because the same
     #       course can exist across multiple semesters. will still leave this
     #       reminder here for now tho. -A
@@ -96,10 +95,6 @@ def add_assignment():
     if session["role"] != 4 and not enrollment:
         abort(403)  # forbidden
 
-    # TODO: make sure assignment already submitted
-    # NOTE: once again: it's possible we can have same title submissions,
-    #       so this is not the best idea at the moment. -A
-
     # make assignment in database
     db_conn.db.assignments.insert_one(
         {
@@ -119,7 +114,6 @@ def submit_assignment():
     """Submits an assignment to the database."""
 
     # get data from form
-    # TODO: Sanitize form input
     assgid = request.form["assg-id"]
     contents = request.form["assg-entry"]
     userid = request.form["assg-user-id"]
@@ -431,7 +425,7 @@ def similarity_report(sid):
 
     try:
         similar_sub_id = sub_info["simsub"]
-    except:
+    except Exception:
         return json.dumps({'error': 'No similar submissions'}, default=str)
 
     curr_contents = sub_info["contents"]
@@ -446,7 +440,9 @@ def similarity_report(sid):
 
     curr_contents_parsed = parseText(curr_contents)
     similar_contents_parsed = parseText(similar_contents["contents"])
-    similar_sentences = getCommonSubstrings(curr_contents_parsed, similar_contents_parsed)
+    similar_sentences = getCommonSubstrings(
+        curr_contents_parsed, similar_contents_parsed
+    )
 
     sentences = []
     for i, j in similar_sentences:

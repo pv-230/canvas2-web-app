@@ -199,29 +199,36 @@ def manage_assignment(aid, cid):
             },
         ]
     )
-    
+
     # sets the similarity score for each student submission
     simSubs = defaultdict(list)
-    list_submissions = [sub for sub in student_subs if len(sub["assignment"]) > 0]
+    list_submissions = [sub for sub in student_subs if len(sub["assignment"]) > 0]  # noqa: E501
     for idx, submission in enumerate(list_submissions):
         try:
             curr_id = submission["assignment"][0]["_id"]
             curr_contents = eval(submission["assignment"][0]["parsedContents"])
-        except:
+        except Exception:
             continue
-        for submission2 in list_submissions[:idx] + list_submissions[idx + 1 :]:
+        for submission2 in list_submissions[:idx] + list_submissions[idx+1:]:
             try:
                 comp_id = submission2["assignment"][0]["_id"]
-                comp_contents = eval(submission2["assignment"][0]["parsedContents"])
-            except:
+                comp_contents = eval(
+                    submission2["assignment"][0]["parsedContents"]
+                )
+            except Exception:
                 continue
             simScore = round(similarityScore(curr_contents, comp_contents), 2)
             simSubs[curr_id].append((comp_id, simScore))
         if len(simSubs[curr_id]) > 0:
             mostSimilar = max(simSubs[curr_id], key=lambda x: x[1])
-            db_conn.db.submissions.update_one({'_id': ObjectId(curr_id)}, {'$set': {'simscore': mostSimilar[1]}})
-            db_conn.db.submissions.update_one({'_id': ObjectId(curr_id)}, {'$set': {'simsub': mostSimilar[0]}})
-
+            db_conn.db.submissions.update_one(
+                {'_id': ObjectId(curr_id)},
+                {'$set': {'simscore': mostSimilar[1]}}
+            )
+            db_conn.db.submissions.update_one(
+                {'_id': ObjectId(curr_id)},
+                {'$set': {'simsub': mostSimilar[0]}}
+            )
 
     # Builds an object containing all students and their submissions
     student_subs = db_conn.db.enrollments.aggregate(

@@ -1,6 +1,7 @@
-from jaccardsimilarity import parseTextFile, shingles, similarityScore, shinglesString
+# flake8: noqa
+from jaccardsimilarity import parseTextFile, shingles, similarityScore,\
+    shinglesString
 from pathlib import Path
-import time
 
 
 def test_set_1():

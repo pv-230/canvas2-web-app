@@ -1,3 +1,4 @@
+# flake8: noqa
 import nltk
 import re
 import threading
