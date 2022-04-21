@@ -150,6 +150,7 @@ sidebar > h2 {
 
 form {
   flex: 1;
+  height: 100%;
 }
 
 .approve-btn:hover {
