@@ -1,6 +1,14 @@
-## Project Description
+# Canvas 2
 
-Canvas 2 seeks to combine Canvas and Turnitin into one sleek web app that professors can use to manage assignments for their classes with plagiarism detection.
+Canvas 2 is a full stack web application that was submitted for a group term project. It is based on the Canvas learning management software frequently used in various schools. The main features include user accounts (student, teacher, teaching assistant, admin), course management, assignment management, plagarism detection, an admin panel, and more. Students are able to submit assignments that get checked for plagarism. TAs and teachers are able to grade those assignments and provide feedback. Admins can manage all users and modify courses/assignments, as well as approve new teacher accounts that have been registered. The frontend was built with templated HTML, plain CSS, and plain javascript. The backend was built with Flask and MongoDB.
+
+Some details from the files have been omitted since the database is no longer live.
+
+## Distribution of Work
+
+- azure_agst: Initial project structure, database design, testing, containerization, server configuration
+- pv-230: All frontend design (Flask, Jinja2 templates, CSS/JS), testing, contributions to backend development
+- shreayp: Integration of plagiarism detection via Jaccard/Simhash algos, testing, contributions to backend development
 
 ## List of Libraries
 
